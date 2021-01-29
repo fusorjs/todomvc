@@ -1,34 +1,39 @@
 import cs from 'clsx';
-import {ENTER_KEY, ESCAPE_KEY, li, div, label, input, button} from './utils';
+import {ENTER_KEY, ESCAPE_KEY, li, div, label, input, button, identity} from './utils';
 
-export const item = ({title, completed, setTitle, setCompletedR, removeR}) => {
+export const item = ({title, completed, setTitle: _setTitle, setCompletedR, remove}) => {
   let render, editing = false;
 
-  const setEditingR = val => {
+  const setEditing = val => {
     if (val === editing) return;
     editing = val;
-    render();
+    return render;
   };
 
-  // todo make usage rendering transparent
-
-  const saveTodo = event => {
-    const val = event.target.value.trim();
-    if (! val) {removeR(); return;}
+  const setTitle = val => {
     if (val === title) return;
     title = val;
-    setTitle(val);
-    setEditingR(false);
+    return _setTitle(val) || render;
   };
 
-  const onkeydown = event => {
-    if (event.which === ESCAPE_KEY) {
-      event.target.value = title;
-      setEditingR(false);
-    } else if (event.which === ENTER_KEY) {
-      saveTodo(event);
-    } else {
-      setEditingR(true);
+  const handleUpdate = event => {
+    const val = event.target.value.trim();
+    if (! val) return remove();
+    return [
+      setTitle(val),
+      setEditing(false)
+    ].find(identity);
+  };
+
+  const handleInput = event => {
+    switch (event.which) {
+      case ESCAPE_KEY:
+        event.target.value = title;
+        return setEditing(false);
+      case ENTER_KEY:
+        return handleUpdate(event);
+      default:
+        return setEditing(true);
     }
   };
 
@@ -40,10 +45,15 @@ export const item = ({title, completed, setTitle, setCompletedR, removeR}) => {
         checked: completed,
         onchange: () => setCompletedR(! completed),
       }),
-      label({ondblclick: () => setEditingR(true)}, () => title),
-      button({class: 'destroy', onclick: removeR}),
+      label({ondblclick: () => setEditing(true)?.()}, () => title),
+      button({class: 'destroy', onclick: () => remove()?.()}),
     ),
-    input({class: 'edit', onblur: saveTodo, value: title, onkeydown}),
+    input({
+      class: 'edit',
+      value: title,
+      onblur: e => handleUpdate(e)?.(),
+      onkeydown: e => handleInput(e)?.(),
+    }),
     () => {console.log('xixix'); return ''},
   );
 };

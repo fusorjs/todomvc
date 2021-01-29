@@ -27,9 +27,9 @@ export const app = ({id}) => {
       setCompleted(index, completed);
       render();
     },
-    removeR (index) {
+    remove (index) {
       remove(index);
-      render();
+      return render;
     },
   });
 
