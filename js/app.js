@@ -23,9 +23,9 @@ export const app = ({id}) => {
   const renderList = list({
     map,
     setTitle,
-    setCompletedR (index, completed) {
+    setCompleted (index, completed) {
       setCompleted(index, completed);
-      render();
+      return render;
     },
     remove (index) {
       remove(index);

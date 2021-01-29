@@ -1,7 +1,7 @@
 import cs from 'clsx';
 import {ENTER_KEY, ESCAPE_KEY, li, div, label, input, button, identity} from './utils';
 
-export const item = ({title, completed, setTitle: _setTitle, setCompletedR, remove}) => {
+export const item = ({title, completed, setTitle: _setTitle, setCompleted, remove}) => {
   let render, editing = false;
 
   const setEditing = val => {
@@ -43,7 +43,7 @@ export const item = ({title, completed, setTitle: _setTitle, setCompletedR, remo
         class: 'toggle',
         type: 'checkbox',
         checked: completed,
-        onchange: () => setCompletedR(! completed),
+        onchange: () => setCompleted(! completed)?.(),
       }),
       label({ondblclick: () => setEditing(true)?.()}, () => title),
       button({class: 'destroy', onclick: () => remove()?.()}),
@@ -54,6 +54,6 @@ export const item = ({title, completed, setTitle: _setTitle, setCompletedR, remo
       onblur: e => handleUpdate(e)?.(),
       onkeydown: e => handleInput(e)?.(),
     }),
-    () => {console.log('xixix'); return ''},
+    // () => {console.log('xixix'); return ''},
   );
 };

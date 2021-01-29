@@ -1,7 +1,7 @@
 import {section, input, label, ul} from './utils';
 import {item} from './item';
 
-export const list = ({map, setTitle, setCompletedR, remove}) => {
+export const list = ({map, setTitle, setCompleted, remove}) => {
   let render;
 
   const handleToggleAll = () => {};
@@ -21,7 +21,7 @@ export const list = ({map, setTitle, setCompletedR, remove}) => {
       title,
       completed,
       setTitle: title => setTitle(index, title),
-      setCompletedR: completed => setCompletedR(index, completed),
+      setCompleted: completed => setCompleted(index, completed),
       remove: () => remove(index),
       onToggle: () => {},
     }))),
