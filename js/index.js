@@ -1,10 +1,19 @@
-import {newTodos} from './utils';
+import {Router} from 'director/build/director';
+import {newTodos, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 import {app} from './app';
 
-let render;
+let render, route;
 
 const todos = newTodos('todos-perform');
 
-render = app({todos});
+render = app({todos, route: () => route});
 
 document.body.append(render());
+
+const router = Router({
+  [ROUTE_ALL]: () => {route = ROUTE_ALL; render()},
+  [ROUTE_ACTIVE]: () => {route = ROUTE_ACTIVE; render()},
+  [ROUTE_COMPLETED]: () => {route = ROUTE_COMPLETED; render()},
+});
+
+router.init(ROUTE_ALL);

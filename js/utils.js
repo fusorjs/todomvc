@@ -1,5 +1,9 @@
 import {h} from './perform';
 
+export const ROUTE_ALL = '/';
+export const ROUTE_ACTIVE = '/active';
+export const ROUTE_COMPLETED = '/completed';
+
 export const newTodos = id => {
   const items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
   const store = () => localStorage.setItem(id, JSON.stringify(items));

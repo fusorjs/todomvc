@@ -1,7 +1,7 @@
 import {header, div, h1, input} from './utils';
 import {list} from './list';
 
-export const app = ({todos}) => {
+export const app = ({todos, route}) => {
   let render;
 
   const onkeydown = event => {

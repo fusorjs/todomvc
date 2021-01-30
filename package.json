@@ -10,7 +10,8 @@
     "start": "xdg-open dist/index.html & webpack --watch"
   },
   "dependencies": {
-    "clsx": "^1.1.1"
+    "clsx": "^1.1.1",
+    "director": "^1.2.8"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",

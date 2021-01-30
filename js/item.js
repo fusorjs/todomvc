@@ -3,6 +3,7 @@ import {li, div, label, input, button} from './utils';
 
 export const item = ({title, completed, setTodoTitle, setTodoCompleted, removeTodo}) => {
   let render, editing;
+
   let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const setEditing = val => {
