@@ -1,8 +1,8 @@
 import cs from 'clsx';
-import {ENTER_KEY, ESCAPE_KEY, li, div, label, input, button} from './utils';
+import {li, div, label, input, button} from './utils';
 
 export const item = ({title, completed, setTitle: _setTitle, setCompleted, remove}) => {
-  let render, removed, editing = false;
+  let render, removed, editing;
 
   const setEditing = val => {
     if (val === editing) return;
@@ -25,11 +25,11 @@ export const item = ({title, completed, setTitle: _setTitle, setCompleted, remov
   };
 
   const handleInput = event => {
-    switch (event.which) {
-      case ESCAPE_KEY:
+    switch (event.code) {
+      case 'Escape':
         event.target.value = title;
         return setEditing(false);
-      case ENTER_KEY:
+      case 'Enter':
         return handleUpdate(event);
       default:
         return setEditing(true);
@@ -53,6 +53,5 @@ export const item = ({title, completed, setTitle: _setTitle, setCompleted, remov
       onblur: e => removed || handleUpdate(e)?.(),
       onkeydown: e => handleInput(e)?.(),
     }),
-    // () => {console.log('xixix'); return ''},
   );
 };

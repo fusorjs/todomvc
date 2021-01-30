@@ -1,8 +1,5 @@
 import {h} from './perform';
 
-export const ENTER_KEY = 13;
-export const ESCAPE_KEY = 27;
-
 export const newTodos = id => {
   const items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
   const store = () => localStorage.setItem(id, JSON.stringify(items));

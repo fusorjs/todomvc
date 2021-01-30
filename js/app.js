@@ -1,4 +1,4 @@
-import {newTodos, ENTER_KEY, header, div, h1, input} from './utils';
+import {newTodos, header, div, h1, input} from './utils';
 import {list} from './list';
 
 export const app = ({id}) => {
@@ -7,7 +7,7 @@ export const app = ({id}) => {
   const {addTitle, setTitle, setCompleted, remove, getLength, map} = newTodos(id);
 
   const onkeydown = event => {
-    if (event.keyCode !== ENTER_KEY) return;
+    if (event.code !== 'Enter') return;
     event.preventDefault();
     const title = event.target.value.trim();
     if (title) {
