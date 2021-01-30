@@ -23,7 +23,6 @@ export const list = ({map, setTitle, setCompleted, remove}) => {
       setTitle: title => setTitle(index, title),
       setCompleted: completed => setCompleted(index, completed),
       remove: () => remove(index),
-      onToggle: () => {},
     }))),
 
   );

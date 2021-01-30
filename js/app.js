@@ -8,11 +8,8 @@ export const app = ({id}) => {
 
   const onkeydown = event => {
     if (event.keyCode !== ENTER_KEY) return;
-
     event.preventDefault();
-
     const title = event.target.value.trim();
-
     if (title) {
       event.target.value = '';
       addTitle(title);

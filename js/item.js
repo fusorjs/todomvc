@@ -1,8 +1,8 @@
 import cs from 'clsx';
-import {ENTER_KEY, ESCAPE_KEY, li, div, label, input, button, identity} from './utils';
+import {ENTER_KEY, ESCAPE_KEY, li, div, label, input, button} from './utils';
 
 export const item = ({title, completed, setTitle: _setTitle, setCompleted, remove}) => {
-  let render, editing = false;
+  let render, removed, editing = false;
 
   const setEditing = val => {
     if (val === editing) return;
@@ -18,11 +18,10 @@ export const item = ({title, completed, setTitle: _setTitle, setCompleted, remov
 
   const handleUpdate = event => {
     const val = event.target.value.trim();
-    if (! val) return remove();
-    return [
-      setTitle(val),
-      setEditing(false)
-    ].find(identity);
+    if (! val) {removed = true; return remove();}
+    const t = setTitle(val);
+    const e = setEditing(false);
+    return t || e;
   };
 
   const handleInput = event => {
@@ -51,7 +50,7 @@ export const item = ({title, completed, setTitle: _setTitle, setCompleted, remov
     input({
       class: 'edit',
       value: title,
-      onblur: e => handleUpdate(e)?.(),
+      onblur: e => removed || handleUpdate(e)?.(),
       onkeydown: e => handleInput(e)?.(),
     }),
     // () => {console.log('xixix'); return ''},
