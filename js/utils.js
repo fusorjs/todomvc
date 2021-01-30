@@ -3,10 +3,9 @@ import {h} from './perform';
 export const newTodos = id => {
   const items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
   const store = () => localStorage.setItem(id, JSON.stringify(items));
-
   return {
-    addTitle (title) {
-      items.push({title});
+    add (item) {
+      items.push(item);
       store();
     },
     setTitle (index, title) {

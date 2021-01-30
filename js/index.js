@@ -1,3 +1,10 @@
+import {newTodos} from './utils';
 import {app} from './app';
 
-document.body.append(app({id: 'todos-perform'})());
+let render;
+
+const todos = newTodos('todos-perform');
+
+render = app({todos});
+
+document.body.append(render());

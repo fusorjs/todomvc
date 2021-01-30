@@ -1,7 +1,7 @@
 import {section, input, label, ul} from './utils';
 import {item} from './item';
 
-export const list = ({map, setTitle, setCompleted, remove}) => {
+export const list = ({mapTodos, setTodoTitle, setTodoCompleted, removeTodo}) => {
   let render;
 
   const handleToggleAll = () => {};
@@ -17,12 +17,12 @@ export const list = ({map, setTitle, setCompleted, remove}) => {
     label({for: 'toggle-all'}),
 
     // todo array children
-    () => ul({class: 'todo-list'}, ...map(({title, completed}, index) => item({
+    () => ul({class: 'todo-list'}, ...mapTodos(({title, completed}, index) => item({
       title,
       completed,
-      setTitle: title => setTitle(index, title),
-      setCompleted: completed => setCompleted(index, completed),
-      remove: () => remove(index),
+      setTodoTitle: title => setTodoTitle(index, title),
+      setTodoCompleted: completed => setTodoCompleted(index, completed),
+      removeTodo: () => removeTodo(index),
     }))),
 
   );

@@ -1,10 +1,8 @@
-import {newTodos, header, div, h1, input} from './utils';
+import {header, div, h1, input} from './utils';
 import {list} from './list';
 
-export const app = ({id}) => {
+export const app = ({todos}) => {
   let render;
-
-  const {addTitle, setTitle, setCompleted, remove, getLength, map} = newTodos(id);
 
   const onkeydown = event => {
     if (event.code !== 'Enter') return;
@@ -12,20 +10,20 @@ export const app = ({id}) => {
     const title = event.target.value.trim();
     if (title) {
       event.target.value = '';
-      addTitle(title);
+      todos.add({title});
       render();
     }
   };
 
   const renderList = list({
-    map,
-    setTitle,
-    setCompleted (index, completed) {
-      setCompleted(index, completed);
+    mapTodos: todos.map,
+    setTodoTitle: todos.setTitle,
+    setTodoCompleted (index, completed) {
+      todos.setCompleted(index, completed);
       return render;
     },
-    remove (index) {
-      remove(index);
+    removeTodo (index) {
+      todos.remove(index);
       return render;
     },
   });
@@ -39,7 +37,7 @@ export const app = ({id}) => {
         onkeydown,
         autofocus: true,
       }),
-      () => getLength() ? renderList : '',
+      () => todos.getLength() ? renderList : '',
     ),
   );
 };

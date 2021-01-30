@@ -1,8 +1,9 @@
 import cs from 'clsx';
 import {li, div, label, input, button} from './utils';
 
-export const item = ({title, completed, setTitle: _setTitle, setCompleted, remove}) => {
-  let render, removed, editing;
+export const item = ({title, completed, setTodoTitle, setTodoCompleted, removeTodo}) => {
+  let render, editing;
+  let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const setEditing = val => {
     if (val === editing) return;
@@ -13,12 +14,12 @@ export const item = ({title, completed, setTitle: _setTitle, setCompleted, remov
   const setTitle = val => {
     if (val === title) return;
     title = val;
-    return _setTitle(val) || render;
+    return setTodoTitle(val) || render;
   };
 
   const handleUpdate = event => {
     const val = event.target.value.trim();
-    if (! val) {removed = true; return remove();}
+    if (! val) {removed = true; return removeTodo();}
     const t = setTitle(val);
     const e = setEditing(false);
     return t || e;
@@ -42,10 +43,10 @@ export const item = ({title, completed, setTitle: _setTitle, setCompleted, remov
         class: 'toggle',
         type: 'checkbox',
         checked: completed,
-        onchange: () => setCompleted(! completed)?.(),
+        onchange: () => setTodoCompleted(! completed)?.(),
       }),
       label({ondblclick: () => setEditing(true)?.()}, () => title),
-      button({class: 'destroy', onclick: () => remove()?.()}),
+      button({class: 'destroy', onclick: () => removeTodo()?.()}),
     ),
     input({
       class: 'edit',
