@@ -6,7 +6,7 @@ let render, route;
 
 const todos = newTodos('todos-perform');
 
-render = app({todos, route: () => route});
+render = app({todos, getRoute: () => route});
 
 document.body.append(render());
 

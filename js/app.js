@@ -1,8 +1,12 @@
-import {header, div, h1, input} from './utils';
+import {
+  ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED,
+  header, div, h1, input
+} from './utils';
 import {list} from './list';
+import {controls} from './controls';
 
-export const app = ({todos, route}) => {
-  let render;
+export const app = ({todos, getRoute}) => {
+  let render, shownTodos, activeTodoCount, completedCount;
 
   const onkeydown = event => {
     if (event.code !== 'Enter') return;
@@ -16,7 +20,7 @@ export const app = ({todos, route}) => {
   };
 
   const renderList = list({
-    mapTodos: todos.map,
+    mapTodos: (...a) => shownTodos.map(...a),
     setTodoTitle: todos.setTitle,
     setTodoCompleted (index, completed) {
       todos.setCompleted(index, completed);
@@ -28,7 +32,14 @@ export const app = ({todos, route}) => {
     },
   });
 
-  return render = div(
+  const renderControls = controls({
+    getRoute,
+    getActiveCount: () => activeTodoCount,
+    getCompletedCount: () => completedCount,
+    //, clearCompleted
+  });
+
+  const renderMain = div(
     header({class: 'header'},
       h1('todos'),
       input({
@@ -38,6 +49,25 @@ export const app = ({todos, route}) => {
         autofocus: true,
       }),
       () => todos.getLength() ? renderList : '',
+      renderControls,
     ),
   );
+
+  return render = () => {
+    shownTodos = todos.filter(({completed}) => {
+      switch (getRoute()) {
+        case ROUTE_ACTIVE: return ! completed;
+        case ROUTE_COMPLETED: return completed;
+        default: return true;
+      }
+    });
+
+    activeTodoCount = todos.reduce(function (accum, todo) {
+      return todo.completed ? accum : accum + 1;
+    }, 0);
+
+    completedCount = todos.getLength() - activeTodoCount;
+
+    return renderMain();
+  };
 };
