@@ -21,6 +21,5 @@ export const list = ({mapTodos, setTodoTitle, setTodoCompleted, setTodosComplete
       setTodoCompleted: completed => setTodoCompleted(index, completed),
       removeTodo: () => removeTodo(index),
     }))),
-
   );
 };

@@ -4,10 +4,10 @@ import {
   footer, span, strong, ul, li, a, button,
 } from './utils';
 
-export const controls = ({getActiveCount, getCompletedCount, getRoute, clearCompleted}) => {
+export const controls = ({getActiveCount, getCompletedCount, getRoute, removeAllCompleted}) => {
   let render;
 
-  const renderButton = button({class: 'clear-completed', onclick: clearCompleted},
+  const renderButton = button({class: 'clear-completed', onclick: removeAllCompleted},
     'Clear completed',
   );
 

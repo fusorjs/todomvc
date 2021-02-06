@@ -5,7 +5,7 @@ export const ROUTE_ACTIVE = '/active';
 export const ROUTE_COMPLETED = '/completed';
 
 export const newTodos = id => {
-  const items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
+  let items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
   const store = () => localStorage.setItem(id, JSON.stringify(items));
   return {
     add (item) {
@@ -26,6 +26,10 @@ export const newTodos = id => {
     },
     remove (index) {
       items.splice(index, 1);
+      store();
+    },
+    removeAllCompleted () {
+      items = items.filter(({completed}) => ! completed);
       store();
     },
     getLength: () => items.length,

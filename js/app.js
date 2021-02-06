@@ -40,7 +40,10 @@ export const app = ({todos, getRoute}) => {
     getRoute,
     getActiveCount: () => activeTodoCount,
     getCompletedCount: () => completedCount,
-    //, clearCompleted
+    removeAllCompleted () {
+      todos.removeAllCompleted();
+      render();
+    },
   });
 
   const renderMain = div(
