@@ -1,18 +1,15 @@
 import {section, input, label, ul} from './utils';
 import {item} from './item';
 
-export const list = ({mapTodos, setTodoTitle, setTodoCompleted, removeTodo}) => {
+export const list = ({mapTodos, setTodoTitle, setTodoCompleted, setTodosCompleted, removeTodo}) => {
   let render;
-
-  const handleToggleAll = () => {};
 
   return render = section({class: 'main'},
     input({
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      onchange: handleToggleAll,
-      // todo
+      onchange: ({target: {checked}}) => setTodosCompleted(checked)?.(),
     }),
     label({for: 'toggle-all'}),
 

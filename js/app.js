@@ -26,6 +26,10 @@ export const app = ({todos, getRoute}) => {
       todos.setCompleted(index, completed);
       return render;
     },
+    setTodosCompleted (completed) {
+      todos.setAllCompleted(completed);
+      return render;
+    },
     removeTodo (index) {
       todos.remove(index);
       return render;

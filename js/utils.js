@@ -20,6 +20,10 @@ export const newTodos = id => {
       items[index] = {...items[index], completed};
       store();
     },
+    setAllCompleted (completed) {
+      for (const i of items) i.completed = completed;
+      store();
+    },
     remove (index) {
       items.splice(index, 1);
       store();
