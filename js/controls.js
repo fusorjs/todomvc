@@ -7,7 +7,7 @@ import {
 export const controls = ({getActiveCount, getCompletedCount, getRoute, removeAllCompleted}) => {
   let render;
 
-  const renderButton = button({class: 'clear-completed', onclick: removeAllCompleted},
+  const renderButton = button({class: 'clear-completed', onclick: () => removeAllCompleted()?.()},
     'Clear completed',
   );
 

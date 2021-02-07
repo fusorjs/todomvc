@@ -26,7 +26,7 @@ export const app = ({todos, getRoute}) => {
       todos.setCompleted(index, completed);
       return render;
     },
-    setTodosCompleted (completed) {
+    setAllCompleted (completed) {
       todos.setAllCompleted(completed);
       return render;
     },
@@ -42,7 +42,7 @@ export const app = ({todos, getRoute}) => {
     getCompletedCount: () => completedCount,
     removeAllCompleted () {
       todos.removeAllCompleted();
-      render();
+      return render;
     },
   });
 
@@ -56,7 +56,7 @@ export const app = ({todos, getRoute}) => {
         autofocus: true,
       }),
       () => todos.getLength() ? renderList : '',
-      renderControls,
+      () => activeTodoCount || completedCount ? renderControls : '',
     ),
   );
 
@@ -69,9 +69,10 @@ export const app = ({todos, getRoute}) => {
       }
     });
 
-    activeTodoCount = todos.reduce(function (accum, todo) {
-      return todo.completed ? accum : accum + 1;
-    }, 0);
+    activeTodoCount = todos.reduce(
+      (acc, {completed}) => completed ? acc : acc + 1,
+      0
+    );
 
     completedCount = todos.getLength() - activeTodoCount;
 
