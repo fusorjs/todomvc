@@ -1,12 +1,9 @@
-import {
-  ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED,
-  header, div, h1, input
-} from './utils';
+import {ROUTE_ACTIVE, ROUTE_COMPLETED, header, div, h1, input} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 
 export const app = ({todos, getRoute}) => {
-  let render, shownTodos, activeTodoCount, completedCount;
+  let render, activeTodoCount, completedCount;
 
   const onkeydown = event => {
     if (event.code !== 'Enter') return;
@@ -20,7 +17,13 @@ export const app = ({todos, getRoute}) => {
   };
 
   const renderList = list({
-    mapTodos: (...a) => shownTodos.map(...a),
+    mapAll (...a) {
+      switch (getRoute()) {
+        case ROUTE_ACTIVE: return todos.filter(({completed}) => ! completed).map(...a);
+        case ROUTE_COMPLETED: return todos.filter(({completed}) => completed).map(...a);
+        default: return todos.map(...a);
+      }
+    },
     setTodoTitle: todos.setTitle,
     setTodoCompleted (index, completed) {
       todos.setCompleted(index, completed);
@@ -61,14 +64,6 @@ export const app = ({todos, getRoute}) => {
   );
 
   return render = () => {
-    shownTodos = todos.filter(({completed}) => {
-      switch (getRoute()) {
-        case ROUTE_ACTIVE: return ! completed;
-        case ROUTE_COMPLETED: return completed;
-        default: return true;
-      }
-    });
-
     activeTodoCount = todos.reduce(
       (acc, {completed}) => completed ? acc : acc + 1,
       0

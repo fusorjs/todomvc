@@ -1,7 +1,7 @@
 import {section, input, label, ul} from './utils';
 import {item} from './item';
 
-export const list = ({mapTodos, setTodoTitle, setTodoCompleted, setAllCompleted, removeTodo}) => {
+export const list = ({mapAll, setTodoTitle, setTodoCompleted, setAllCompleted, removeTodo}) => {
   let render;
 
   return render = section({class: 'main'},
@@ -14,7 +14,7 @@ export const list = ({mapTodos, setTodoTitle, setTodoCompleted, setAllCompleted,
     label({for: 'toggle-all'}),
 
     // todo array children
-    () => ul({class: 'todo-list'}, ...mapTodos(({title, completed}, index) => item({
+    () => ul({class: 'todo-list'}, ...mapAll(({title, completed}, index) => item({
       title,
       completed,
       setTodoTitle: title => setTodoTitle(index, title),
