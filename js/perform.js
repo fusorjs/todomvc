@@ -1,7 +1,7 @@
 
 const isEmpty = v => v === false ||  v === null || v === undefined;
 const isObject = v => v.constructor === Object;
-const isFunction = v => v?.constructor === Function;
+const isFunction = v => v.constructor === Function;
 
 /*************************************************************************************/
 /* PROPS *****************************************************************************/
@@ -44,7 +44,7 @@ const setAndCompileProps = (e, props) => {
   for (let [k, v] of Object.entries(props)) {
     if (k.startsWith('on')) {
       if (isEmpty(v));
-      else if (isFunction(v)) e.addEventListener(k.substring(2), v, false);
+      else if (v && isFunction(v)) e.addEventListener(k.substring(2), v, false);
       else throw new Error(`attribute is not supported: ${k} = ${v}`);
     }
     else if (k === 'ref') {
@@ -54,7 +54,7 @@ const setAndCompileProps = (e, props) => {
     else {
       let r = v;
 
-      if (isFunction(v)) {
+      if (v && isFunction(v)) {
         r = v();
         _props ??= [];
         _props.push(newAttributeSetter(e, k, v, r));
@@ -79,7 +79,7 @@ const isDefiniteValue = r => {
 const childUpdater = (node, v, prev) => () => {
   let r = v();
 
-  if (isFunction(r)) r = r();
+  if (r && isFunction(r)) r = r();
 
   if (prev === r) return;
   else prev = r;
@@ -107,7 +107,7 @@ const setAndCompileChildren = (e, children) => {
   for (const v of children) {
     let r = v;
 
-    if (isFunction(v)) {
+    if (v && isFunction(v)) {
       _children ??= [];
 
       r = v();
@@ -116,7 +116,7 @@ const setAndCompileChildren = (e, children) => {
       else {
         let prev = r;
 
-        if (isFunction(r)) r = prev = r();
+        if (r && isFunction(r)) r = prev = r();
 
         if (r instanceof HTMLElement);
         else if (isDefiniteValue(r)) r = document.createTextNode(r);
@@ -141,7 +141,7 @@ const getPropsAndChildren = args => {
   const [first] = args;
 
   if (first !== undefined) {
-    if (first.constructor === Object) {
+    if (isObject(first)) {
       props = first;
 
       if (args[1] !== undefined) children = args.slice(1);
