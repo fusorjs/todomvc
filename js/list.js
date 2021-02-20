@@ -1,7 +1,9 @@
 import {section, input, label, ul} from './utils';
 import {item} from './item';
 
-export const list = ({mapAll, setTodoTitle, setTodoCompleted, setAllCompleted, removeTodo}) => {
+export const list = ({
+  mapAll, setTodoTitle, setTodoCompleted, setAllCompleted, removeTodo, toggleAllRef
+}) => {
   let render;
 
   return render = section({class: 'main'},
@@ -9,11 +11,12 @@ export const list = ({mapAll, setTodoTitle, setTodoCompleted, setAllCompleted, r
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
+      ref: toggleAllRef,
       onchange: ({target: {checked}}) => setAllCompleted(checked)?.(),
     }),
     label({for: 'toggle-all'}),
 
-    // todo array children
+    // todo array children ***
     () => ul({class: 'todo-list'}, ...mapAll(({title, completed}, index) => item({
       title,
       completed,

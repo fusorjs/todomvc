@@ -4,6 +4,7 @@ import {controls} from './controls';
 
 export const app = ({todos, getRoute}) => {
   let render, activeTodoCount, completedCount;
+  const toggleAllRef = {};
 
   const onkeydown = event => {
     if (event.code !== 'Enter') return;
@@ -17,6 +18,7 @@ export const app = ({todos, getRoute}) => {
   };
 
   const renderList = list({
+    toggleAllRef,
     mapAll (...a) {
       switch (getRoute()) {
         case ROUTE_ACTIVE: return todos.filter(({completed}) => ! completed).map(...a);
@@ -45,6 +47,7 @@ export const app = ({todos, getRoute}) => {
     getCompletedCount: () => completedCount,
     removeAllCompleted () {
       todos.removeAllCompleted();
+      toggleAllRef.current.checked = false;
       return render;
     },
   });

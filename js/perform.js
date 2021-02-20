@@ -1,5 +1,6 @@
 
 const isEmpty = v => v === false ||  v === null || v === undefined;
+const isObject = v => v.constructor === Object;
 const isFunction = v => v?.constructor === Function;
 
 /*************************************************************************************/
@@ -45,6 +46,10 @@ const setAndCompileProps = (e, props) => {
       if (isEmpty(v));
       else if (isFunction(v)) e.addEventListener(k.substring(2), v, false);
       else throw new Error(`attribute is not supported: ${k} = ${v}`);
+    }
+    else if (k === 'ref') {
+      if (v && isObject(v)) v.current = e;
+      else throw new Error(`ref must be an object: ${k} = ${v}`);
     }
     else {
       let r = v;
