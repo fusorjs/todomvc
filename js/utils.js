@@ -21,7 +21,7 @@ export const newTodos = id => {
       store();
     },
     setAllCompleted (completed) {
-      for (const i of items) i.completed = completed;
+      items = items.map(i => ({...i, completed}));
       store();
     },
     remove (index) {

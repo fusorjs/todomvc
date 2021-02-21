@@ -2,7 +2,7 @@ import {section, input, label, ul} from './utils';
 import {item} from './item';
 
 export const list = ({
-  mapAll, setTodoTitle, setTodoCompleted, setAllCompleted, removeTodo, toggleAllRef
+  mapAll, setTodoTitle, setTodoCompleted, setAllCompleted, removeTodo, getAllChecked,
 }) => {
   let render;
 
@@ -11,12 +11,12 @@ export const list = ({
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      ref: toggleAllRef,
+      checked: getAllChecked,
       onchange: ({target: {checked}}) => setAllCompleted(checked)?.(),
     }),
     label({for: 'toggle-all'}),
 
-    // todo array children ***
+    // todo array children
     () => ul({class: 'todo-list'}, ...mapAll(({title, completed}, index) => item({
       title,
       completed,
