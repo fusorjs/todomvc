@@ -3,6 +3,7 @@ import {li, div, label, input, button} from './utils';
 
 export const item = ({title, completed, setTodoTitle, setTodoCompleted, removeTodo}) => {
   let render, editing;
+  const inputRef = {};
 
   let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
@@ -46,12 +47,18 @@ export const item = ({title, completed, setTodoTitle, setTodoCompleted, removeTo
         checked: completed,
         onchange: () => setTodoCompleted(! completed)?.(),
       }),
-      label({ondblclick: () => setEditing(true)?.()}, () => title),
+      label({
+        ondblclick: () => {
+          setEditing(true)?.();
+          inputRef.current.select();
+        },
+      }, () => title),
       button({class: 'destroy', onclick: () => removeTodo()?.()}),
     ),
     input({
       class: 'edit',
       value: title,
+      ref: inputRef,
       onblur: e => removed || handleUpdate(e)?.(),
       onkeydown: e => handleInput(e)?.(),
     }),
