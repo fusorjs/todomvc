@@ -4,15 +4,27 @@ export const ROUTE_ALL = '/';
 export const ROUTE_ACTIVE = '/active';
 export const ROUTE_COMPLETED = '/completed';
 
-export const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
 export const newTodos = id => {
   let items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
   const store = () => localStorage.setItem(id, JSON.stringify(items));
   return {
     create (item) {
-      items = [...items, item];
+      items = [...items, {...item, id: uuid()}];
       store();
+    },
+    update (id, item) {
+      let index;
+      const curItem = items.find((im, ix) => {
+        if (im.id === id) {
+          index = ix;
+          return true;
+        }
+      });
+      if (! curItem) throw new Error(`missing id: "${id}"`);
+      const newItem = {...curItem, ...item, id};
+      Object.assign([], items, {[index]: newItem});
     },
     setTitle (index, title) {
       items[index] = {...items[index], title};
