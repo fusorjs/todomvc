@@ -4,12 +4,14 @@ export const ROUTE_ALL = '/';
 export const ROUTE_ACTIVE = '/active';
 export const ROUTE_COMPLETED = '/completed';
 
+export const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+
 export const newTodos = id => {
   let items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
   const store = () => localStorage.setItem(id, JSON.stringify(items));
   return {
-    add (item) {
-      items.push(item);
+    create (item) {
+      items = [...items, item];
       store();
     },
     setTitle (index, title) {

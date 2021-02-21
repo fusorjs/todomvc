@@ -1,4 +1,4 @@
-import {ROUTE_ACTIVE, ROUTE_COMPLETED, header, div, h1, input} from './utils';
+import {uuid, ROUTE_ACTIVE, ROUTE_COMPLETED, header, div, h1, input} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 
@@ -11,7 +11,7 @@ export const app = ({todos, getRoute}) => {
     const title = event.target.value.trim();
     if (title) {
       event.target.value = '';
-      todos.add({title});
+      todos.create({id: uuid(), title});
       render();
     }
   };
