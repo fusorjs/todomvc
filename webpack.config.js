@@ -5,7 +5,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
-
   entry: `./js/index.js`,
   output: {
     filename: '[name].bundle.js',
@@ -19,4 +18,12 @@ module.exports = {
       title: 'Perform • TodoMVC',
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
 };
