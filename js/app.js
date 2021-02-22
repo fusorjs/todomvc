@@ -44,8 +44,8 @@ export const app = ({todos, getRoute}) => {
     getRoute,
     getActiveCount: () => activeTodoCount,
     getCompletedCount: () => completedCount,
-    removeAllCompleted () {
-      todos.removeAllCompleted();
+    removeCompletedAll () {
+      todos.removeCompletedAll();
       return render;
     },
   });
