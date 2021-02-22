@@ -17,7 +17,7 @@ export const app = ({todos, getRoute}) => {
   };
 
   const renderList = list({
-    getAllChecked: () => activeTodoCount === 0,
+    getCheckedAll: () => activeTodoCount === 0,
     mapAll (...a) {
       switch (getRoute()) {
         case ROUTE_ACTIVE: return todos.filter(({completed}) => ! completed).map(...a);
