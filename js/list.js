@@ -17,7 +17,7 @@ export const list = ({
     label({for: 'toggle-all'}),
 
     // todo array children
-    () => ul({class: 'todo-list'}, ...mapAll(({id, title, completed}, index) => item({
+    () => ul({class: 'todo-list'}, ...mapAll(({id, title, completed}) => item({
       id,
       title,
       completed,
