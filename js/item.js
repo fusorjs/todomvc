@@ -1,7 +1,7 @@
 import cs from 'clsx';
 import {li, div, label, input, button} from './utils';
 
-export const item = ({id, title, completed, setTodoTitle, updateCompleted, removeTodo}) => {
+export const item = ({id, title, completed, updateTitle, updateCompleted, removeTodo}) => {
   let render, editing;
   const inputRef = {};
 
@@ -16,7 +16,7 @@ export const item = ({id, title, completed, setTodoTitle, updateCompleted, remov
   const setTitle = val => {
     if (val === title) return;
     title = val;
-    return setTodoTitle(val) || render;
+    return updateTitle(id, val) || render;
   };
 
   const handleUpdate = event => {

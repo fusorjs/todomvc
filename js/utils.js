@@ -28,10 +28,6 @@ export const newTodos = id => {
       items[index] = newItem;
       store();
     },
-    setTitle (index, title) {
-      items[index] = {...items[index], title};
-      store();
-    },
     setAllCompleted (completed) {
       items = items.map(i => ({...i, completed}));
       store();

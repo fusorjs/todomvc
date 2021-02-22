@@ -25,7 +25,7 @@ export const app = ({todos, getRoute}) => {
         default: return todos.map(...a);
       }
     },
-    setTodoTitle: todos.setTitle,
+    updateTitle: (id, title) => todos.update(id, {title}),
     updateCompleted (id, completed) {
       todos.update(id, {completed});
       return render;
