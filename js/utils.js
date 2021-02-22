@@ -32,7 +32,7 @@ export const newTodos = id => {
       items = items.filter(i => i.id !== id);
       store();
     },
-    setAllCompleted (completed) {
+    updateCompletedAll (completed) {
       items = items.map(i => ({...i, completed}));
       store();
     },

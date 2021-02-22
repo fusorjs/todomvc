@@ -34,8 +34,8 @@ export const app = ({todos, getRoute}) => {
       todos.remove(id);
       return render;
     },
-    setAllCompleted (completed) {
-      todos.setAllCompleted(completed);
+    updateCompletedAll (completed) {
+      todos.updateCompletedAll(completed);
       return render;
     },
   });
