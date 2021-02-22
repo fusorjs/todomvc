@@ -2,7 +2,7 @@ import {section, input, label, ul} from './utils';
 import {item} from './item';
 
 export const list = ({
-  mapAll, updateTitle, updateCompleted, setAllCompleted, removeTodo, getAllChecked,
+  mapAll, updateTitle, updateCompleted, setAllCompleted, remove, getAllChecked,
 }) => {
   let render;
 
@@ -23,7 +23,7 @@ export const list = ({
       completed,
       updateTitle,
       updateCompleted,
-      removeTodo: () => removeTodo(index),
+      remove,
     }))),
   );
 };

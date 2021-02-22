@@ -1,7 +1,7 @@
 import cs from 'clsx';
 import {li, div, label, input, button} from './utils';
 
-export const item = ({id, title, completed, updateTitle, updateCompleted, removeTodo}) => {
+export const item = ({id, title, completed, updateTitle, updateCompleted, remove}) => {
   let render, editing;
   const inputRef = {};
 
@@ -21,7 +21,7 @@ export const item = ({id, title, completed, updateTitle, updateCompleted, remove
 
   const handleUpdate = event => {
     const val = event.target.value.trim();
-    if (! val) {removed = true; return removeTodo();}
+    if (! val) {removed = true; return remove(id);}
     const t = setTitle(val);
     const e = setEditing(false);
     return t || e;
@@ -53,7 +53,7 @@ export const item = ({id, title, completed, updateTitle, updateCompleted, remove
           inputRef.current.select();
         },
       }, () => title),
-      button({class: 'destroy', onclick: () => removeTodo()?.()}),
+      button({class: 'destroy', onclick: () => remove(id)?.()}),
     ),
     input({
       class: 'edit',

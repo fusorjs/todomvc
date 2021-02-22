@@ -28,12 +28,12 @@ export const newTodos = id => {
       items[index] = newItem;
       store();
     },
-    setAllCompleted (completed) {
-      items = items.map(i => ({...i, completed}));
+    remove (id) {
+      items = items.filter(i => i.id !== id);
       store();
     },
-    remove (index) {
-      items.splice(index, 1);
+    setAllCompleted (completed) {
+      items = items.map(i => ({...i, completed}));
       store();
     },
     removeAllCompleted () {

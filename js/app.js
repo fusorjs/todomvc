@@ -30,12 +30,12 @@ export const app = ({todos, getRoute}) => {
       todos.update(id, {completed});
       return render;
     },
-    setAllCompleted (completed) {
-      todos.setAllCompleted(completed);
+    remove (id) {
+      todos.remove(id);
       return render;
     },
-    removeTodo (index) {
-      todos.remove(index);
+    setAllCompleted (completed) {
+      todos.setAllCompleted(completed);
       return render;
     },
   });
