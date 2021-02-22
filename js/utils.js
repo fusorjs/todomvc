@@ -24,14 +24,12 @@ export const newTodos = id => {
       });
       if (! curItem) throw new Error(`missing id: "${id}"`);
       const newItem = {...curItem, ...item, id};
-      Object.assign([], items, {[index]: newItem});
+      items = [...items];
+      items[index] = newItem;
+      store();
     },
     setTitle (index, title) {
       items[index] = {...items[index], title};
-      store();
-    },
-    setCompleted (index, completed) {
-      items[index] = {...items[index], completed};
       store();
     },
     setAllCompleted (completed) {

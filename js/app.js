@@ -26,8 +26,8 @@ export const app = ({todos, getRoute}) => {
       }
     },
     setTodoTitle: todos.setTitle,
-    setTodoCompleted (index, completed) {
-      todos.setCompleted(index, completed);
+    updateCompleted (id, completed) {
+      todos.update(id, {completed});
       return render;
     },
     setAllCompleted (completed) {

@@ -1,7 +1,7 @@
 import cs from 'clsx';
 import {li, div, label, input, button} from './utils';
 
-export const item = ({title, completed, setTodoTitle, setTodoCompleted, removeTodo}) => {
+export const item = ({id, title, completed, setTodoTitle, updateCompleted, removeTodo}) => {
   let render, editing;
   const inputRef = {};
 
@@ -45,7 +45,7 @@ export const item = ({title, completed, setTodoTitle, setTodoCompleted, removeTo
         class: 'toggle',
         type: 'checkbox',
         checked: completed,
-        onchange: () => setTodoCompleted(! completed)?.(),
+        onchange: () => updateCompleted(id, ! completed)?.(),
       }),
       label({
         ondblclick: () => {
