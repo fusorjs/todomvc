@@ -7,45 +7,31 @@ const isFunction = v => v.constructor === Function;
 /*************************************************************************************/
 /* PROPS *****************************************************************************/
 
-// const createAttributeActionPicker = (definite, boolean) => (k, v, vT) => {
-//   switch (vT) {
-//     case 'string':
-//     case 'number':
-//       if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
-//       return definite;
-//     case 'boolean':
-//       return boolean;
-//     default:
-//       throw new Error(`unsupported attribute value "${k}": ${v}`);
-//   }
-// };
-
-// const setInitialAttribute = createAttributeActionPicker(
-//   (e, k, v) => e.setAttribute(k, v),
-//   (e, k) => e.setAttribute(k, '')
-// );
-
-
-const updateDefiniteAttribute = (e, k, v) => isVoid(v) ? e.removeAttribute(k) : e.setAttribute(k, v);
-const updateBooleanAttribute = (e, k, v) => v ? e.removeAttribute(k) : e.setAttribute(k, '');
-const updateInputProperty = (e, k, v) => e[k] = v;
-
-const setInitialAttribute = (e, k, v) => {
-  switch (typeof v) {
+const createAttributeActionGetter = (definite, boolean) => (k, v, vT) => {
+  switch (vT) {
     case 'string':
     case 'number':
       if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
-      e.setAttribute(k, v);
-      break;
-
+      return definite;
     case 'boolean':
-      e.setAttribute(k, '');
-      break;
-
+      return boolean;
     default:
       throw new Error(`unsupported attribute value "${k}": ${v}`);
   }
 };
+
+const getInitialAttributeAction = createAttributeActionGetter(
+  (e, k, v) => e.setAttribute(k, v),
+  (e, k) => e.setAttribute(k, '')
+);
+
+const setInitialAttribute = (e, k, v) => {
+  getInitialAttributeAction(k, v, typeof v)(e, k, v);
+};
+
+const updateDefiniteAttribute = (e, k, v) => isVoid(v) ? e.removeAttribute(k) : e.setAttribute(k, v);
+const updateBooleanAttribute = (e, k, v) => v ? e.removeAttribute(k) : e.setAttribute(k, '');
+const updateInputProperty = (e, k, v) => e[k] = v;
 
 const getPropertyUpdater = (e, k, v, vT) => {
   if (e.tagName === 'INPUT' && (k === 'value' || k === 'checked')) {
