@@ -11,7 +11,7 @@ export const list = ({
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      checked: getCheckedAll, // todo toggle then toggle individual, will not update???
+      checked: getCheckedAll,
       onchange: ({target: {checked}}) => updateCompletedAll(checked)?.(),
     }),
     label({for: 'toggle-all'}),

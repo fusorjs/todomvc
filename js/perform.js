@@ -1,22 +1,19 @@
 
-const isEmpty = v => v === false ||  v === null || v === undefined;
+const isVoid = v => v === null || v === undefined;
+const isEmpty = v => v === false || v === null || v === undefined;
 const isObject = v => v.constructor === Object;
 const isFunction = v => v.constructor === Function;
 
 /*************************************************************************************/
 /* PROPS *****************************************************************************/
 
-const setAttribute = (e, k, v) => {
-  if (isEmpty(v)) {
-    e.removeAttribute(k);
-    return;
-  }
-
-  if (v === NaN) throw new Error(`attribute is not supported: ${k} = NaN`);
+const addAttribute = (e, k, v) => {
+  if (isEmpty(v)) return;
 
   switch (typeof v) {
     case 'string':
     case 'number':
+      if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
       e.setAttribute(k, v);
       break;
 
@@ -25,17 +22,32 @@ const setAttribute = (e, k, v) => {
       break;
 
     default:
-      throw new Error(`attribute type is not supported: "${k}": ${typeof v}`);
+      throw new Error(`unsupported attribute value "${k}": ${v}`);
   }
 };
 
-const newAttributeSetter = (e, k, v, prev) => () => {
-  const r = v();
+const createPropertyUpdater = (e, k, f, prev, prevT) => () => {
+  const v = f(), vT = typeof v;
 
-  if (prev === r) return;
-  else prev = r;
+  if (vT !== prevT) throw new Error(`failed attribute update "${k}": ${prev} -> ${v}`);
 
-  setAttribute(e, k, r);
+  if (prev === v) return;
+  else prev = v;
+
+  switch (vT) {
+    case 'string':
+    case 'number':
+      if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
+      if (isVoid(v)) e.removeAttribute(k); else e.setAttribute(k, v);
+      break;
+
+    case 'boolean':
+      e[k] = v;
+      break;
+
+    default:
+      throw new Error(`unsupported attribute value "${k}": ${v}`);
+  }
 };
 
 const setAndCompileProps = (e, props) => {
@@ -45,11 +57,11 @@ const setAndCompileProps = (e, props) => {
     if (k.startsWith('on')) {
       if (isEmpty(v));
       else if (v && isFunction(v)) e.addEventListener(k.substring(2), v, false);
-      else throw new Error(`attribute is not supported: ${k} = ${v}`);
+      else throw new Error(`unsupported attribute "${k}": ${v}`);
     }
     else if (k === 'ref') {
       if (v && isObject(v)) v.current = e;
-      else throw new Error(`ref must be an object: ${k} = ${v}`);
+      else throw new Error(`unsupported attribute "${k}": ${v}`);
     }
     else {
       let r = v;
@@ -57,10 +69,10 @@ const setAndCompileProps = (e, props) => {
       if (v && isFunction(v)) {
         r = v();
         _props ??= [];
-        _props.push(newAttributeSetter(e, k, v, r));
+        _props.push(createPropertyUpdater(e, k, v, r, typeof r));
       }
 
-      setAttribute(e, k, r);
+      addAttribute(e, k, r);
     }
   }
 
