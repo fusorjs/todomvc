@@ -93,15 +93,14 @@ const setAndCompileProps = (e, props) => {
       else throw new Error(`unsupported attribute "${k}": ${v}`);
     }
     else {
-      let r = v;
-
       if (v && isFunction(v)) {
-        r = v();
+        const f = v;
+        v = v();
         _props ??= [];
-        _props.push(createPropertyUpdater(e, k, v, r, typeof r));
+        _props.push(createPropertyUpdater(e, k, f, v, typeof v));
       }
 
-      if (! isEmpty(r)) setInitialAttribute(e, k, r);
+      if (! isEmpty(v)) setInitialAttribute(e, k, v);
     }
   }
 
