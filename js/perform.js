@@ -7,16 +7,30 @@ const isFunction = v => v.constructor === Function;
 /*************************************************************************************/
 /* PROPS *****************************************************************************/
 
-const setDefiniteAttribute = (e, k, v) => e.setAttribute(k, v);
-const setBooleanAttribute = (e, k) => e.setAttribute(k, '');
+// const createAttributeActionPicker = (definite, boolean) => (k, v, vT) => {
+//   switch (vT) {
+//     case 'string':
+//     case 'number':
+//       if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
+//       return definite;
+//     case 'boolean':
+//       return boolean;
+//     default:
+//       throw new Error(`unsupported attribute value "${k}": ${v}`);
+//   }
+// };
+
+// const setInitialAttribute = createAttributeActionPicker(
+//   (e, k, v) => e.setAttribute(k, v),
+//   (e, k) => e.setAttribute(k, '')
+// );
+
 
 const updateDefiniteAttribute = (e, k, v) => isVoid(v) ? e.removeAttribute(k) : e.setAttribute(k, v);
 const updateBooleanAttribute = (e, k, v) => v ? e.removeAttribute(k) : e.setAttribute(k, '');
 const updateInputProperty = (e, k, v) => e[k] = v;
 
 const setInitialAttribute = (e, k, v) => {
-  if (isEmpty(v)) return;
-
   switch (typeof v) {
     case 'string':
     case 'number':
@@ -87,7 +101,7 @@ const setAndCompileProps = (e, props) => {
         _props.push(createPropertyUpdater(e, k, v, r, typeof r));
       }
 
-      setInitialAttribute(e, k, r);
+      if (! isEmpty(r)) setInitialAttribute(e, k, r);
     }
   }
 
