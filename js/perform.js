@@ -7,7 +7,14 @@ const isFunction = v => v.constructor === Function;
 /*************************************************************************************/
 /* PROPS *****************************************************************************/
 
-const addAttribute = (e, k, v) => {
+const setDefiniteAttribute = (e, k, v) => e.setAttribute(k, v);
+const setBooleanAttribute = (e, k) => e.setAttribute(k, '');
+
+const updateDefiniteAttribute = (e, k, v) => isVoid(v) ? e.removeAttribute(k) : e.setAttribute(k, v);
+const updateBooleanAttribute = (e, k, v) => v ? e.removeAttribute(k) : e.setAttribute(k, '');
+const updateInputProperty = (e, k, v) => e[k] = v;
+
+const setInitialAttribute = (e, k, v) => {
   if (isEmpty(v)) return;
 
   switch (typeof v) {
@@ -26,28 +33,36 @@ const addAttribute = (e, k, v) => {
   }
 };
 
-const createPropertyUpdater = (e, k, f, prev, prevT) => () => {
-  const v = f(), vT = typeof v;
-
-  if (vT !== prevT) throw new Error(`failed attribute update "${k}": ${prev} -> ${v}`);
-
-  if (prev === v) return;
-  else prev = v;
+const getPropertyUpdater = (e, k, v, vT) => {
+  if (e.tagName === 'INPUT' && (k === 'value' || k === 'checked')) {
+    return updateInputProperty;
+  }
 
   switch (vT) {
     case 'string':
     case 'number':
       if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
-      if (isVoid(v)) e.removeAttribute(k); else e.setAttribute(k, v);
-      break;
-
+      return updateDefiniteAttribute;
     case 'boolean':
-      e[k] = v;
-      break;
-
+      return updateBooleanAttribute;
     default:
       throw new Error(`unsupported attribute value "${k}": ${v}`);
   }
+};
+
+const createPropertyUpdater = (e, k, f, prev, prevT) => {
+  const update = getPropertyUpdater(e, k, prev, prevT);
+
+  return () => {
+    const v = f(), vT = typeof v;
+
+    if (vT !== prevT) throw new Error(`failed attribute update "${k}": ${prev} -> ${v}`);
+
+    if (prev === v) return;
+    else prev = v;
+
+    update(e, k, v);
+  };
 };
 
 const setAndCompileProps = (e, props) => {
@@ -72,7 +87,7 @@ const setAndCompileProps = (e, props) => {
         _props.push(createPropertyUpdater(e, k, v, r, typeof r));
       }
 
-      addAttribute(e, k, r);
+      setInitialAttribute(e, k, r);
     }
   }
 
