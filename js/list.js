@@ -18,13 +18,6 @@ export const list = ({
 
     // todo array children
     // () => ul({class: 'todo-list'}, ...mapVisible(({id, title, completed}) => item({
-    //   id,
-    //   title,
-    //   completed,
-    //   updateTitle,
-    //   updateCompleted,
-    //   remove,
-    // }))),
     ul({class: 'todo-list'}, () => mapVisible(({id, title, completed}) => item({
       id,
       title,

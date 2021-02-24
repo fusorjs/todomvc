@@ -65,7 +65,7 @@ const createPropertyUpdater = (e, k, f, prev, prevT) => {
 };
 
 const setAndCompileProps = (e, props) => {
-  let _props;
+  let updaters;
 
   for (let [k, v] of Object.entries(props)) {
     if (isEmpty(v));
@@ -81,15 +81,15 @@ const setAndCompileProps = (e, props) => {
       if (v && isFunction(v)) {
         const f = v;
         v = v();
-        _props ??= [];
-        _props.push(createPropertyUpdater(e, k, f, v, typeof v));
+        updaters ??= [];
+        updaters.push(createPropertyUpdater(e, k, f, v, typeof v));
       }
 
       if (! isEmpty(v)) setInitialAttribute(e, k, v);
     }
   }
 
-  return _props;
+  return updaters;
 };
 
 /*************************************************************************************/
@@ -128,15 +128,15 @@ const createArrayUpdater = () => {
 };
 
 const setAndCompileChildren = (e, children) => {
-  let _children;
+  let updaters;
 
   e.append(...children.map(v => {
     if (v && isFunction(v)) {
       const f = v;
       v = v();
-      _children ??= [];
+      updaters ??= [];
 
-      if (v instanceof HTMLElement) _children.push(f);
+      if (v instanceof HTMLElement) updaters.push(f);
       else {
         let prev = v;
 
@@ -147,14 +147,14 @@ const setAndCompileChildren = (e, children) => {
         // todo else if (v && isArray(v))
         else throw new Error(`unsupported child: ${f}`);
 
-        _children.push(createChildUpdater(v, f, prev));
+        updaters.push(createChildUpdater(v, f, prev));
       }
     }
 
     return v;
   }));
 
-  return _children;
+  return updaters;
 };
 
 /*************************************************************************************/
@@ -178,28 +178,28 @@ const getPropsAndChildren = args => {
 };
 
 const setAndCompilePropsAndChildren = (e, props, children) => {
-  let _props, _children;
+  let propUpdaters, childUpdaters;
 
-  if (props) _props = setAndCompileProps(e, props);
+  if (props) propUpdaters = setAndCompileProps(e, props);
 
-  if (children) _children = setAndCompileChildren(e, children);
+  if (children) childUpdaters = setAndCompileChildren(e, children);
 
-  return [_props, _children];
+  return [propUpdaters, childUpdaters];
 };
 
 export const h = (tag, ...args) => {
-  let e, _props, _children;
+  let e, propUpdaters, childUpdaters;
 
   return () => {
     // 1. The first run must be in render, as it is actually renders the element!
     if (! e) {
       e = document.createElement(tag);
-      [_props, _children] = setAndCompilePropsAndChildren(e, ...getPropsAndChildren(args));
+      [propUpdaters, childUpdaters] = setAndCompilePropsAndChildren(e, ...getPropsAndChildren(args));
     }
     // 2. All subsequent runs are just updating the rendered element.
     else {
-      _props?.forEach(u => u());
-      _children?.forEach(u => u());
+      propUpdaters?.forEach(u => u());
+      childUpdaters?.forEach(u => u());
     }
 
     return e;
