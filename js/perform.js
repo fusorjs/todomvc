@@ -125,29 +125,27 @@ const createChildUpdater = (node, f, prev) => () => {
 const setAndCompileChildren = (e, children) => {
   let _children;
 
-  for (const v of children) {
-    let r = v;
-
+  for (let v of children) {
     if (v && isFunction(v)) {
+      const f = v;
+      v = v();
       _children ??= [];
 
-      r = v();
-
-      if (r instanceof HTMLElement) _children.push(v);
+      if (v instanceof HTMLElement) _children.push(f);
       else {
-        let prev = r;
+        let prev = v;
 
-        if (r && isFunction(r)) r = prev = r();
+        if (v && isFunction(v)) v = prev = v();
 
-        if (r instanceof HTMLElement);
-        else if (isDefiniteValue(r)) r = document.createTextNode(r);
-        else throw new Error(`child is not supported: "${v}"`);
+        if (v instanceof HTMLElement);
+        else if (isDefiniteValue(v)) v = document.createTextNode(v);
+        else throw new Error(`child is not supported: "${f}"`);
 
-        _children.push(createChildUpdater(r, v, prev));
+        _children.push(createChildUpdater(v, f, prev));
       }
     }
 
-    e.append(r); // todo in one go maybe
+    e.append(v); // todo in one go maybe
   };
 
   return _children;
