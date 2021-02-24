@@ -94,35 +94,32 @@ const setAndCompileProps = (e, props) => {
 /*************************************************************************************/
 /* CHILDREN **************************************************************************/
 
-const isDefiniteValue = r => {
-  const t = typeof r;
-
+const isDefiniteValue = v => {
+  const t = typeof v;
   return t === 'string' || t === 'number';
 };
 
-const childUpdater = (node, v, prev) => () => {
-  let r = v();
+const createChildUpdater = (node, f, prev) => () => {
+  let v = f();
 
-  if (r && isFunction(r)) r = r();
+  if (v && isFunction(v)) v = v();
 
-  if (prev === r) return;
-  else prev = r;
+  if (prev === v) return;
+  else prev = v;
 
-  if (r instanceof HTMLElement);
-  else if (isDefiniteValue(r)) {
+  if (v instanceof HTMLElement);
+  else if (isDefiniteValue(v)) {
     if (node instanceof Text) {
-      node.nodeValue = r;
-
+      node.nodeValue = v;
       return;
     }
-
-    r = document.createTextNode(r);
+    v = document.createTextNode(v);
   }
-  else throw new Error(`child is not supported: "${v}"`);
+  else throw new Error(`child is not supported: "${f}"`);
 
-  node.replaceWith(r);
+  node.replaceWith(v);
 
-  node = r;
+  node = v;
 };
 
 const setAndCompileChildren = (e, children) => {
@@ -146,7 +143,7 @@ const setAndCompileChildren = (e, children) => {
         else if (isDefiniteValue(r)) r = document.createTextNode(r);
         else throw new Error(`child is not supported: "${v}"`);
 
-        _children.push(childUpdater(r, v, prev));
+        _children.push(createChildUpdater(r, v, prev));
       }
     }
 
