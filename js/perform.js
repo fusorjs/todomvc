@@ -7,26 +7,30 @@ const isFunction = v => v.constructor === Function;
 /*************************************************************************************/
 /* PROPS *****************************************************************************/
 
-const createAttributeActionGetter = (definite, boolean) => (k, v, vT) => {
+const createAttributeActionGetter = (textual, numeric, boolean) => (k, v, vT) => {
   switch (vT) {
-    case 'string':
-    case 'number':
-      if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
-      return definite;
-    case 'boolean':
-      return boolean;
-    default:
-      throw new Error(`unsupported attribute value "${k}": ${v}`);
+    case 'string': return textual;
+    case 'number': return numeric;
+    case 'boolean': return boolean;
+    default: throw new Error(`unsupported attribute type "${k}": ${v}`);
   }
 };
 
 const getAttributeSetterAction = createAttributeActionGetter(
   (e, k, v) => e.setAttribute(k, v),
+  (e, k, v) => {
+    if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
+    e.setAttribute(k, v);
+  },
   (e, k) => e.setAttribute(k, '')
 );
 
 const getPropertyUpdaterAction = createAttributeActionGetter(
   (e, k, v) => isVoid(v) ? e.removeAttribute(k) : e.setAttribute(k, v),
+  (e, k, v) => {
+    if (v === NaN) throw new Error(`invalid attribute value "${k}": ${v}`);
+    isVoid(v) ? e.removeAttribute(k) : e.setAttribute(k, v);
+  },
   (e, k, v) => v ? e.removeAttribute(k) : e.setAttribute(k, '')
 );
 
