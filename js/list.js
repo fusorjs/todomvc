@@ -2,7 +2,7 @@ import {section, input, label, ul} from './utils';
 import {item} from './item';
 
 export const list = ({
-  mapAll, updateTitle, updateCompleted, remove, getCheckedAll, updateCompletedAll,
+  mapVisible, updateTitle, updateCompleted, remove, getCheckedAll, updateCompletedAll,
 }) => {
   let render;
 
@@ -17,7 +17,7 @@ export const list = ({
     label({for: 'toggle-all'}),
 
     // todo array children
-    () => ul({class: 'todo-list'}, ...mapAll(({id, title, completed}) => item({
+    () => ul({class: 'todo-list'}, ...mapVisible(({id, title, completed}) => item({
       id,
       title,
       completed,
