@@ -1,6 +1,7 @@
 
 const isVoid = v => v === null || v === undefined;
 const isEmpty = v => v === false || v === null || v === undefined;
+const isArray = v => v.constructor === Array;
 const isObject = v => v.constructor === Object;
 const isFunction = v => v.constructor === Function;
 
@@ -122,6 +123,10 @@ const createChildUpdater = (node, f, prev) => () => {
   node = v;
 };
 
+const createArrayUpdater = () => {
+
+};
+
 const setAndCompileChildren = (e, children) => {
   let _children;
 
@@ -139,7 +144,8 @@ const setAndCompileChildren = (e, children) => {
 
         if (v instanceof HTMLElement);
         else if (isDefiniteValue(v)) v = document.createTextNode(v);
-        else throw new Error(`child is not supported: "${f}"`);
+        // todo else if (v && isArray(v))
+        else throw new Error(`unsupported child: ${f}`);
 
         _children.push(createChildUpdater(v, f, prev));
       }
@@ -192,8 +198,8 @@ export const h = (tag, ...args) => {
     }
     // 2. All subsequent runs are just updating the rendered element.
     else {
-      _props?.forEach(r => r());
-      _children?.forEach(r => r());
+      _props?.forEach(u => u());
+      _children?.forEach(u => u());
     }
 
     return e;
