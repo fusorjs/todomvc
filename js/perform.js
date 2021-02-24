@@ -20,7 +20,7 @@ const createAttributeActionGetter = (definite, boolean) => (k, v, vT) => {
   }
 };
 
-const getInitialAttributeAction = createAttributeActionGetter(
+const getAttributeSetterAction = createAttributeActionGetter(
   (e, k, v) => e.setAttribute(k, v),
   (e, k) => e.setAttribute(k, '')
 );
@@ -33,7 +33,7 @@ const getPropertyUpdaterAction = createAttributeActionGetter(
 const updateInputProperty = (e, k, v) => e[k] = v;
 
 const setInitialAttribute = (e, k, v) => {
-  getInitialAttributeAction(k, v, typeof v)(e, k, v);
+  getAttributeSetterAction(k, v, typeof v)(e, k, v);
 };
 
 const getPropertyUpdater = (e, k, v, vT) => {
@@ -63,9 +63,9 @@ const setAndCompileProps = (e, props) => {
   let _props;
 
   for (let [k, v] of Object.entries(props)) {
-    if (k.startsWith('on')) {
-      if (isEmpty(v));
-      else if (v && isFunction(v)) e.addEventListener(k.substring(2), v, false);
+    if (isEmpty(v));
+    else if (k.startsWith('on')) {
+      if (v && isFunction(v)) e.addEventListener(k.substring(2), v, false);
       else throw new Error(`unsupported attribute "${k}": ${v}`);
     }
     else if (k === 'ref') {
