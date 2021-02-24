@@ -125,7 +125,7 @@ const createChildUpdater = (node, f, prev) => () => {
 const setAndCompileChildren = (e, children) => {
   let _children;
 
-  for (let v of children) {
+  e.append(...children.map(v => {
     if (v && isFunction(v)) {
       const f = v;
       v = v();
@@ -145,8 +145,8 @@ const setAndCompileChildren = (e, children) => {
       }
     }
 
-    e.append(v); // todo in one go maybe
-  };
+    return v;
+  }));
 
   return _children;
 };
