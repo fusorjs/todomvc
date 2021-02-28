@@ -130,40 +130,37 @@ const createChildUpdater = (node, f, prev) => () => {
 //   }
 // };
 
-const setChildrenAndGetUpdaters = (e, children) => {
-  let updaters;
+const addChildNodeAndUpdater = ([nodes, updaters], v, index, children) => {
+  if (v && isFunction(v)) {
+    const f = v;
+    v = v();
+    updaters ??= [];
 
-  for (let v of children) {
-    if (v && isFunction(v)) {
-      const f = v;
-      v = v();
-      updaters ??= [];
+    if (v instanceof HTMLElement) updaters.push(f);
+    else {
+      let prev = v;
 
-      if (v instanceof HTMLElement) updaters.push(f);
-      else {
-        let prev = v;
+      if (v && isFunction(v)) v = prev = v(); // conditions
 
-        if (v && isFunction(v)) v = prev = v(); // conditions
-
-        if (v instanceof HTMLElement);
-        else if (isDefiniteValue(v)) v = document.createTextNode(v);
-        else if (v && isArray(v) && children.length === 1) { // array, single child for now
-          setChildrenAndGetUpdaters(e, v);
-          return [() => {
-            e.replaceChildren();
-            setChildrenAndGetUpdaters(e, f());
-          }];
-        }
-        else throw new Error(`unsupported child: ${f}`);
-
-        updaters.push(createChildUpdater(v, f, prev));
+      if (v instanceof HTMLElement);
+      else if (isDefiniteValue(v)) v = document.createTextNode(v);
+      else if (v && isArray(v) && children.length === 1) { // array, single child for now
+        const [nodes] = v.reduce(addChildNodeAndUpdater, []);
+        return [nodes, [e => {
+          const [nodes] = f().reduce(addChildNodeAndUpdater, []);
+          e.replaceChildren(...nodes);
+        }]];
       }
+      else throw new Error(`unsupported child: ${f}`);
+
+      updaters.push(createChildUpdater(v, f, prev));
     }
+  }
 
-    e.append(v);
-  };
+  nodes ??= [];
+  nodes.push(v);
 
-  return updaters;
+  return [nodes, updaters];
 };
 
 /*************************************************************************************/
@@ -187,11 +184,14 @@ const getPropsAndChildren = args => {
 };
 
 const setAndCompilePropsAndChildren = (e, props, children) => {
-  let propUpdaters, childUpdaters;
+  let propUpdaters, childNodes, childUpdaters;
 
   if (props) propUpdaters = setPropsAndGetUpdaters(e, props);
 
-  if (children) childUpdaters = setChildrenAndGetUpdaters(e, children);
+  if (children) {
+    [childNodes, childUpdaters] = children.reduce(addChildNodeAndUpdater, []);
+    if (childNodes) e.append(...childNodes);
+  }
 
   return [propUpdaters, childUpdaters];
 };
@@ -208,7 +208,7 @@ export const h = (tag, ...args) => {
     // 2. All subsequent runs are just updating the rendered element.
     else {
       propUpdaters?.forEach(u => u());
-      childUpdaters?.forEach(u => u());
+      childUpdaters?.forEach(u => u(e));
     }
 
     return e;
