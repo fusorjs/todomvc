@@ -64,7 +64,7 @@ const createPropertyUpdater = (e, k, f, prev, prevT) => {
   };
 };
 
-const setAndCompileProps = (e, props) => {
+const setPropsAndGetUpdaters = (e, props) => {
   let updaters;
 
   for (let [k, v] of Object.entries(props)) {
@@ -116,21 +116,24 @@ const createChildUpdater = (node, f, prev) => () => {
     }
     v = document.createTextNode(v);
   }
-  else throw new Error(`child is not supported: "${f}"`);
+  else throw new Error(`unsupported child: ${f}`);
 
   node.replaceWith(v);
 
   node = v;
 };
 
-const createArrayUpdater = () => {
+// const createArrayUpdater = (node, f) => () => {
+//   const children = f();
+//   // https://developer.mozilla.org/en-US/docs/Web/API/NodeList
+//   for (let v of children) {
+//   }
+// };
 
-};
-
-const setAndCompileChildren = (e, children) => {
+const setChildrenAndGetUpdaters = (e, children) => {
   let updaters;
 
-  e.append(...children.map(v => {
+  for (let v of children) {
     if (v && isFunction(v)) {
       const f = v;
       v = v();
@@ -140,19 +143,25 @@ const setAndCompileChildren = (e, children) => {
       else {
         let prev = v;
 
-        if (v && isFunction(v)) v = prev = v();
+        if (v && isFunction(v)) v = prev = v(); // conditions
 
         if (v instanceof HTMLElement);
         else if (isDefiniteValue(v)) v = document.createTextNode(v);
-        // todo else if (v && isArray(v))
+        else if (v && isArray(v) && children.length === 1) { // array, single child for now
+          setChildrenAndGetUpdaters(e, v);
+          return [() => {
+            e.replaceChildren();
+            setChildrenAndGetUpdaters(e, f());
+          }];
+        }
         else throw new Error(`unsupported child: ${f}`);
 
         updaters.push(createChildUpdater(v, f, prev));
       }
     }
 
-    return v;
-  }));
+    e.append(v);
+  };
 
   return updaters;
 };
@@ -180,9 +189,9 @@ const getPropsAndChildren = args => {
 const setAndCompilePropsAndChildren = (e, props, children) => {
   let propUpdaters, childUpdaters;
 
-  if (props) propUpdaters = setAndCompileProps(e, props);
+  if (props) propUpdaters = setPropsAndGetUpdaters(e, props);
 
-  if (children) childUpdaters = setAndCompileChildren(e, children);
+  if (children) childUpdaters = setChildrenAndGetUpdaters(e, children);
 
   return [propUpdaters, childUpdaters];
 };
