@@ -123,12 +123,32 @@ const createChildUpdater = (node, f, prev) => () => {
   node = v;
 };
 
-// const createArrayUpdater = (node, f) => () => {
-//   const children = f();
-//   // https://developer.mozilla.org/en-US/docs/Web/API/NodeList
-//   for (let v of children) {
-//   }
-// };
+const createChildrenUpdater = (f, prevNodes) => e => {
+  const [nextNodes] = f();
+
+  if (nextNodes === prevNodes) return;
+
+  let i = 0, len = nextNodes?.length || 0;
+
+  for (; i < len; i ++) {
+    const n = nextNodes[i], p = prevNodes?.[i];
+
+    if (n !== p) {
+      if (p) p.replaceWith(n);
+      else e.append(n);
+    }
+  }
+
+  len = prevNodes?.length || 0;
+
+  for (; i < len; i ++) {
+    prevNodes[i].remove();
+  }
+
+  // todo before after
+
+  prevNodes = nextNodes;
+};
 
 const addChildNodeAndUpdater = ([nodes, updaters], v, index, children) => {
   if (v && isFunction(v)) {
@@ -146,10 +166,20 @@ const addChildNodeAndUpdater = ([nodes, updaters], v, index, children) => {
       else if (isDefiniteValue(v)) v = document.createTextNode(v);
       else if (v && isArray(v) && children.length === 1) { // array, single child for now
         const [nodes] = v.reduce(addChildNodeAndUpdater, []);
-        return [nodes, [e => {
-          const [nodes] = f().reduce(addChildNodeAndUpdater, []);
-          e.replaceChildren(...nodes);
-        }]];
+        return [
+          nodes,
+          [
+            // e => {
+            //   const [nodes] = f().reduce(addChildNodeAndUpdater, []);
+            //   e.replaceChildren(...nodes);
+            // }
+            // todo replace only diff
+            createChildrenUpdater(
+              () => f().reduce(addChildNodeAndUpdater, []),
+              nodes
+            )
+          ]
+        ];
       }
       else throw new Error(`unsupported child: ${f}`);
 
@@ -212,5 +242,42 @@ export const h = (tag, ...args) => {
     }
 
     return e;
+  };
+};
+
+/*************************************************************************************/
+/* MEMO ******************************************************************************/
+
+const areEqualShallow = (o1, o2) => {
+  if (o1 === o2) return true;
+  // todo
+};
+
+// todo: areEqual Objects Arrays Shallow Deep ...
+
+// todo: memo component map, create one instance of component's prop/child updaters
+
+export const memoMap = (
+  getItems, createComponent, areEqual = areEqualShallow,
+) => {
+  let prevItems = [], prevComponents = [];
+
+  return () => {
+    const nextItems = getItems();
+
+    if (nextItems === prevItems) return prevComponents;
+
+    const nextComponents = [];
+    let i = 0, len = nextItems.length;
+
+    for (; i < len; i ++) {
+      const n = nextItems[i], p = prevItems[i];
+      nextComponents[i] = areEqual(n, p) ? prevComponents[i] : createComponent(n);
+    }
+
+    prevItems = nextItems;
+    prevComponents = nextComponents;
+
+    return nextComponents;
   };
 };

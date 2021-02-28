@@ -18,11 +18,11 @@ export const app = ({todos, getRoute}) => {
 
   const renderList = list({
     getCheckedAll: () => activeTodoCount === 0,
-    mapVisible (...a) {
+    getVisible () {
       switch (getRoute()) {
-        case ROUTE_ACTIVE: return todos.filter(({completed}) => ! completed).map(...a);
-        case ROUTE_COMPLETED: return todos.filter(({completed}) => completed).map(...a);
-        default: return todos.map(...a);
+        case ROUTE_ACTIVE: return todos.filter(({completed}) => ! completed);
+        case ROUTE_COMPLETED: return todos.filter(({completed}) => completed);
+        default: return todos.map(i => i); // todo model
       }
     },
     updateTitle: (id, title) => todos.update(id, {title}),
