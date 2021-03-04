@@ -40,10 +40,9 @@ export const newTodos = id => {
       items = items.filter(({completed}) => ! completed);
       store();
     },
-    getLength: () => items.length,
-    map: (...a) => items.map(...a),
-    filter: (...a) => items.filter(...a),
-    reduce: (...a) => items.reduce(...a),
+    get items () {
+      return items;
+    },
   };
 };
 

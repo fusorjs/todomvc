@@ -19,10 +19,11 @@ export const app = ({todos, getRoute}) => {
   const renderList = list({
     getCheckedAll: () => activeTodoCount === 0,
     getVisible () {
+      const {items} = todos;
       switch (getRoute()) {
-        case ROUTE_ACTIVE: return todos.filter(({completed}) => ! completed);
-        case ROUTE_COMPLETED: return todos.filter(({completed}) => completed);
-        default: return todos.map(i => i); // todo model
+        case ROUTE_ACTIVE: return items.filter(({completed}) => ! completed);
+        case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
+        default: return items;
       }
     },
     updateTitle: (id, title) => todos.update(id, {title}),
@@ -59,18 +60,20 @@ export const app = ({todos, getRoute}) => {
         onkeydown,
         autofocus: true,
       }),
-      () => todos.getLength() ? renderList : '',
+      () => todos.items.length ? renderList : '',
       () => activeTodoCount || completedCount ? renderControls : '',
     ),
   );
 
   return render = () => {
-    activeTodoCount = todos.reduce(
+    const {items} = todos;
+
+    activeTodoCount = items.reduce(
       (acc, {completed}) => completed ? acc : acc + 1,
       0
     );
 
-    completedCount = todos.getLength() - activeTodoCount;
+    completedCount = items.length - activeTodoCount;
 
     return renderMain();
   };
