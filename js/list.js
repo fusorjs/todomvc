@@ -3,7 +3,7 @@ import {section, input, label, ul} from './utils';
 import {item} from './item';
 
 export const list = ({
-  getVisible, updateTitle, updateCompleted, remove, getCheckedAll, updateCompletedAll,
+  getVisible, updateTitle, updateCompleted, remove, getCheckedAll, updateAllCompleted,
 }) => {
   let render;
 
@@ -13,7 +13,7 @@ export const list = ({
       class: 'toggle-all',
       type: 'checkbox',
       checked: getCheckedAll,
-      onchange: ({target: {checked}}) => updateCompletedAll(checked)?.(),
+      onchange: ({target: {checked}}) => updateAllCompleted(checked)?.(),
     }),
     label({for: 'toggle-all'}),
 

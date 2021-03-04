@@ -32,8 +32,8 @@ export const newTodos = id => {
       items = items.filter(i => i.id !== id);
       store();
     },
-    updateCompletedAll (completed) {
-      items = items.map(i => ({...i, completed}));
+    updateAll (item) {
+      items = items.map(i => ({...i, ...item, id: i.id}));
       store();
     },
     removeCompletedAll () {
