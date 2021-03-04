@@ -36,8 +36,8 @@ export const newTodos = id => {
       items = items.map(i => ({...i, ...item, id: i.id}));
       store();
     },
-    removeCompletedAll () {
-      items = items.filter(({completed}) => ! completed);
+    filter (callback) {
+      items = items.filter(callback);
       store();
     },
     get items () {
