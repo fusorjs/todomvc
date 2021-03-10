@@ -1,9 +1,13 @@
-import {ROUTE_ACTIVE, ROUTE_COMPLETED, header, div, h1, input} from './utils';
+import {
+  ROUTE_ACTIVE, ROUTE_COMPLETED,
+  header, div, h1, input,
+  memoize,
+} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 
 export const app = ({todos, getRoute}) => {
-  let render, activeTodoCount, completedCount;
+  let render, activeCount, completedCount;
 
   const onkeydown = event => {
     if (event.code !== 'Enter') return;
@@ -16,16 +20,17 @@ export const app = ({todos, getRoute}) => {
     }
   };
 
+  const getVisible = memoize((items, route) => {
+    switch (route) {
+      case ROUTE_ACTIVE: return items.filter(({completed}) => ! completed);
+      case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
+      default: return items;
+    }
+  });
+
   const renderList = list({
-    getCheckedAll: () => activeTodoCount === 0,
-    getVisible () {
-      const {items} = todos;
-      switch (getRoute()) {
-        case ROUTE_ACTIVE: return items.filter(({completed}) => ! completed);
-        case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
-        default: return items;
-      }
-    },
+    getCheckedAll: () => activeCount === 0,
+    getVisible: () => getVisible(todos.items, getRoute()),
     updateTitle: (id, title) => todos.update(id, {title}),
     updateCompleted (id, completed) {
       todos.update(id, {completed});
@@ -43,7 +48,7 @@ export const app = ({todos, getRoute}) => {
 
   const renderControls = controls({
     getRoute,
-    getActiveCount: () => activeTodoCount,
+    getActiveCount: () => activeCount,
     getCompletedCount: () => completedCount,
     removeAllCompleted () {
       todos.filter(({completed}) => ! completed);
@@ -61,19 +66,19 @@ export const app = ({todos, getRoute}) => {
         autofocus: true,
       }),
       () => todos.items.length ? renderList : '',
-      () => activeTodoCount || completedCount ? renderControls : '',
+      () => activeCount || completedCount ? renderControls : '',
     ),
   );
 
   return render = () => {
     const {items} = todos;
 
-    activeTodoCount = items.reduce(
+    activeCount = items.reduce(
       (acc, {completed}) => completed ? acc : acc + 1,
       0
     );
 
-    completedCount = items.length - activeTodoCount;
+    completedCount = items.length - activeCount;
 
     return renderMain();
   };

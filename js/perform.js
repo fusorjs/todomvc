@@ -248,18 +248,9 @@ export const h = (tag, ...args) => {
 /*************************************************************************************/
 /* MEMO ******************************************************************************/
 
-const areEqualShallow = (o1, o2) => {
-  if (o1 === o2) return true;
-  // todo
-};
-
-// todo: areEqual Objects Arrays Shallow Deep ...
-
 // todo: memo component map, create one instance of component's prop/child updaters
 
-export const memoMap = (
-  getItems, createComponent, areEqual = areEqualShallow,
-) => {
+export const memoMap = (getItems, createComponent) => {
   let prevItems = [], prevComponents = [];
 
   return () => {
@@ -272,7 +263,7 @@ export const memoMap = (
 
     for (; i < len; i ++) {
       const n = nextItems[i], p = prevItems[i];
-      nextComponents[i] = areEqual(n, p) ? prevComponents[i] : createComponent(n);
+      nextComponents[i] = n === p ? prevComponents[i] : createComponent(n);
     }
 
     prevItems = nextItems;

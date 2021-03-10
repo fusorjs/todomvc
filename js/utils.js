@@ -61,3 +61,30 @@ export const button = (...a) => h('button', ...a);
 export const header = (...a) => h('header', ...a);
 export const section = (...a) => h('section', ...a);
 export const footer = (...a) => h('footer', ...a);
+
+export const areArraysEqual = (a1, a2) => {
+  const {length} = a1;
+
+  if (length !== a2.length)
+    return false;
+
+  for (let i = 0; i < length; i ++)
+    if (a1[i] !== a2[i])
+      return false;
+
+  return true;
+}
+
+export const memoize = f => {
+  let prevArgs, prevResult;
+
+  return (...nextArgs) => {
+    if (prevArgs && areArraysEqual(prevArgs, nextArgs))
+      return prevResult;
+
+    prevArgs = nextArgs;
+    prevResult = f(...nextArgs);
+
+    return prevResult;
+  };
+};
