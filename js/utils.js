@@ -1,3 +1,5 @@
+import {memoize} from '../perform/memoize';
+
 export const ROUTE_ALL = '/';
 export const ROUTE_ACTIVE = '/active';
 export const ROUTE_COMPLETED = '/completed';
@@ -46,29 +48,12 @@ export const newTodos = id => {
 
 export const pluralize = (count, word) => count === 1 ? word : word + 's';
 
-export const areArraysEqual = (a1, a2) => {
-  const {length} = a1;
+export const isNotCompleted = ({completed}) => ! completed;
 
-  if (length !== a2.length)
-    return false;
-
-  for (let i = 0; i < length; i ++)
-    if (a1[i] !== a2[i])
-      return false;
-
-  return true;
-}
-
-export const memoize = f => {
-  let prevArgs, prevResult;
-
-  return (...nextArgs) => {
-    if (prevArgs && areArraysEqual(prevArgs, nextArgs))
-      return prevResult;
-
-    prevArgs = nextArgs;
-    prevResult = f(...nextArgs);
-
-    return prevResult;
-  };
-};
+export const getVisible = memoize((items, route) => {
+  switch (route) {
+    case ROUTE_ACTIVE: return items.filter(isNotCompleted);
+    case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
+    default: return items;
+  }
+});

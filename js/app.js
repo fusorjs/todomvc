@@ -1,6 +1,6 @@
 import {header, div, h1, input} from '../perform/tags';
 
-import {ROUTE_ACTIVE, ROUTE_COMPLETED, memoize} from './utils';
+import {getVisible, isNotCompleted} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 
@@ -17,14 +17,6 @@ export const app = ({todos, getRoute}) => {
       render();
     }
   };
-
-  const getVisible = memoize((items, route) => {
-    switch (route) {
-      case ROUTE_ACTIVE: return items.filter(({completed}) => ! completed);
-      case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
-      default: return items;
-    }
-  });
 
   const renderList = list({
     getCheckedAll: () => activeCount === 0,
@@ -49,7 +41,7 @@ export const app = ({todos, getRoute}) => {
     getActiveCount: () => activeCount,
     getCompletedCount: () => completedCount,
     removeAllCompleted () {
-      todos.filter(({completed}) => ! completed);
+      todos.filter(isNotCompleted);
       return render;
     },
   });
