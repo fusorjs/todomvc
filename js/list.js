@@ -1,5 +1,6 @@
-import {memoMap} from './perform';
-import {section, input, label, ul} from './utils';
+import {memoMap} from '../perform/perform';
+import {section, input, label, ul} from '../perform/tags';
+
 import {item} from './item';
 
 export const list = ({

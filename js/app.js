@@ -1,8 +1,6 @@
-import {
-  ROUTE_ACTIVE, ROUTE_COMPLETED,
-  header, div, h1, input,
-  memoize,
-} from './utils';
+import {header, div, h1, input} from '../perform/tags';
+
+import {ROUTE_ACTIVE, ROUTE_COMPLETED, memoize} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 

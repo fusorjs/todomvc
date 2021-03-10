@@ -1,8 +1,8 @@
 import cs from 'clsx';
-import {
-  pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED,
-  footer, span, strong, ul, li, a, button,
-} from './utils';
+
+import {footer, span, strong, ul, li, a, button} from '../perform/tags';
+
+import {pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 
 export const controls = ({getActiveCount, getCompletedCount, getRoute, removeAllCompleted}) => {
   let render;
