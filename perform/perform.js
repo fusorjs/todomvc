@@ -150,7 +150,7 @@ const createChildrenUpdater = (f, prevNodes) => e => {
   prevNodes = nextNodes;
 };
 
-const addChildNodeAndUpdater = ([nodes, updaters], v, index, children) => {
+const childNodesUpdaters = ([nodes, updaters], v, index, children) => {
   if (v && isFunction(v)) {
     const f = v;
     v = v();
@@ -165,7 +165,7 @@ const addChildNodeAndUpdater = ([nodes, updaters], v, index, children) => {
       if (v instanceof HTMLElement);
       else if (isDefiniteValue(v)) v = document.createTextNode(v);
       else if (v && isArray(v) && children.length === 1) { // array, single child for now
-        const [nodes] = v.reduce(addChildNodeAndUpdater, []);
+        const [nodes] = v.reduce(childNodesUpdaters, []);
         return [
           nodes,
           [
@@ -175,7 +175,7 @@ const addChildNodeAndUpdater = ([nodes, updaters], v, index, children) => {
             // }
             // todo replace only diff
             createChildrenUpdater(
-              () => f().reduce(addChildNodeAndUpdater, []),
+              () => f().reduce(childNodesUpdaters, []),
               nodes
             )
           ]
@@ -205,7 +205,8 @@ const getPropsAndChildren = args => {
     if (isObject(first)) {
       props = first;
 
-      if (args[1] !== undefined) children = args.slice(1);
+      if (args[1] !== undefined)
+        children = args.slice(1); // todo avoid new array creation
     }
     else children = args;
   }
@@ -219,7 +220,7 @@ const setAndCompilePropsAndChildren = (e, props, children) => {
   if (props) propUpdaters = setPropsAndGetUpdaters(e, props);
 
   if (children) {
-    [childNodes, childUpdaters] = children.reduce(addChildNodeAndUpdater, []);
+    [childNodes, childUpdaters] = children.reduce(childNodesUpdaters, []);
     if (childNodes) e.append(...childNodes);
   }
 
@@ -250,7 +251,7 @@ export const h = (tag, ...args) => {
 
 // todo: memo component map, create one instance of component's prop/child updaters
 
-export const memoMap = (getItems, createComponent) => {
+export const memoComponents = (getItems, createComponent) => {
   let prevItems = [], prevComponents = [];
 
   return () => {
@@ -259,11 +260,34 @@ export const memoMap = (getItems, createComponent) => {
     if (nextItems === prevItems) return prevComponents;
 
     const nextComponents = [];
-    let i = 0, len = nextItems.length;
+    const {length} = nextItems;
 
-    for (; i < len; i ++) {
+    for (let i = 0; i < length; i ++) {
       const n = nextItems[i], p = prevItems[i];
       nextComponents[i] = n === p ? prevComponents[i] : createComponent(n);
+    }
+
+    prevItems = nextItems;
+    prevComponents = nextComponents;
+
+    return nextComponents;
+  };
+};
+
+export const memoComponents2 = (getItems, createComponent) => {
+  let prevItems = [], prevComponents = [];
+
+  return () => {
+    const nextItems = getItems();
+
+    if (nextItems === prevItems) return prevComponents;
+
+    const nextComponents = [];
+    const {length} = nextItems;
+
+    for (let i = 0; i < length; i ++) {
+      const n = nextItems[i], p = prevItems[i];
+      nextComponents[i] = n === p ? prevComponents[i] : createComponent(() => n);
     }
 
     prevItems = nextItems;

@@ -1,4 +1,4 @@
-import {memoMap} from '../perform/perform';
+import {memoComponents, memoComponents2} from '../perform/perform';
 import {section, input, label, ul} from '../perform/tags';
 
 import {item} from './item';
@@ -18,10 +18,10 @@ export const list = ({
     }),
     label({for: 'toggle-all'}),
 
-    // todo array children
-    // () => ul({class: 'todo-list'}, ...mapVisible(({id, title, completed}) => item({
-    // ul({class: 'todo-list'}, () => mapVisible(({id, title, completed}) => item({
-    ul({class: 'todo-list'}, memoMap(getVisible, ({id, title, completed}) => item({
+    // 3 ways of doing dynamic children:
+    // () => ul({class: 'todo-list'}, ...getVisible().map(({id, title, completed}) => item({
+    // ul({class: 'todo-list'}, () => getVisible().map(({id, title, completed}) => item({
+    ul({class: 'todo-list'}, memoComponents(getVisible, ({id, title, completed}) => item({
       id,
       title,
       completed,
@@ -29,5 +29,14 @@ export const list = ({
       updateCompleted,
       remove,
     }))),
+
+    // ul({class: 'todo-list'}, memoComponents2(getVisible, getItem => item({
+    //   id: () => getItem().id,
+    //   title: () => getItem().title,
+    //   completed: () => getItem().completed,
+    //   updateTitle,
+    //   updateCompleted,
+    //   remove,
+    // }))),
   );
 };
