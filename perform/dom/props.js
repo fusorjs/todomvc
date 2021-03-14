@@ -1,4 +1,4 @@
-import {isFunction, isEmpty, isObject, isVoid} from './utils';
+import {isFunction, isEmpty, isObject, isVoid} from '../utils';
 
 const createAttributeActionGetter = (textual, numeric, boolean) => (k, v, vT) => {
   switch (vT) {

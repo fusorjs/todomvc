@@ -1,4 +1,4 @@
-import {isFunction, isArray} from './utils';
+import {isFunction, isArray} from '../utils';
 
 const isDefiniteValue = v => {
   const t = typeof v;

@@ -1,7 +1,7 @@
 
 import {isObject} from './utils';
-import {setPropsAndGetUpdaters} from './domProps';
-import {childNodesUpdaters} from './domNodes';
+import {setPropsAndGetUpdaters} from './dom/props';
+import {childNodesUpdaters} from './dom/nodes';
 
 const getPropsAndChildren = args => {
   let props, children;
