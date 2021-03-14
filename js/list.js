@@ -1,5 +1,5 @@
 import {memMap} from '../perform/memMap';
-import {section, input, label, ul} from '../perform/tags';
+import {section, input, label, ul} from '../perform/html';
 
 import {item} from './item';
 import {item1} from './item1';

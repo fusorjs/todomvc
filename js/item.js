@@ -1,6 +1,6 @@
 import cs from 'clsx';
 
-import {li, div, label, input, button} from '../perform/tags';
+import {li, div, label, input, button} from '../perform/html';
 
 export const item = ({id, title, getCompleted, updateTitle, updateCompleted, remove}) => {
   let render, editing;

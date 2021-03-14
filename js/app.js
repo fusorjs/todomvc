@@ -1,4 +1,4 @@
-import {header, div, h1, input} from '../perform/tags';
+import {header, div, h1, input} from '../perform/html';
 
 import {getVisible, isNotCompleted} from './utils';
 import {list} from './list';
