@@ -130,19 +130,33 @@ const createChildrenUpdater = (f, prevNodes) => e => {
 
   if (nextNodes === prevNodes) return;
 
-  let i = 0, len;
+  const nextLength = nextNodes?.length;
+  const prevLength = prevNodes?.length;
 
-  for (len = nextNodes?.length ?? 0; i < len; i ++) {
-    const n = nextNodes[i], p = prevNodes?.[i];
+  let i = 0;
 
-    if (n !== p) {
-      if (p) p.replaceWith(n);
-      else e.append(n);
+  // update
+  if (nextLength && prevLength) {
+    for (const minLength = Math.min(nextLength, prevLength); i < minLength; i ++) {
+      const n = nextNodes[i];
+      const p = prevNodes[i];
+
+      if (n !== p)
+        p.replaceWith(n);
     }
   }
 
-  for (len = prevNodes?.length ?? 0; i < len; i ++) {
-    prevNodes[i].remove();
+  if (nextLength !== prevLength) {
+    // create
+    if (nextLength > prevLength) {
+      for (; i < nextLength; i ++)
+        e.append(nextNodes[i]);
+    }
+    // delete
+    else if (nextLength < prevLength) {
+      for (; i < prevLength; i ++)
+        prevNodes[i].remove();
+    }
   }
 
   // todo jsonpatch compatibility
@@ -265,14 +279,14 @@ export const map = (getItems, createRenderer) => {
     if (prevItems) {
       if (nextItems === prevItems) return prevRenderers;
 
-      let i = 0, length;
-
       const nextLength = nextItems.length;
       const prevLength = prevItems.length;
 
+      let i = 0;
+
       // update
       if (nextLength && prevLength) {
-        for (length = Math.min(nextLength, prevLength); i < length; i ++)
+        for (const minLength = Math.min(nextLength, prevLength); i < minLength; i ++)
           if (nextItems[i] !== prevItems[i])
             prevRenderers[i]();
       }
