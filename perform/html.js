@@ -1,4 +1,4 @@
-import {h} from './perform';
+import {h} from './h';
 
 export const div = (...a) => h('div', ...a);
 export const span = (...a) => h('span', ...a);
