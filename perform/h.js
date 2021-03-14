@@ -1,5 +1,6 @@
 
-import {isObject, setPropsAndGetUpdaters} from './perform';
+import {isObject} from './perform';
+import {setPropsAndGetUpdaters} from './domProps';
 import {childNodesUpdaters} from './domNodes';
 
 const getPropsAndChildren = args => {
