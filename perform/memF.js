@@ -12,7 +12,7 @@ export const areArraysEqual = (a1, a2) => {
   return true;
 }
 
-export const memoize = f => {
+export const memF = f => {
   let prevArgs, prevResult;
 
   return (...nextArgs) => {
