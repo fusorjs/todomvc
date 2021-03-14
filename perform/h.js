@@ -1,5 +1,5 @@
 
-import {isObject} from './perform';
+import {isObject} from './utils';
 import {setPropsAndGetUpdaters} from './domProps';
 import {childNodesUpdaters} from './domNodes';
 
