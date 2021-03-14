@@ -8,6 +8,7 @@ export const memMap = (getItems, createRenderer) => {
   // Render function:
   return () => {
     nextItems = getItems();
+
     // console.log(prevItems, nextItems)
 
     // All subsequent runs:

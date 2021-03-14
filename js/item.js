@@ -45,7 +45,10 @@ export const item = ({getItem, updateTitle, updateCompleted, remove}) => {
         class: 'toggle',
         type: 'checkbox',
         checked: () => getItem().completed,
-        onchange: () => updateCompleted(getItem().id, ! getItem().completed)?.(),
+        onchange: () => {
+          const {id, completed} = getItem();
+          updateCompleted(id, ! completed)?.()
+        },
       }),
       label({
         ondblclick: () => {
