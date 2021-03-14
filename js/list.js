@@ -1,9 +1,9 @@
 import {memMap} from '../perform/memMap';
 import {section, input, label, ul} from '../perform/html';
 
-import {item} from './item';
 import {item1} from './item1';
 import {item2} from './item2';
+import {item} from './item';
 
 export const list = ({
   getRouteItems, updateTitle, updateCompleted, remove, getCheckedAll, updateAllCompleted,
@@ -30,7 +30,7 @@ export const list = ({
     //   remove,
     // }))),
 
-    // ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item({
+    // ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item2({
     //   id: getItem().id,
     //   title: getItem().title,
     //   getCompleted: () => getItem().completed,
@@ -39,7 +39,7 @@ export const list = ({
     //   remove,
     // }))),
 
-    ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item2({
+    ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item({
       getItem,
       updateTitle,
       updateCompleted,

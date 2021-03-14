@@ -4,9 +4,9 @@ import {li, div, label, input, button} from '../perform/html';
 
 export const item1 = ({id, title, completed, updateTitle, updateCompleted, remove}) => {
   let render, editing;
-  const inputRef = {};
-
   let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
+
+  const inputRef = {};
 
   const setEditing = val => {
     if (val === editing) return;
