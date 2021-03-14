@@ -2,7 +2,7 @@ import cs from 'clsx';
 
 import {li, div, label, input, button} from '../perform/tags';
 
-export const item = ({id, title, completed, updateTitle, updateCompleted, remove}) => {
+export const item = ({id, title, getCompleted, updateTitle, updateCompleted, remove}) => {
   let render, editing;
   const inputRef = {};
 
@@ -40,13 +40,13 @@ export const item = ({id, title, completed, updateTitle, updateCompleted, remove
     }
   };
 
-  return render = li({class: () => cs(completed && 'completed', editing && 'editing')},
+  return render = li({class: () => cs(getCompleted() && 'completed', editing && 'editing')},
     div({class: 'view'},
       input({
         class: 'toggle',
         type: 'checkbox',
-        checked: completed,
-        onchange: () => updateCompleted(id, ! completed)?.(),
+        checked: getCompleted,
+        onchange: () => updateCompleted(id, ! getCompleted())?.(),
       }),
       label({
         ondblclick: () => {

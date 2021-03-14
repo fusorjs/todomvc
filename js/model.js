@@ -19,6 +19,7 @@ export const newTodos = id => {
       });
       if (! curItem) throw new Error(`missing id: "${id}"`);
       const newItem = {...curItem, ...item, id};
+      // todo check if changed
       items = [...items];
       items[index] = newItem;
       store();
@@ -28,6 +29,7 @@ export const newTodos = id => {
       store();
     },
     updateAll (item) {
+      // todo check if changed each item
       items = items.map(i => ({...i, ...item, id: i.id}));
       store();
     },
@@ -38,5 +40,6 @@ export const newTodos = id => {
     get items () {
       return items;
     },
+    // todo jsonpatch observable
   };
 };

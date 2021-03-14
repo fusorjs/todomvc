@@ -1,4 +1,4 @@
-import {memoComponents, memoComponents2} from '../perform/perform';
+import {map} from '../perform/perform';
 import {section, input, label, ul} from '../perform/tags';
 
 import {item} from './item';
@@ -17,26 +17,13 @@ export const list = ({
       onchange: ({target: {checked}}) => updateAllCompleted(checked)?.(),
     }),
     label({for: 'toggle-all'}),
-
-    // 3 ways of doing dynamic children:
-    // () => ul({class: 'todo-list'}, ...getVisible().map(({id, title, completed}) => item({
-    // ul({class: 'todo-list'}, () => getVisible().map(({id, title, completed}) => item({
-    ul({class: 'todo-list'}, memoComponents(getVisible, ({id, title, completed}) => item({
-      id,
-      title,
-      completed,
+    ul({class: 'todo-list'}, map(getVisible, getItem => item({
+      id: getItem().id,
+      title: getItem().title,
+      getCompleted: () => getItem().completed,
       updateTitle,
       updateCompleted,
       remove,
     }))),
-
-    // ul({class: 'todo-list'}, memoComponents2(getVisible, getItem => item({
-    //   id: () => getItem().id,
-    //   title: () => getItem().title,
-    //   completed: () => getItem().completed,
-    //   updateTitle,
-    //   updateCompleted,
-    //   remove,
-    // }))),
   );
 };

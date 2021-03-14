@@ -55,10 +55,12 @@ const createPropertyUpdater = (e, k, f, prev, prevT) => {
   return () => {
     const v = f(), vT = typeof v;
 
-    if (vT !== prevT) throw new Error(`failed attribute update "${k}": ${prev} -> ${v}`);
+    if (vT !== prevT && prev !== undefined && v !== undefined)
+      throw new Error(`mismatch attribute type "${k}": ${prev} to ${v}`);
 
     if (prev === v) return;
-    else prev = v;
+    prev = v;
+    prevT = vT;
 
     update(e, k, v);
   };
@@ -128,9 +130,9 @@ const createChildrenUpdater = (f, prevNodes) => e => {
 
   if (nextNodes === prevNodes) return;
 
-  let i = 0, len = nextNodes?.length || 0;
+  let i = 0, len;
 
-  for (; i < len; i ++) {
+  for (len = nextNodes?.length ?? 0; i < len; i ++) {
     const n = nextNodes[i], p = prevNodes?.[i];
 
     if (n !== p) {
@@ -139,13 +141,11 @@ const createChildrenUpdater = (f, prevNodes) => e => {
     }
   }
 
-  len = prevNodes?.length || 0;
-
-  for (; i < len; i ++) {
+  for (len = prevNodes?.length ?? 0; i < len; i ++) {
     prevNodes[i].remove();
   }
 
-  // todo before after
+  // todo jsonpatch compatibility
 
   prevNodes = nextNodes;
 };
@@ -170,7 +170,7 @@ const childNodesUpdaters = ([nodes, updaters], v, index, children) => {
           nodes,
           [
             // e => {
-            //   const [nodes] = f().reduce(addChildNodeAndUpdater, []);
+            //   const [nodes] = f().reduce(childNodesUpdaters, []);
             //   e.replaceChildren(...nodes);
             // }
             // todo replace only diff
@@ -230,16 +230,17 @@ const setAndCompilePropsAndChildren = (e, props, children) => {
 export const h = (tag, ...args) => {
   let e, propUpdaters, childUpdaters;
 
+  // Render function:
   return () => {
-    // 1. The first run must be in render, as it is actually renders the element!
-    if (! e) {
-      e = document.createElement(tag);
-      [propUpdaters, childUpdaters] = setAndCompilePropsAndChildren(e, ...getPropsAndChildren(args));
-    }
-    // 2. All subsequent runs are just updating the rendered element.
-    else {
+    // All subsequent runs are just updating the rendered element:
+    if (e) {
       propUpdaters?.forEach(u => u());
       childUpdaters?.forEach(u => u(e));
+    }
+    // The first run must be in render, as it is actually renders the element:
+    else {
+      e = document.createElement(tag);
+      [propUpdaters, childUpdaters] = setAndCompilePropsAndChildren(e, ...getPropsAndChildren(args));
     }
 
     return e;
@@ -250,49 +251,65 @@ export const h = (tag, ...args) => {
 /* MEMO ******************************************************************************/
 
 // todo: memo component map, create one instance of component's prop/child updaters
+// todo jsonpatch compatibility
 
-export const memoComponents = (getItems, createComponent) => {
-  let prevItems = [], prevComponents = [];
+export const map = (getItems, createRenderer) => {
+  let prevItems, prevRenderers, nextItems;
 
+  // Render function:
   return () => {
-    const nextItems = getItems();
+    nextItems = getItems();
+    // console.log(prevItems, nextItems)
 
-    if (nextItems === prevItems) return prevComponents;
+    // All subsequent runs:
+    if (prevItems) {
+      if (nextItems === prevItems) return prevRenderers;
 
-    const nextComponents = [];
-    const {length} = nextItems;
+      let i = 0, length;
 
-    for (let i = 0; i < length; i ++) {
-      const n = nextItems[i], p = prevItems[i];
-      nextComponents[i] = n === p ? prevComponents[i] : createComponent(n);
+      const nextLength = nextItems.length;
+      const prevLength = prevItems.length;
+
+      // update
+      if (nextLength && prevLength) {
+        for (length = Math.min(nextLength, prevLength); i < length; i ++)
+          if (nextItems[i] !== prevItems[i])
+            prevRenderers[i]();
+      }
+
+      if (nextLength !== prevLength) {
+        let nextRenderers;
+
+        // create
+        if (nextLength > prevLength) {
+          nextRenderers = [...prevRenderers];
+          for (; i < nextLength; i ++) {
+            const _i = i;
+            nextRenderers.push(createRenderer(() => nextItems[_i]));
+          }
+        }
+        // delete
+        else if (nextLength < prevLength) {
+          nextRenderers = prevRenderers.slice(0, nextLength);
+        }
+
+        prevRenderers = nextRenderers;
+      }
+    }
+    // The first run:
+    else {
+      const nextLength = nextItems.length;
+
+      prevRenderers = [];
+
+      for (let i = 0; i < nextLength; i ++) {
+        const _i = i;
+        prevRenderers.push(createRenderer(() => nextItems[_i]));
+      }
     }
 
     prevItems = nextItems;
-    prevComponents = nextComponents;
 
-    return nextComponents;
-  };
-};
-
-export const memoComponents2 = (getItems, createComponent) => {
-  let prevItems = [], prevComponents = [];
-
-  return () => {
-    const nextItems = getItems();
-
-    if (nextItems === prevItems) return prevComponents;
-
-    const nextComponents = [];
-    const {length} = nextItems;
-
-    for (let i = 0; i < length; i ++) {
-      const n = nextItems[i], p = prevItems[i];
-      nextComponents[i] = n === p ? prevComponents[i] : createComponent(() => n);
-    }
-
-    prevItems = nextItems;
-    prevComponents = nextComponents;
-
-    return nextComponents;
+    return prevRenderers;
   };
 };
