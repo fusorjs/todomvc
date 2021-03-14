@@ -6,7 +6,7 @@ import {item1} from './item1';
 import {item2} from './item2';
 
 export const list = ({
-  getVisible, updateTitle, updateCompleted, remove, getCheckedAll, updateAllCompleted,
+  getRouteItems, updateTitle, updateCompleted, remove, getCheckedAll, updateAllCompleted,
 }) => {
   let render;
 
@@ -20,8 +20,8 @@ export const list = ({
     }),
     label({for: 'toggle-all'}),
 
-    // () => ul({class: 'todo-list'}, ...getVisible().map(({id, title, completed}) => item1({
-    // ul({class: 'todo-list'}, () => getVisible().map(({id, title, completed}) => item1({
+    // () => ul({class: 'todo-list'}, ...getRouteItems().map(({id, title, completed}) => item1({
+    // ul({class: 'todo-list'}, () => getRouteItems().map(({id, title, completed}) => item1({
     //   id,
     //   title,
     //   completed,
@@ -30,7 +30,7 @@ export const list = ({
     //   remove,
     // }))),
 
-    // ul({class: 'todo-list'}, memMap(getVisible, getItem => item({
+    // ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item({
     //   id: getItem().id,
     //   title: getItem().title,
     //   getCompleted: () => getItem().completed,
@@ -39,7 +39,7 @@ export const list = ({
     //   remove,
     // }))),
 
-    ul({class: 'todo-list'}, memMap(getVisible, getItem => item2({
+    ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item2({
       getItem,
       updateTitle,
       updateCompleted,

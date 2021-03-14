@@ -1,5 +1,5 @@
 
-export const areArraysEqual = (a1, a2) => {
+const areArraysEqual = (a1, a2) => {
   const {length} = a1;
 
   if (length !== a2.length)

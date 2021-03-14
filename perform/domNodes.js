@@ -33,8 +33,8 @@ const createChildrenUpdater = (f, prevNodes) => e => {
 
   if (nextNodes === prevNodes) return;
 
-  const nextLength = nextNodes?.length;
-  const prevLength = prevNodes?.length;
+  const nextLength = nextNodes?.length ?? 0;
+  const prevLength = prevNodes?.length ?? 0;
 
   let i = 0;
 
@@ -67,7 +67,7 @@ const createChildrenUpdater = (f, prevNodes) => e => {
   prevNodes = nextNodes;
 };
 
-export const childNodesUpdaters = ([nodes, updaters], v, index, children) => {
+export const childNodesUpdaters = ([nodes, updaters], v, _index, children) => {
   if (v && isFunction(v)) {
     const f = v;
     v = v();
@@ -81,7 +81,7 @@ export const childNodesUpdaters = ([nodes, updaters], v, index, children) => {
 
       if (v instanceof HTMLElement);
       else if (isDefiniteValue(v)) v = document.createTextNode(v);
-      else if (v && isArray(v) && children.length === 1) { // array, single child for now
+      else if (v && isArray(v) && children.length === 1) { // todo array, single child for now
         const [nodes] = v.reduce(childNodesUpdaters, []);
         return [
           nodes,

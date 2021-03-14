@@ -1,13 +1,13 @@
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
-import {newTodos} from './model';
+import {createTodos} from './model';
 import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 import {app} from './app';
 
 let render, route;
 
-const todos = newTodos('todos-perform');
+const todos = createTodos('todos-perform');
 
 render = app({todos, getRoute: () => route});
 
