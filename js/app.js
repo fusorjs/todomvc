@@ -21,7 +21,10 @@ export const app = ({todos, getRoute}) => {
   const renderList = list({
     getCheckedAll: () => activeCount === 0,
     getVisible: () => getVisible(todos.items, getRoute()),
-    updateTitle: (id, title) => todos.update(id, {title}),
+    updateTitle (id, title) {
+      todos.update(id, {title});
+      return render;
+    },
     updateCompleted (id, completed) {
       todos.update(id, {completed});
       return render;

@@ -3,6 +3,7 @@ import {section, input, label, ul} from '../perform/html';
 
 import {item} from './item';
 import {item1} from './item1';
+import {item2} from './item2';
 
 export const list = ({
   getVisible, updateTitle, updateCompleted, remove, getCheckedAll, updateAllCompleted,
@@ -29,10 +30,17 @@ export const list = ({
     //   remove,
     // }))),
 
-    ul({class: 'todo-list'}, memMap(getVisible, getItem => item({
-      id: getItem().id,
-      title: getItem().title,
-      getCompleted: () => getItem().completed,
+    // ul({class: 'todo-list'}, memMap(getVisible, getItem => item({
+    //   id: getItem().id,
+    //   title: getItem().title,
+    //   getCompleted: () => getItem().completed,
+    //   updateTitle,
+    //   updateCompleted,
+    //   remove,
+    // }))),
+
+    ul({class: 'todo-list'}, memMap(getVisible, getItem => item2({
+      getItem,
       updateTitle,
       updateCompleted,
       remove,
