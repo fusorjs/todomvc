@@ -13,25 +13,25 @@ export const memMap = (getItems, createRenderer) => {
 
     // All subsequent runs:
     if (prevItems) {
-      if (nextItems === prevItems) return prevRenderers;
+      if (prevItems === nextItems) return prevRenderers;
 
-      const nextLength = nextItems.length;
       const prevLength = prevItems.length;
+      const nextLength = nextItems.length;
 
       let i = 0;
 
       // update
-      if (nextLength && prevLength) {
-        for (const minLength = Math.min(nextLength, prevLength); i < minLength; i ++)
-          if (nextItems[i] !== prevItems[i])
+      if (prevLength && nextLength) {
+        for (const minLength = Math.min(prevLength, nextLength); i < minLength; i ++)
+          if (prevItems[i] !== nextItems[i])
             prevRenderers[i]();
       }
 
-      if (nextLength !== prevLength) {
+      if (prevLength !== nextLength) {
         let nextRenderers;
 
         // create
-        if (nextLength > prevLength) {
+        if (prevLength < nextLength) {
           nextRenderers = [...prevRenderers];
           for (; i < nextLength; i ++) {
             const _i = i;
@@ -39,7 +39,7 @@ export const memMap = (getItems, createRenderer) => {
           }
         }
         // delete
-        else if (nextLength < prevLength) {
+        else if (prevLength > nextLength) {
           nextRenderers = prevRenderers.slice(0, nextLength);
         }
 

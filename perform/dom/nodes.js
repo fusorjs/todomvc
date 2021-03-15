@@ -30,12 +30,12 @@ const createChildUpdater = (node, f, prev) => () => {
   node = v;
 };
 
-const createChildrenUpdater = (f, prevNodes) => e => {
+const createChildrenUpdater = (f, prevNodes) => parentNode => {
   const [nextNodes] = f();
 
   if (prevNodes === nextNodes) return;
 
-  updateChildren(e, prevNodes, nextNodes);
+  updateChildren(parentNode, prevNodes, nextNodes);
 
   prevNodes = nextNodes;
 };
