@@ -1,15 +1,24 @@
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
+import {memF} from '../perform/memF';
+
 import {createTodos} from './model';
-import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
+import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED, getRouteItems} from './utils';
 import {app} from './app';
 
-let render, route;
+let route;
 
-const todos = createTodos('todos-perform');
+// todo [getRouteItemsMem, next]
+const getRouteItemsMem = memF(getRouteItems);
 
-render = app({todos, getRoute: () => route});
+const todos = createTodos('todos-perform'); // todo next
+
+const render = app({
+  todos,
+  getRoute: () => route,
+  getRouteItems: () => getRouteItemsMem(route, todos.items),
+});
 
 document.body.append(render());
 

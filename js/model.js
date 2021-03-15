@@ -1,19 +1,21 @@
 
 const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-// todo jsonpatch compatible:
+// todo jsonpatch compatibility:
 // return patch in actions if value has chnged or undefined otherwise
 // or make observable
 
-export const createTodos = id => {
+export const createTodos = (id, next) => {
   let items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
 
   const store = () => localStorage.setItem(id, JSON.stringify(items));
 
   return {
     create (item) {
-      items = [...items, {...item, id: uuid()}];
+      const newItem = { ...item, id: uuid() };
+      items = [...items, newItem];
       store();
+      next?.([{ op: 'add', path: '/-', value: newItem }]);
     },
 
     update (id, item) {

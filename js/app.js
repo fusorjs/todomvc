@@ -1,11 +1,10 @@
 import {header, div, h1, input} from '../perform/html';
-import {memF} from '../perform/memF';
 
-import {getRouteItems, isNotCompleted} from './utils';
+import {isNotCompleted} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 
-export const app = ({todos, getRoute}) => {
+export const app = ({todos, getRoute, getRouteItems}) => {
   let activeCount, completedCount;
 
   const onkeydown = event => {
@@ -19,11 +18,9 @@ export const app = ({todos, getRoute}) => {
     }
   };
 
-  const getRouteItemsMem = memF(getRouteItems);
-
   const renderList = list({
+    getRouteItems,
     getCheckedAll: () => activeCount === 0,
-    getRouteItems: () => getRouteItemsMem(getRoute(), todos.items),
     updateTitle (id, title) {
       todos.update(id, {title});
       return render;
