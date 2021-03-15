@@ -2,8 +2,26 @@
 // todo: memo component map, create one instance of component's prop/child updaters
 // todo jsonpatch compatibility
 
-export const memMap = (getItems, createRenderer) => {
+const ID_KEY = '__PERFORM_ID';
+
+// use idKey for perfomance optimization
+export const memMap = (getItems, createRenderer, idKey) => {
   let prevItems, prevRenderers, nextItems;
+
+  const createNext = (index) => {
+    const render = createRenderer(() => nextItems[index]);
+
+    if (idKey) {
+      const id = nextItems[index][idKey];
+
+      if (id === undefined)
+        throw new Error(`missing item id value for "${idKey}" in: ${nextItems[index]}`);
+
+      render[ID_KEY] = id;
+    }
+
+    return render;
+  };
 
   // Render function:
   return () => {
@@ -18,44 +36,46 @@ export const memMap = (getItems, createRenderer) => {
       const prevLength = prevItems.length;
       const nextLength = nextItems.length;
 
-      let i = 0;
+      let i = 0, nextRenderers;
 
       // update
-      if (prevLength && nextLength) {
-        for (const minLength = Math.min(prevLength, nextLength); i < minLength; i ++)
-          if (prevItems[i] !== nextItems[i])
-            prevRenderers[i]();
+      for (const minLength = Math.min(prevLength, nextLength); i < minLength; i ++) {
+        // console.log(prevItems[i] === nextItems[i]);
+        const nextItem = nextItems[i];
+
+        if (prevItems[i] !== nextItem) {
+          const prevRenderer = prevRenderers[i];
+
+          if (idKey && prevRenderer[ID_KEY] === nextItem[idKey]) {
+            // console.log(render[ID_KEY], i);
+            prevRenderer();
+          }
+          else {
+            nextRenderers ??= prevRenderers.slice(0, minLength);
+            nextRenderers[i] = createNext(i); // todo refactor props updater prev
+          }
+        }
       }
 
       if (prevLength !== nextLength) {
-        let nextRenderers;
-
         // create
         if (prevLength < nextLength) {
-          nextRenderers = [...prevRenderers];
-          for (; i < nextLength; i ++) {
-            const _i = i;
-            nextRenderers.push(createRenderer(() => nextItems[_i]));
-          }
+          nextRenderers ??= [...prevRenderers];
+          for (; i < nextLength; i ++) nextRenderers.push(createNext(i));
         }
         // delete
         else if (prevLength > nextLength) {
-          nextRenderers = prevRenderers.slice(0, nextLength);
+          nextRenderers ??= prevRenderers.slice(0, nextLength);
         }
-
-        prevRenderers = nextRenderers;
       }
+
+      if (nextRenderers) prevRenderers = nextRenderers;
     }
     // The first run:
     else {
       const nextLength = nextItems.length;
-
       prevRenderers = [];
-
-      for (let i = 0; i < nextLength; i ++) {
-        const _i = i;
-        prevRenderers.push(createRenderer(() => nextItems[_i]));
-      }
+      for (let i = 0; i < nextLength; i ++) prevRenderers.push(createNext(i));
     }
 
     prevItems = nextItems;

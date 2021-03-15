@@ -44,6 +44,6 @@ export const list = ({
       updateTitle,
       updateCompleted,
       remove,
-    }))),
+    }), 'id')),
   );
 };

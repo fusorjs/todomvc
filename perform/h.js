@@ -21,35 +21,35 @@ const getPropsAndChildren = args => {
   return [props, children];
 };
 
-const setAndCompilePropsAndChildren = (e, props, children) => {
+const setAndCompilePropsAndChildren = (element, props, children) => {
   let propUpdaters, childNodes, childUpdaters;
 
-  if (props) propUpdaters = setPropsAndGetUpdaters(e, props);
+  if (props) propUpdaters = setPropsAndGetUpdaters(element, props);
 
   if (children) {
     [childNodes, childUpdaters] = children.reduce(childNodesUpdaters, []);
-    if (childNodes) e.append(...childNodes);
+    if (childNodes) element.append(...childNodes);
   }
 
   return [propUpdaters, childUpdaters];
 };
 
-export const h = (tag, ...args) => {
-  let e, propUpdaters, childUpdaters;
+export const h = (tagName, ...args) => {
+  let element, propUpdaters, childUpdaters;
 
   // Render function:
   return () => {
     // All subsequent runs are just updating the rendered element:
-    if (e) {
+    if (element) {
       propUpdaters?.forEach(u => u());
-      childUpdaters?.forEach(u => u(e));
+      childUpdaters?.forEach(u => u(element));
     }
     // The first run must be in render, as it is actually renders the element:
     else {
-      e = document.createElement(tag);
-      [propUpdaters, childUpdaters] = setAndCompilePropsAndChildren(e, ...getPropsAndChildren(args));
+      element = document.createElement(tagName);
+      [propUpdaters, childUpdaters] = setAndCompilePropsAndChildren(element, ...getPropsAndChildren(args));
     }
 
-    return e;
+    return element;
   };
 };

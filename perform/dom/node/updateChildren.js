@@ -15,14 +15,12 @@ export const updateChildren = (parentNode, prevNodes, nextNodes) => {
   let i = 0;
 
   // update
-  if (prevLength && nextLength) {
-    for (const minLength = Math.min(prevLength, nextLength); i < minLength; i ++) {
-      const p = prevNodes[i];
-      const n = nextNodes[i];
+  for (const minLength = Math.min(prevLength, nextLength); i < minLength; i ++) {
+    const p = prevNodes[i];
+    const n = nextNodes[i];
 
-      if (p !== n)
-        p.replaceWith(n);
-    }
+    if (p !== n)
+      p.replaceWith(n);
   }
 
   if (prevLength !== nextLength) {

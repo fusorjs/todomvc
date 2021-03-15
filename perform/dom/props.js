@@ -42,13 +42,15 @@ const getPropertyUpdater = (e, k, v, vT) => {
 };
 
 const createPropertyUpdater = (e, k, f, prev, prevT) => {
-  const update = getPropertyUpdater(e, k, prev, prevT);
+  const update = getPropertyUpdater(e, k, prev, prevT); // todo element could change maybe
 
   return () => {
     const v = f(), vT = typeof v;
 
     if (vT !== prevT && prev !== undefined && v !== undefined)
       throw new Error(`mismatch attribute type "${k}": ${prev} to ${v}`);
+
+    // console.log({prev, v}); // todo refactor prev
 
     if (prev === v) return;
     prev = v;
@@ -58,17 +60,17 @@ const createPropertyUpdater = (e, k, f, prev, prevT) => {
   };
 };
 
-export const setPropsAndGetUpdaters = (e, props) => {
+export const setPropsAndGetUpdaters = (element, props) => {
   let updaters;
 
   for (let [k, v] of Object.entries(props)) {
     if (isEmpty(v));
     else if (k.startsWith('on')) {
-      if (v && isFunction(v)) e.addEventListener(k.substring(2), v, false);
+      if (v && isFunction(v)) element.addEventListener(k.substring(2), v, false);
       else throw new Error(`unsupported attribute "${k}": ${v}`);
     }
     else if (k === 'ref') {
-      if (v && isObject(v)) v.current = e;
+      if (v && isObject(v)) v.current = element;
       else throw new Error(`unsupported attribute "${k}": ${v}`);
     }
     else {
@@ -76,10 +78,10 @@ export const setPropsAndGetUpdaters = (e, props) => {
         const f = v;
         v = v();
         updaters ??= [];
-        updaters.push(createPropertyUpdater(e, k, f, v, typeof v));
+        updaters.push(createPropertyUpdater(element, k, f, v, typeof v));
       }
 
-      if (! isEmpty(v)) setInitialAttribute(e, k, v);
+      if (! isEmpty(v)) setInitialAttribute(element, k, v);
     }
   }
 
