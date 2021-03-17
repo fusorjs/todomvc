@@ -1,4 +1,4 @@
-import {header, div, h1, input} from '../perform/html';
+import {header, div, h1, input} from '@perform/core/html';
 
 import {isNotCompleted} from './utils';
 import {list} from './list';

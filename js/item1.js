@@ -1,6 +1,5 @@
+import {li, div, label, input, button} from '@perform/core/html';
 import cs from 'clsx';
-
-import {li, div, label, input, button} from '../perform/html';
 
 export const item1 = ({id, title, completed, updateTitle, updateCompleted, remove}) => {
   let render, editing;

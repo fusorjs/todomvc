@@ -1,7 +1,6 @@
+import {memF} from '@perform/core/memF';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
-
-import {memF} from '../perform/memF';
 
 import {createTodos} from './model';
 import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED, getRouteItems} from './utils';

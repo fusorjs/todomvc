@@ -1,6 +1,5 @@
+import {footer, span, strong, ul, li, a, button} from '@perform/core/html';
 import cs from 'clsx';
-
-import {footer, span, strong, ul, li, a, button} from '../perform/html';
 
 import {pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 
