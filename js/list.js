@@ -1,6 +1,6 @@
-import {section, input, label, ul} from '@perform/core/html';
 import {memMap} from '@perform/core/memMap';
 
+import {section, input, label, ul} from './html';
 import {item1} from './item1';
 import {item2} from './item2';
 import {item} from './item';

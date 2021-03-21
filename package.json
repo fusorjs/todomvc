@@ -1,14 +1,14 @@
 {
-  "name": "perform-todomvc",
+  "name": "@perform/todo-mvc",
   "version": "1.0.0",
-  "description": "Perform TodoMVC Implementation",
+  "description": "@perform todo-mvc implementation",
   "keywords": [
-    "perform",
+    "@perform",
+    "todo-mvc",
     "todomvc"
   ],
-  "author": "Igor Sukharev <imixaly4@gmail.com>",
   "license": "ISC",
-  "private": true,
+  "author": "Igor Sukharev <imixaly4@gmail.com>",
   "scripts": {
     "start": "xdg-open dist/index.html & webpack --watch"
   },
