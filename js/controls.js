@@ -1,12 +1,12 @@
 import cs from 'clsx';
 
 import {footer, span, strong, ul, li, a, button} from './html';
-import {pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
+import {isNotCompleted, pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 
-export const controls = ({getActiveCount, getCompletedCount, getRoute, removeAllCompleted}) => {
+export const controls = ({getActiveCount, getCompletedCount, getRoute, filter}) => {
   let render;
 
-  const renderButton = button({class: 'clear-completed', onclick: () => removeAllCompleted()?.()},
+  const renderButton = button({class: 'clear-completed', onclick: () => filter(isNotCompleted)?.()},
     'Clear completed',
   );
 

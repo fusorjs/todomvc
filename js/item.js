@@ -2,7 +2,7 @@ import cs from 'clsx';
 
 import {li, div, label, input, button} from './html';
 
-export const item = ({getItem, updateTitle, updateCompleted, remove}) => {
+export const item = ({getItem, update, remove}) => {
   let render, editing;
   let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
@@ -14,15 +14,11 @@ export const item = ({getItem, updateTitle, updateCompleted, remove}) => {
     return render;
   };
 
-  const setTitle = val => {
-    if (val === getItem().title) return;
-    return updateTitle(getItem().id, val) || render;
-  };
-
-  const handleUpdate = event => {
-    const val = event.target.value.trim();
-    if (! val) {removed = true; return remove(getItem().id);}
-    const t = setTitle(val);
+  const handleUpdate = ({target}) => {
+    const title = target.value.trim();
+    if (! title) {removed = true; return remove(getItem().id);}
+    target.value = title;
+    const t = update(getItem().id, {title});
     const e = setEditing(false);
     return t || e;
   };
@@ -39,7 +35,9 @@ export const item = ({getItem, updateTitle, updateCompleted, remove}) => {
     }
   };
 
-  return render = li({class: () => cs(getItem().completed && 'completed', editing && 'editing')},
+  return render = li({
+    class: () => cs(getItem().completed && 'completed', editing && 'editing'),
+  },
     div({class: 'view'},
       input({
         class: 'toggle',
@@ -47,7 +45,7 @@ export const item = ({getItem, updateTitle, updateCompleted, remove}) => {
         checked: () => getItem().completed,
         onchange: () => {
           const {id, completed} = getItem();
-          updateCompleted(id, ! completed)?.()
+          update(id, {completed: ! completed})?.()
         },
       }),
       label({

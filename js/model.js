@@ -1,57 +1,70 @@
+import {areObjectsEqual} from '@perform/core/helpers';
 
 const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-// todo jsonpatch compatibility:
-// return patch in actions if value has chnged or undefined otherwise
-// or make observable
-
+// todo next observable
 export const createTodos = (id, next) => {
   let items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
 
   const store = () => localStorage.setItem(id, JSON.stringify(items));
+
+  const filter = (predicate) => {
+    const nextItems = items.filter(predicate);
+    if (items.length !== nextItems.length) {
+      items = nextItems;
+      store();
+      return next();
+    }
+  };
 
   return {
     create (item) {
       const newItem = { ...item, id: uuid() };
       items = [...items, newItem];
       store();
-      next?.([{ op: 'add', path: '/-', value: newItem }]);
+      return next(
+        // [{ op: 'append', value: newItem }] // todo patch
+      );
     },
 
     update (id, item) {
+      if (item.hasOwnProperty('id')) throw new Error(`must not update id: "${id}"`);
       let index;
-      const curItem = items.find((im, ix) => {
+      const prevItem = items.find((im, ix) => {
         if (im.id === id) {
           index = ix;
           return true;
         }
       });
-      if (! curItem) throw new Error(`missing id: "${id}"`);
-      const newItem = {...curItem, ...item, id};
-      // todo check if changed
-      items = [...items];
-      items[index] = newItem;
-      store();
-    },
-
-    remove (id) {
-      items = items.filter(i => i.id !== id);
-      store();
+      if (! prevItem) throw new Error(`missing id: "${id}"`);
+      const nextItem = {...prevItem, ...item, id};
+      if (! areObjectsEqual(prevItem, nextItem)) {
+        items = [...items];
+        items[index] = nextItem;
+        store();
+        return next();
+      }
     },
 
     updateAll (item) {
-      // todo check if changed each item
-      items = items.map(i => ({...i, ...item, id: i.id}));
-      store();
+      if (item.hasOwnProperty('id')) throw new Error(`must not update id: "${id}"`);
+      let areAnyChanged = false;
+      const nextItems = items.map(p => {
+        const n = {...p, ...item};
+        if (! areObjectsEqual(p, n)) areAnyChanged = true;
+        return n;
+      });
+      if (areAnyChanged) {
+        items = nextItems;
+        store();
+        return next();
+      }
     },
 
-    filter (callback) {
-      items = items.filter(callback);
-      store();
-    },
+    remove: (id) => filter(i => i.id !== id),
 
-    get items () {
-      return items;
-    },
+    filter,
+
+    get items () {return items;},
   };
 };

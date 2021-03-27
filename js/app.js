@@ -1,5 +1,4 @@
 import {header, div, h1, input} from './html';
-import {isNotCompleted} from './utils';
 import {list} from './list';
 import {controls} from './controls';
 
@@ -12,40 +11,23 @@ export const app = ({todos, getRoute, getRouteItems}) => {
     const title = event.target.value.trim();
     if (title) {
       event.target.value = '';
-      todos.create({title});
-      render();
+      todos.create({title})?.();
     }
   };
 
   const renderList = list({
     getRouteItems,
     getCheckedAll: () => activeCount === 0,
-    updateTitle (id, title) {
-      todos.update(id, {title});
-      return render;
-    },
-    updateCompleted (id, completed) {
-      todos.update(id, {completed});
-      return render;
-    },
-    remove (id) {
-      todos.remove(id);
-      return render;
-    },
-    updateAllCompleted (completed) {
-      todos.updateAll({completed});
-      return render;
-    },
+    update: todos.update,
+    remove: todos.remove,
+    updateAll: todos.updateAll,
   });
 
   const renderControls = controls({
     getRoute,
     getActiveCount: () => activeCount,
     getCompletedCount: () => completedCount,
-    removeAllCompleted () {
-      todos.filter(isNotCompleted);
-      return render;
-    },
+    filter: todos.filter,
   });
 
   const renderMain = div(
@@ -62,7 +44,7 @@ export const app = ({todos, getRoute, getRouteItems}) => {
     ),
   );
 
-  function render () {
+  return () => {
     const {items} = todos;
 
     activeCount = items.reduce(
@@ -74,6 +56,4 @@ export const app = ({todos, getRoute, getRouteItems}) => {
 
     return renderMain();
   };
-
-  return render;
 };

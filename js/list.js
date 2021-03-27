@@ -1,4 +1,4 @@
-import {memMap} from '@perform/core/memMap';
+import {memMap} from '@perform/core/helpers';
 
 import {section, input, label, ul} from './html';
 import {item1} from './item1';
@@ -6,7 +6,7 @@ import {item2} from './item2';
 import {item} from './item';
 
 export const list = ({
-  getRouteItems, updateTitle, updateCompleted, remove, getCheckedAll, updateAllCompleted,
+  getRouteItems, update, remove, getCheckedAll, updateAll,
 }) => {
   let render;
 
@@ -16,7 +16,7 @@ export const list = ({
       class: 'toggle-all',
       type: 'checkbox',
       checked: getCheckedAll,
-      onchange: ({target: {checked}}) => updateAllCompleted(checked)?.(),
+      onchange: ({target: {checked}}) => updateAll({completed: checked})?.(),
     }),
     label({for: 'toggle-all'}),
 
@@ -41,8 +41,7 @@ export const list = ({
 
     ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item({
       getItem,
-      updateTitle,
-      updateCompleted,
+      update,
       remove,
     }), 'id')),
   );
