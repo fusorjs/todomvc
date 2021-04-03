@@ -25,12 +25,16 @@ render = app({
   getRouteItems: () => getRouteItemsMem(route, todos.items),
 });
 
-document.body.append(render());
+{
+  let element;
 
-const router = Router({
-  [ROUTE_ALL]: () => {route = ROUTE_ALL; render()},
-  [ROUTE_ACTIVE]: () => {route = ROUTE_ACTIVE; render()},
-  [ROUTE_COMPLETED]: () => {route = ROUTE_COMPLETED; render()},
-});
+  new Router({
+    [ROUTE_ACTIVE]: () => {route = ROUTE_ACTIVE; element = render();},
+    [ROUTE_COMPLETED]: () => {route = ROUTE_COMPLETED; element = render();},
+  }).configure({
+    notfound: () => {route = ROUTE_ALL; element = render();},
+    async: false,
+  }).init();
 
-router.init(ROUTE_ALL);
+  document.body.append(element ?? render());
+}
