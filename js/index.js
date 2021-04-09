@@ -1,4 +1,4 @@
-import {memF} from '@perform/core/helpers';
+import {memF} from '@perform/core/helpers/memF';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
@@ -8,7 +8,6 @@ import {app} from './app';
 
 let route, render;
 
-// todo [getRouteItemsMem, next]
 const getRouteItemsMem = memF((route, items) => {
   switch (route) {
     case ROUTE_ACTIVE: return items.filter(isNotCompleted);
@@ -17,7 +16,7 @@ const getRouteItemsMem = memF((route, items) => {
   }
 });
 
-const todos = createTodos('todos-perform', () => render); // todo next
+const todos = createTodos('todos-perform', () => render);
 
 render = app({
   todos,

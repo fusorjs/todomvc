@@ -1,4 +1,4 @@
-import {areObjectsEqual} from '@perform/core/helpers';
+import {areObjectsEqualShallow} from '@perform/core/helpers/object/equal';
 
 const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
@@ -22,9 +22,7 @@ export const createTodos = (id, next) => {
       const newItem = { ...item, id: uuid() };
       items = [...items, newItem];
       store();
-      return next(
-        // [{ op: 'append', value: newItem }] // todo patch
-      );
+      return next();
     },
 
     update (id, item) {
@@ -38,7 +36,7 @@ export const createTodos = (id, next) => {
       });
       if (! prevItem) throw new Error(`missing id: "${id}"`);
       const nextItem = {...prevItem, ...item, id};
-      if (! areObjectsEqual(prevItem, nextItem)) {
+      if (! areObjectsEqualShallow(prevItem, nextItem)) {
         items = [...items];
         items[index] = nextItem;
         store();
@@ -51,7 +49,7 @@ export const createTodos = (id, next) => {
       let areAnyChanged = false;
       const nextItems = items.map(p => {
         const n = {...p, ...item};
-        if (! areObjectsEqual(p, n)) areAnyChanged = true;
+        if (! areObjectsEqualShallow(p, n)) areAnyChanged = true;
         return n;
       });
       if (areAnyChanged) {

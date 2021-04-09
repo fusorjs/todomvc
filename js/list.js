@@ -1,14 +1,10 @@
-import {memMap} from '@perform/core/helpers';
+import {childArray} from '@perform/core/dom/children/update/array';
 
 import {section, input, label, ul} from './html';
 import {item} from './item';
 
-export const list = ({
-  getRouteItems, update, remove, getCheckedAll, updateAll,
-}) => {
-  let render;
-
-  return render = section({class: 'main'},
+export const list = ({getRouteItems, update, remove, getCheckedAll, updateAll}) => (
+  section({class: 'main'},
     input({
       id: 'toggle-all',
       class: 'toggle-all',
@@ -17,10 +13,10 @@ export const list = ({
       onchange: ({target: {checked}}) => updateAll({completed: checked})?.(),
     }),
     label({for: 'toggle-all'}),
-    ul({class: 'todo-list'}, memMap(getRouteItems, getItem => item({
+    ul({class: 'todo-list'}, childArray(getRouteItems, getItem => item({
       getItem,
       update,
       remove,
     }), 'id')),
-  );
-};
+  )
+);

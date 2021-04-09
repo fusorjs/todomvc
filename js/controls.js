@@ -4,13 +4,11 @@ import {footer, span, strong, ul, li, a, button} from './html';
 import {isNotCompleted, pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 
 export const controls = ({getActiveCount, getCompletedCount, getRoute, filter}) => {
-  let render;
-
   const renderButton = button({class: 'clear-completed', onclick: () => filter(isNotCompleted)?.()},
     'Clear completed',
   );
 
-  return render = footer({class: 'footer'},
+  return footer({class: 'footer'},
     span({class: 'todo-count'}, strong(getActiveCount), pluralize(getActiveCount, ' item'), ' left'),
     ul({class: 'filters'},
       li(a({href: `#${ROUTE_ALL}`, class: () => cs(getRoute() === ROUTE_ALL && 'selected')}, 'All')),
