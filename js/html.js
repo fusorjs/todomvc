@@ -1,5 +1,5 @@
-import {createComponent} from '@perform/core/dom/component';
-import {createTags} from '@perform/core/helpers/tag';
+import {createComponent} from '@perform/dom/component';
+import {createTags} from '@perform/base/tag';
 
 export const {
   div, ul, li, h1, header, section, footer,

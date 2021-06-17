@@ -19,7 +19,8 @@
     "todomvc-common": "^1.0.5"
   },
   "devDependencies": {
-    "@perform/core": "link:../core/dev/",
+    "@perform/base": "link:../base/dev/",
+    "@perform/dom": "link:../dom/dev/",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.2",
     "html-webpack-plugin": "^4.5.1",
