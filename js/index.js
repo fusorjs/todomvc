@@ -2,7 +2,7 @@ import {memF} from '@perform/core/helpers/memF';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
-import {createTodos} from './model';
+import {createModel} from './model';
 import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED, isNotCompleted} from './utils';
 import {app} from './app';
 
@@ -16,7 +16,13 @@ const getRouteItemsMem = memF((route, items) => {
   }
 });
 
-const todos = createTodos('todos-perform', () => render);
+const todos = createModel(
+  (s => s ? JSON.parse(s) : [])(localStorage.getItem('todos-perform')),
+  (items) => () => {
+    localStorage.setItem('todos-perform', JSON.stringify(items));
+    render();
+  },
+);
 
 render = app({
   todos,

@@ -1,4 +1,4 @@
-import {childArray} from '@perform/core/dom/children/update/array';
+import {diffChildren} from '@perform/core/dom/children/update/diff';
 
 import {section, input, label, ul} from './html';
 import {item} from './item';
@@ -13,10 +13,11 @@ export const list = ({getRouteItems, update, remove, getCheckedAll, updateAll}) 
       onchange: ({target: {checked}}) => updateAll({completed: checked})?.(),
     }),
     label({for: 'toggle-all'}),
-    ul({class: 'todo-list'}, childArray(getRouteItems, getItem => item({
+    ul({class: 'todo-list'}, diffChildren(getRouteItems, getItem => item({
       getItem,
       update,
       remove,
     }), 'id')),
+    // }))),
   )
 );

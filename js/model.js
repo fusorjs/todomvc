@@ -1,19 +1,15 @@
 import {areObjectsEqualShallow} from '@perform/core/helpers/object/equal';
 
-const uuid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+import {uuid} from './utils';
 
-// todo next observable
-export const createTodos = (id, next) => {
-  let items = (s => s ? JSON.parse(s) : [])(localStorage.getItem(id));
-
-  const store = () => localStorage.setItem(id, JSON.stringify(items));
-
+// todo next -> observable
+// todo try to propagate changes directly: push/pop/insert/remove... (instead of diff)
+export const createModel = (items, next) => {
   const filter = (predicate) => {
     const nextItems = items.filter(predicate);
     if (items.length !== nextItems.length) {
       items = nextItems;
-      store();
-      return next();
+      return next(items);
     }
   };
 
@@ -21,8 +17,7 @@ export const createTodos = (id, next) => {
     create (item) {
       const newItem = { ...item, id: uuid() };
       items = [...items, newItem];
-      store();
-      return next();
+      return next(items);
     },
 
     update (id, item) {
@@ -39,13 +34,12 @@ export const createTodos = (id, next) => {
       if (! areObjectsEqualShallow(prevItem, nextItem)) {
         items = [...items];
         items[index] = nextItem;
-        store();
-        return next();
+        return next(items);
       }
     },
 
     updateAll (item) {
-      if (item.hasOwnProperty('id')) throw new Error(`must not update id: "${id}"`);
+      if (item.hasOwnProperty('id')) throw new Error(`must not update id: "${item.id}"`);
       let areAnyChanged = false;
       const nextItems = items.map(p => {
         const n = {...p, ...item};
@@ -54,8 +48,7 @@ export const createTodos = (id, next) => {
       });
       if (areAnyChanged) {
         items = nextItems;
-        store();
-        return next();
+        return next(items);
       }
     },
 
