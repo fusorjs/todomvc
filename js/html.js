@@ -1,5 +1,5 @@
-import {createComponent} from '@perform/dom/component';
 import {createTags} from '@perform/base/tag';
+import {component} from '@perform/dom';
 
 export const {
   div, ul, li, h1, header, section, footer,
@@ -7,4 +7,4 @@ export const {
 } = createTags([
   'div', 'ul', 'li', 'h1', 'header', 'section', 'footer',
   'span', 'strong', 'a', 'input', 'label', 'button',
-], createComponent);
+], component);

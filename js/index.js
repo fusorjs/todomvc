@@ -31,6 +31,8 @@ render = app({
 });
 
 {
+  // prevent router to render twice on init
+
   let element;
 
   new Router({

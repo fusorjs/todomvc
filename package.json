@@ -1,5 +1,5 @@
 {
-  "name": "@perform/todo-mvc",
+  "name": "@perform/todo-mvc-implementation",
   "version": "1.0.0",
   "description": "@perform todo-mvc implementation",
   "keywords": [
@@ -10,20 +10,22 @@
   "license": "ISC",
   "author": "Igor Sukharev <imixaly4@gmail.com>",
   "scripts": {
-    "start": "xdg-open dist/index.html & webpack --watch"
+    "start": "webpack --watch",
+    "open": "open-cli dist/index.html"
   },
   "dependencies": {
+    "@perform/base": "link:../base/dev/",
+    "@perform/dom": "link:../dom/dev/",
     "clsx": "^1.1.1",
     "director": "^1.2.8",
     "todomvc-app-css": "^2.3.0",
     "todomvc-common": "^1.0.5"
   },
   "devDependencies": {
-    "@perform/base": "link:../base/dev/",
-    "@perform/dom": "link:../dom/dev/",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.2",
     "html-webpack-plugin": "^4.5.1",
+    "open-cli": "^7.0.0",
     "style-loader": "^2.0.0",
     "webpack": "^5.14.0",
     "webpack-cli": "^4.3.1"
