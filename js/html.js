@@ -1,4 +1,4 @@
-import {createTags} from '@perform/base/tag';
+import {createTags} from '@perform/common/tag';
 import {component} from '@perform/dom';
 
 export const {

@@ -1,4 +1,4 @@
-import {diffChildren} from '@perform/dom/children/update/diff';
+import {diffChildren} from '@perform/dom';
 
 import {section, input, label, ul} from './html';
 import {item} from './item';

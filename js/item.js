@@ -45,7 +45,7 @@ export const item = ({getItem, update, remove}) => {
         checked: () => getItem().completed,
         onchange: () => {
           const {id, completed} = getItem();
-          update(id, {completed: ! completed})?.()
+          update(id, {completed: ! completed})?.() // todo make straight render
         },
       }),
       label({
@@ -58,7 +58,7 @@ export const item = ({getItem, update, remove}) => {
     ),
     input({
       class: 'edit',
-      value: () => getItem().title,
+      value: () => getItem().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
       ref: inputRef,
       onblur: e => removed || handleUpdate(e)?.(),
       onkeydown: e => handleInput(e)?.(),

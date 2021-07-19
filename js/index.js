@@ -1,4 +1,4 @@
-import {memF} from '@perform/base/memF';
+import {memF} from '@perform/common/memF';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
