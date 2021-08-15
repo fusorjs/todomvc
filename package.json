@@ -16,6 +16,7 @@
   "dependencies": {
     "@perform/common": "link:../common/dist",
     "@perform/dom": "link:../dom/dist",
+    "@perform/dom-components": "link:../dom-components/dist",
     "clsx": "^1.1.1",
     "director": "^1.2.8",
     "todomvc-app-css": "^2.4.1",

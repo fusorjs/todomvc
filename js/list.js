@@ -1,6 +1,6 @@
-import {diffChildren} from '@perform/dom';
+import {section, input, label, ul} from '@perform/dom-components/html';
+import {diffChildrenUpdater} from '@perform/dom-components';
 
-import {section, input, label, ul} from './html';
 import {item} from './item';
 
 export const list = ({getRouteItems, update, remove, getCheckedAll, updateAll}) => (
@@ -13,11 +13,15 @@ export const list = ({getRouteItems, update, remove, getCheckedAll, updateAll}) 
       onchange: ({target: {checked}}) => updateAll({completed: checked})?.(),
     }),
     label({for: 'toggle-all'}),
-    ul({class: 'todo-list'}, diffChildren(getRouteItems, getItem => item({
-      getItem,
-      update,
-      remove,
-    }), 'id')),
-    // }))),
+    diffChildrenUpdater(
+      getRouteItems,
+      ul({class: 'todo-list'}),
+      getItem => item({
+        getItem,
+        update,
+        remove,
+      }),
+      'id',
+    ),
   )
 );

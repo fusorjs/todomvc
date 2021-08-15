@@ -1,4 +1,5 @@
-import {header, div, h1, input} from './html';
+import {header, div, h1, input} from '@perform/dom-components/html';
+
 import {list} from './list';
 import {controls} from './controls';
 

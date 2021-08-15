@@ -1,4 +1,4 @@
-import {areObjectsEqualShallow} from '@perform/common/object/equal';
+import {areObjectsEqualShallow} from '@perform/common';
 
 import {uuid} from './utils';
 

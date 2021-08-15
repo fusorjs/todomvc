@@ -1,6 +1,16 @@
 # @perform/todo-mvc-implementation
 
-## working @perform/dom version
+http://todomvc.com/
+https://github.com/tastejs/todomvc/blob/master/app-spec.md
 
-beff5e9: init props to typescript & add more tests
+## PROGRESS
 
+### CHANGELOG
+
+### DEVELOMENT
+
+### BACKLOG
+
+- TodoMVC model: try to propagate changes directly: push/pop/insert/remove... (instead of diff)
+- TodoMVC to typescript
+- remove render double calling ()() maybe?

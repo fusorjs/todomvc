@@ -1,4 +1,4 @@
-import {memF} from '@perform/common/memF';
+import {memoizeFunction} from '@perform/common';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
@@ -8,7 +8,7 @@ import {app} from './app';
 
 let route, render;
 
-const getRouteItemsMem = memF((route, items) => {
+const getRouteItemsMem = memoizeFunction((route, items) => {
   switch (route) {
     case ROUTE_ACTIVE: return items.filter(isNotCompleted);
     case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
