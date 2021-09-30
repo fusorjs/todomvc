@@ -3,14 +3,14 @@
 http://todomvc.com/
 https://github.com/tastejs/todomvc/blob/master/app-spec.md
 
-## PROGRESS
+## Done
 
-### CHANGELOG
+## In Progress
 
-### DEVELOMENT
-
-### BACKLOG
-
-- TodoMVC model: try to propagate changes directly: push/pop/insert/remove... (instead of diff)
 - TodoMVC to typescript
-- remove render double calling ()() maybe?
+
+## Todo
+
+- simplify, remove render double calling ()() maybe?
+- simplify, use simple child updater instead of diff maybe?
+- TodoMVC model: try to propagate changes directly: push/pop/insert/remove... (instead of diff)
