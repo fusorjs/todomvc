@@ -1,9 +1,13 @@
 # @perform/todo-mvc-implementation
 
+@perform todo-mvc implementation.
+
 http://todomvc.com/
 https://github.com/tastejs/todomvc/blob/master/app-spec.md
 
 ## Done
+
+072788f - last js version
 
 ## In Progress
 

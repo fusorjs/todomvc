@@ -49,15 +49,15 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@perform/common@link:../common/dist":
+"@perform/common@link:../common":
   version "0.0.0"
   uid ""
 
-"@perform/dom-components@link:../dom-components/dist":
+"@perform/dom-element@link:../dom-element":
   version "0.0.0"
   uid ""
 
-"@perform/dom@link:../dom/dist":
+"@perform/dom-other@link:../dom-other":
   version "0.0.0"
   uid ""
 

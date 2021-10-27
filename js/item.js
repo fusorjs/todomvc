@@ -1,4 +1,4 @@
-import {li, div, label, input, button} from '@perform/dom-components/html';
+import {li, div, label, input, button} from '@perform/dom-element/html';
 import cs from 'clsx';
 
 export const item = ({getItem, update, remove}) => {

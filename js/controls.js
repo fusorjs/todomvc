@@ -1,4 +1,4 @@
-import {footer, span, strong, ul, li, a, button} from '@perform/dom-components/html';
+import {footer, span, strong, ul, li, a, button} from '@perform/dom-element/html';
 import cs from 'clsx';
 
 import {isNotCompleted, pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';

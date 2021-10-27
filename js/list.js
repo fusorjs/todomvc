@@ -1,5 +1,5 @@
-import {section, input, label, ul} from '@perform/dom-components/html';
-import {diffChildren, replaceChildren} from '@perform/dom-components';
+import {section, input, label, ul} from '@perform/dom-element/html';
+import {diffChildren, replaceChildren} from '@perform/dom-other';
 
 import {item} from './item';
 
