@@ -28,6 +28,10 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.5.tgz#9283c9ce5b289a3c4f61c12757469e59377f81f3"
   integrity sha512-6nFkfkmSeV/rqSaS4oWHgmpnYw194f6hmWF5is6b0J1naJZoiD0NTc9AiUwPHvWsowkjuHErCZT1wa0jg+BLIA==
 
+"@efusor/dom@link:../dom":
+  version "0.0.0"
+  uid ""
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -48,18 +52,6 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
-
-"@perform/common@link:../common":
-  version "0.0.0"
-  uid ""
-
-"@perform/dom-element@link:../dom-element":
-  version "0.0.0"
-  uid ""
-
-"@perform/dom-other@link:../dom-other":
-  version "0.0.0"
-  uid ""
 
 "@tokenizer/token@^0.3.0":
   version "0.3.0"

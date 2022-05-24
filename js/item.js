@@ -1,66 +1,69 @@
-import {li, div, label, input, button} from '@perform/dom-element/html';
-import cs from 'clsx';
+import {li, div, label, input, button} from '@efusor/dom/html';
+import clsx from 'clsx';
 
-export const item = ({getItem, update, remove}) => {
-  let render, editing;
+export const item = ({todo, update, remove}) => {
+  let wrapper, editing;
   let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
-
-  const inputRef = {};
-
-  const setEditing = val => {
-    if (val === editing) return;
-    editing = val;
-    return render;
-  };
+  let inputRef;
 
   const handleUpdate = ({target}) => {
     const title = target.value.trim();
-    if (! title) {removed = true; return remove(getItem().id);}
-    target.value = title;
-    const t = update(getItem().id, {title});
-    const e = setEditing(false);
-    return t || e;
-  };
 
-  const handleInput = event => {
-    switch (event.code) {
-      case 'Escape':
-        event.target.value = getItem().title;
-        return setEditing(false);
-      case 'Enter':
-        return handleUpdate(event);
-      default:
-        return setEditing(true);
+    if (title) {
+      editing = false;
+      target.value = title;
+      update(todo.id, {title});
+    } else {
+      removed = true;
+      remove(todo.id);
     }
   };
 
-  return render = li({
-    class: () => cs(getItem().completed && 'completed', editing && 'editing'),
+  return wrapper = li({
+    class: () => clsx(todo.completed && 'completed', editing && 'editing'),
   },
     div({class: 'view'},
       input({
         class: 'toggle',
         type: 'checkbox',
-        checked: () => getItem().completed,
+        checked$$: () => todo.completed,
         onchange: () => {
-          const {id, completed} = getItem();
-          update(id, {completed: ! completed})?.() // todo make straight render
+          const {id, completed} = todo;
+          update(id, {completed: ! completed});
         },
       }),
       label({
         ondblclick: () => {
-          setEditing(true)?.();
-          inputRef.current.select();
+          editing = true;
+          wrapper.update();
+          inputRef.getElement().select(); // after update
         },
-      }, () => getItem().title),
-      button({class: 'destroy', onclick: () => remove(getItem().id)?.()}),
+      }, () => todo.title),
+      button({class: 'destroy', onclick: () => remove(todo.id)}),
     ),
-    input({
+
+    inputRef = input({
       class: 'edit',
-      value: () => getItem().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
-      ref: inputRef,
-      onblur: e => removed || handleUpdate(e)?.(),
-      onkeydown: e => handleInput(e)?.(),
+      value$$: () => todo.title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
+      onblur: e => {
+        removed || handleUpdate(e);
+        wrapper.update();
+      },
+      onkeydown: event => {
+        switch (event.code) {
+          case 'Escape':
+            event.target.value = todo.title;
+            editing = false;
+            break;
+          case 'Enter':
+            handleUpdate(event);
+            break;
+          default:
+            editing = true;
+            break;
+        }
+        wrapper.update();
+      },
     }),
   );
 };

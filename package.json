@@ -1,10 +1,9 @@
 {
-  "name": "@perform/todo-mvc-implementation",
+  "name": "@efusor/todomvc",
   "version": "1.0.0",
-  "description": "@perform todo-mvc implementation",
+  "description": "@efusor todo-mvc implementation",
   "keywords": [
-    "@perform",
-    "todo-mvc",
+    "@efusor",
     "todomvc"
   ],
   "license": "ISC",
@@ -14,9 +13,7 @@
     "open": "open-cli dist/index.html"
   },
   "dependencies": {
-    "@perform/common": "link:../common",
-    "@perform/dom-element": "link:../dom-element",
-    "@perform/dom-other": "link:../dom-other",
+    "@efusor/dom": "link:../dom",
     "clsx": "^1.1.1",
     "director": "^1.2.8",
     "todomvc-app-css": "^2.4.1",

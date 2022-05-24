@@ -1,6 +1,4 @@
-import {areObjectsEqualShallow} from '@perform/common';
-
-import {uuid} from './utils';
+import {uuid, areObjectsEqualShallow} from './utils';
 
 // todo next -> observable
 // todo try to propagate changes directly: push/pop/insert/remove... (instead of diff)
@@ -9,7 +7,7 @@ export const createModel = (items, next) => {
     const nextItems = items.filter(predicate);
     if (items.length !== nextItems.length) {
       items = nextItems;
-      return next(items);
+      next(items);
     }
   };
 
@@ -17,7 +15,7 @@ export const createModel = (items, next) => {
     create (item) {
       const newItem = { ...item, id: uuid() };
       items = [...items, newItem];
-      return next(items);
+      next(items);
     },
 
     update (id, item) {
@@ -34,7 +32,7 @@ export const createModel = (items, next) => {
       if (! areObjectsEqualShallow(prevItem, nextItem)) {
         items = [...items];
         items[index] = nextItem;
-        return next(items);
+        next(items);
       }
     },
 
@@ -48,7 +46,7 @@ export const createModel = (items, next) => {
       });
       if (areAnyChanged) {
         items = nextItems;
-        return next(items);
+        next(items);
       }
     },
 

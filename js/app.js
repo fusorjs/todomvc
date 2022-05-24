@@ -1,51 +1,12 @@
-import {header, div, h1, input} from '@perform/dom-element/html';
+import {header, div, h1, input} from '@efusor/dom/html';
 
-import {list} from './list';
-import {controls} from './controls';
+import {TodoList} from './list';
+import {MainControls} from './controls';
 
-export const app = ({todos, getRoute, getRouteItems}) => {
+export const App = ({todos, getRoute, getRouteItems}) => {
   let activeCount, completedCount;
 
-  const onkeydown = event => {
-    if (event.code !== 'Enter') return;
-    event.preventDefault();
-    const title = event.target.value.trim();
-    if (title) {
-      event.target.value = '';
-      todos.create({title})?.();
-    }
-  };
-
-  const renderList = list({
-    getRouteItems,
-    getCheckedAll: () => activeCount === 0,
-    update: todos.update,
-    remove: todos.remove,
-    updateAll: todos.updateAll,
-  });
-
-  const renderControls = controls({
-    getRoute,
-    getActiveCount: () => activeCount,
-    getCompletedCount: () => completedCount,
-    filter: todos.filter,
-  });
-
-  const renderMain = div(
-    header({class: 'header'},
-      h1('todos'),
-      input({
-        class: 'new-todo',
-        placeholder: 'What needs to be done?',
-        onkeydown,
-        autofocus: true,
-      }),
-      () => todos.items.length ? renderList : '',
-      () => activeCount || completedCount ? renderControls : '',
-    ),
-  );
-
-  return () => {
+  const calcCounts = () => {
     const {items} = todos;
 
     activeCount = items.reduce(
@@ -54,7 +15,54 @@ export const app = ({todos, getRoute, getRouteItems}) => {
     );
 
     completedCount = items.length - activeCount;
+  };
 
-    return renderMain();
+  calcCounts();
+
+  const onkeydown = event => {
+    if (event.code !== 'Enter') return;
+    event.preventDefault();
+    const title = event.target.value.trim();
+    if (title) {
+      event.target.value = '';
+      todos.create({title});
+    }
+  };
+
+  const todoList = TodoList({
+    getRouteItems,
+    getCheckedAll: () => activeCount === 0,
+    update: todos.update,
+    remove: todos.remove,
+    updateAll: todos.updateAll,
+  });
+
+  const mainControls = MainControls({
+    getRoute,
+    getActiveCount: () => activeCount,
+    getCompletedCount: () => completedCount,
+    filter: todos.filter,
+  });
+
+  const wrapper = div(
+    header({class: 'header'}, // todo header contains all content
+      h1('todos'),
+      input({
+        class: 'new-todo',
+        placeholder: 'What needs to be done?',
+        onkeydown,
+        autofocus: true,
+      }),
+      () => todos.items.length ? todoList : '',
+      () => activeCount || completedCount ? mainControls : '',
+    ),
+  );
+
+  return {
+    update: () => {
+      calcCounts();
+      wrapper.update();
+    },
+    getElement: () => wrapper.getElement(),
   };
 };

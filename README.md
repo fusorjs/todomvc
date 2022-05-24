@@ -1,6 +1,6 @@
-# @perform/todo-mvc-implementation
+# @efusor/todomvc
 
-@perform todo-mvc implementation.
+## @efusor TodoMVC implementation
 
 http://todomvc.com/
 https://github.com/tastejs/todomvc/blob/master/app-spec.md
@@ -8,12 +8,12 @@ https://github.com/tastejs/todomvc/blob/master/app-spec.md
 ## Done
 
 072788f - last js version
-
-## In Progress
-
-- TodoMVC to typescript
+remove {type: 'button'}
+remove refs
 
 ## Todo
+
+- TodoMVC to typescript
 
 - simplify, remove render double calling ()() maybe?
 - simplify, use simple child updater instead of diff maybe?

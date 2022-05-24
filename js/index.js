@@ -1,12 +1,13 @@
-import {memoizeFunction} from '@perform/common';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
 
+import {memoizeFunction} from './utils';
+
 import {createModel} from './model';
 import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED, isNotCompleted} from './utils';
-import {app} from './app';
+import {App} from './app';
 
-let route, render;
+let route, app;
 
 const getRouteItemsMem = memoizeFunction((route, items) => {
   switch (route) {
@@ -16,32 +17,28 @@ const getRouteItemsMem = memoizeFunction((route, items) => {
   }
 });
 
+const storageKey = '@efusor/todomvc';
+
 const todos = createModel(
-  (s => s ? JSON.parse(s) : [])(localStorage.getItem('todos-perform')),
-  (items) => () => {
-    localStorage.setItem('todos-perform', JSON.stringify(items));
-    render();
+  (s => s ? JSON.parse(s) : [])(localStorage.getItem(storageKey)),
+  (items) => {
+    localStorage.setItem(storageKey, JSON.stringify(items));
+    app.update();
   },
 );
 
-render = app({
+app = App({
   todos,
   getRoute: () => route,
   getRouteItems: () => getRouteItemsMem(route, todos.items),
 });
 
-{
-  // prevent router to render twice on init
+document.body.append(app.getElement());
 
-  let element;
-
-  new Router({
-    [ROUTE_ACTIVE]: () => {route = ROUTE_ACTIVE; element = render();},
-    [ROUTE_COMPLETED]: () => {route = ROUTE_COMPLETED; element = render();},
-  }).configure({
-    notfound: () => {route = ROUTE_ALL; element = render();},
-    async: false,
-  }).init();
-
-  document.body.append(element ?? render());
-}
+new Router({
+  [ROUTE_ACTIVE]: () => {route = ROUTE_ACTIVE; app.update();},
+  [ROUTE_COMPLETED]: () => {route = ROUTE_COMPLETED; app.update();},
+}).configure({
+  notfound: () => {route = ROUTE_ALL; app.update();},
+  async: false,
+}).init();

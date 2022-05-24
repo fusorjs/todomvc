@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   entry: './js/index.js',
   output: {
     filename: 'bundle.js',
@@ -15,7 +15,7 @@ module.exports = {
       {cleanStaleWebpackAssets: false} // --watch - do not delete index.html
     ),
     new HtmlWebpackPlugin({
-      title: 'Perform • TodoMVC',
+      title: 'TodoMVC',
     }),
   ],
   module: {
