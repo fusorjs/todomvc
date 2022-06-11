@@ -1,7 +1,6 @@
+import {memoizeFunctionShallow} from '@efusor/generic';
 import {Router} from 'director/build/director';
 import 'todomvc-app-css/index.css';
-
-import {memoizeFunction} from './utils';
 
 import {createModel} from './model';
 import {ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED, isNotCompleted} from './utils';
@@ -9,7 +8,7 @@ import {App} from './app';
 
 let route, app;
 
-const getRouteItemsMem = memoizeFunction((route, items) => {
+const getRouteItemsMem = memoizeFunctionShallow((route, items) => {
   switch (route) {
     case ROUTE_ACTIVE: return items.filter(isNotCompleted);
     case ROUTE_COMPLETED: return items.filter(({completed}) => completed);
@@ -33,7 +32,7 @@ app = App({
   getRouteItems: () => getRouteItemsMem(route, todos.items),
 });
 
-document.body.append(app.getElement());
+document.body.append(app.element);
 
 new Router({
   [ROUTE_ACTIVE]: () => {route = ROUTE_ACTIVE; app.update();},

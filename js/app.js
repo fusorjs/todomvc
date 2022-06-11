@@ -1,7 +1,7 @@
 import {header, div, h1, input} from '@efusor/dom/html';
 
 import {TodoList} from './list';
-import {MainControls} from './controls';
+import {FooterControls} from './controls';
 
 export const App = ({todos, getRoute, getRouteItems}) => {
   let activeCount, completedCount;
@@ -37,7 +37,7 @@ export const App = ({todos, getRoute, getRouteItems}) => {
     updateAll: todos.updateAll,
   });
 
-  const mainControls = MainControls({
+  const mainControls = FooterControls({
     getRoute,
     getActiveCount: () => activeCount,
     getCompletedCount: () => completedCount,
@@ -63,6 +63,8 @@ export const App = ({todos, getRoute, getRouteItems}) => {
       calcCounts();
       wrapper.update();
     },
-    getElement: () => wrapper.getElement(),
+    get element () {
+      return wrapper.element;
+    }
   };
 };

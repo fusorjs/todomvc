@@ -1,7 +1,8 @@
 import {section, input, label, ul} from '@efusor/dom/html';
 // import {diffChildren, replaceChildren} from '@perform/dom-other';
+import {MemoizeArrayMapShallow} from '@efusor/generic';
 
-import {item} from './item';
+import {TodoItem} from './item';
 
 export const TodoList = ({getRouteItems, update, remove, getCheckedAll, updateAll}) => (
   section({class: 'main'}, // todo main tag
@@ -16,7 +17,7 @@ export const TodoList = ({getRouteItems, update, remove, getCheckedAll, updateAl
 
     // replaceChildren(
     //   ul({class: 'todo-list'}),
-    //   () => getRouteItems().map(i => item({
+    //   () => getRouteItems().map(i => TodoItem({
     //     getItem: () => i,
     //     update,
     //     remove,
@@ -25,7 +26,7 @@ export const TodoList = ({getRouteItems, update, remove, getCheckedAll, updateAl
 
     // diffChildren(
     //   ul({class: 'todo-list'}),
-    //   getItem => item({
+    //   getItem => TodoItem({
     //     getItem,
     //     update,
     //     remove,
@@ -34,12 +35,23 @@ export const TodoList = ({getRouteItems, update, remove, getCheckedAll, updateAl
     //   'id',
     // ),
 
+    // ul({class: 'todo-list'},
+    //   () => getRouteItems().map(todo => TodoItem({
+    //     todo
+    //     update,
+    //     remove,
+    //   })),
+    // ),
+
     ul({class: 'todo-list'},
-      () => getRouteItems().map(i => item({
-        todo: i,
-        update,
-        remove,
-      })),
+      MemoizeArrayMapShallow(
+        getRouteItems,
+        todo => TodoItem({
+          todo,
+          update,
+          remove,
+        }),
+      )
     ),
   )
 );

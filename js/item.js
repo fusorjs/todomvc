@@ -1,7 +1,7 @@
 import {li, div, label, input, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
-export const item = ({todo, update, remove}) => {
+export const TodoItem = ({todo, update, remove}) => {
   let wrapper, editing;
   let removed; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
   let inputRef;
@@ -36,7 +36,7 @@ export const item = ({todo, update, remove}) => {
         ondblclick: () => {
           editing = true;
           wrapper.update();
-          inputRef.getElement().select(); // after update
+          inputRef.element.select(); // after update
         },
       }, () => todo.title),
       button({class: 'destroy', onclick: () => remove(todo.id)}),

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import {isNotCompleted, pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 
-export const MainControls = ({getActiveCount, getCompletedCount, getRoute, filter}) => {
+export const FooterControls = ({getActiveCount, getCompletedCount, getRoute, filter}) => {
   const clearButton = button({class: 'clear-completed', onclick: () => filter(isNotCompleted)?.()},
     'Clear completed',
   );

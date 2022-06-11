@@ -1,4 +1,6 @@
-import {uuid, areObjectsEqualShallow} from './utils';
+import {areObjectsEqualShallow} from '@efusor/generic';
+
+import {uuid} from './utils';
 
 // todo next -> observable
 // todo try to propagate changes directly: push/pop/insert/remove... (instead of diff)
