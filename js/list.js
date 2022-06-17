@@ -4,8 +4,15 @@ import {MemoizeArrayMapShallow} from '@efusor/generic';
 
 import {TodoItem} from './item';
 
-export const TodoList = ({getRouteItems, update, remove, getCheckedAll, updateAll}) => (
-  section({class: 'main'}, // todo main tag
+export const TodoList = ({
+  getRouteItems,
+  update,
+  remove,
+  getCheckedAll,
+  updateAll,
+}) =>
+  section(
+    {class: 'main'}, // todo main tag
     input({
       id: 'toggle-all',
       class: 'toggle-all',
@@ -43,15 +50,14 @@ export const TodoList = ({getRouteItems, update, remove, getCheckedAll, updateAl
     //   })),
     // ),
 
-    ul({class: 'todo-list'},
-      MemoizeArrayMapShallow(
-        getRouteItems,
-        todo => TodoItem({
+    ul(
+      {class: 'todo-list'},
+      MemoizeArrayMapShallow(getRouteItems, todo =>
+        TodoItem({
           todo,
           update,
           remove,
         }),
-      )
+      ),
     ),
-  )
-);
+  );

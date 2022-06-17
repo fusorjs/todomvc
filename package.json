@@ -9,24 +9,24 @@
   "license": "ISC",
   "author": "Igor Sukharev <imixaly4@gmail.com>",
   "scripts": {
-    "start": "webpack --watch",
-    "open": "open-cli dist/index.html"
+    "start": "NODE_ENV=development webpack serve --open",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@efusor/dom": "link:../dom",
     "@efusor/generic": "link:../generic",
     "clsx": "^1.1.1",
     "director": "^1.2.8",
-    "todomvc-app-css": "^2.4.1",
+    "todomvc-app-css": "^2.4.2",
     "todomvc-common": "^1.0.5"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^4.0.0",
-    "css-loader": "^6.3.0",
-    "html-webpack-plugin": "^5.3.2",
-    "open-cli": "^7.0.1",
-    "style-loader": "^3.3.0",
-    "webpack": "^5.55.1",
-    "webpack-cli": "^4.8.0"
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "prettier": "^2.6.2",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.2"
   }
 }

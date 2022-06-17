@@ -1,4 +1,4 @@
-import {header, div, h1, input} from '@efusor/dom/html';
+import {header, section, h1, input} from '@efusor/dom/html';
 
 import {TodoList} from './list';
 import {FooterControls} from './controls';
@@ -10,8 +10,8 @@ export const App = ({todos, getRoute, getRouteItems}) => {
     const {items} = todos;
 
     activeCount = items.reduce(
-      (acc, {completed}) => completed ? acc : acc + 1,
-      0
+      (acc, {completed}) => (completed ? acc : acc + 1),
+      0,
     );
 
     completedCount = items.length - activeCount;
@@ -41,11 +41,13 @@ export const App = ({todos, getRoute, getRouteItems}) => {
     getRoute,
     getActiveCount: () => activeCount,
     getCompletedCount: () => completedCount,
-    filter: todos.filter,
+    todos,
   });
 
-  const wrapper = div(
-    header({class: 'header'}, // todo header contains all content
+  const wrapper = section(
+    {class: 'todoapp'},
+    header(
+      {class: 'header'},
       h1('todos'),
       input({
         class: 'new-todo',
@@ -53,9 +55,9 @@ export const App = ({todos, getRoute, getRouteItems}) => {
         onkeydown,
         autofocus: true,
       }),
-      () => todos.items.length ? todoList : '',
-      () => activeCount || completedCount ? mainControls : '',
     ),
+    () => (todos.items.length ? todoList : ''),
+    () => (todos.items.length ? mainControls : ''),
   );
 
   return {
@@ -63,8 +65,8 @@ export const App = ({todos, getRoute, getRouteItems}) => {
       calcCounts();
       wrapper.update();
     },
-    get element () {
+    get element() {
       return wrapper.element;
-    }
+    },
   };
 };

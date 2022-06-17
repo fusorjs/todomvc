@@ -19,30 +19,35 @@ export const TodoItem = ({todo, update, remove}) => {
     }
   };
 
-  return wrapper = li({
-    class: () => clsx(todo.completed && 'completed', editing && 'editing'),
-  },
-    div({class: 'view'},
+  return (wrapper = li(
+    {
+      class: () => clsx(todo.completed && 'completed', editing && 'editing'),
+    },
+    div(
+      {class: 'view'},
       input({
         class: 'toggle',
         type: 'checkbox',
         checked$$: () => todo.completed,
         onchange: () => {
           const {id, completed} = todo;
-          update(id, {completed: ! completed});
+          update(id, {completed: !completed});
         },
       }),
-      label({
-        ondblclick: () => {
-          editing = true;
-          wrapper.update();
-          inputRef.element.select(); // after update
+      label(
+        {
+          ondblclick: () => {
+            editing = true;
+            wrapper.update();
+            inputRef.element.select(); // after update
+          },
         },
-      }, () => todo.title),
+        () => todo.title,
+      ),
       button({class: 'destroy', onclick: () => remove(todo.id)}),
     ),
 
-    inputRef = input({
+    (inputRef = input({
       class: 'edit',
       value$$: () => todo.title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
       onblur: e => {
@@ -64,6 +69,6 @@ export const TodoItem = ({todo, update, remove}) => {
         }
         wrapper.update();
       },
-    }),
-  );
+    })),
+  ));
 };
