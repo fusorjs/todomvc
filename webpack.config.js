@@ -1,13 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const isDevelopment =
+  process.env.NODE_ENV?.trim().toLowerCase() === 'development';
+
 module.exports = {
-  mode: 'development',
-  devtool: 'eval-source-map',
-  entry: './js/index.js',
+  entry: './js/index.ts',
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/', // for the historyApiFallback to function
     clean: true,
   },
   plugins: [
@@ -21,6 +23,34 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+        // use: {
+        //   loader: 'ts-loader',
+        //   options: {
+        //     compilerOptions: {
+        //       sourceMap: isDevelopment,
+        //     },
+        //   },
+        // },
+        exclude: /node_modules/,
+      },
     ],
   },
+  resolve: {
+    extensions: ['.ts', '...'],
+  },
+
+  ...(isDevelopment
+    ? {
+        mode: 'development',
+        devtool: 'inline-source-map',
+        devServer: {
+          historyApiFallback: true,
+        },
+      }
+    : {
+        mode: 'production',
+      }),
 };

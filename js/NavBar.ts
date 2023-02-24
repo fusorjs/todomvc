@@ -1,6 +1,8 @@
 import {footer, span, strong, ul, li, a, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
+import {Model} from './model';
+
 import {
   isActive,
   pluralize,
@@ -9,14 +11,14 @@ import {
   ROUTE_COMPLETED,
 } from './utils';
 
-export const FooterControls = ({
-  getActiveCount,
-  getCompletedCount,
-  getRoute,
-  todos,
-}) => {
+interface Props {
+  todos: Model;
+  getRoute: () => string;
+}
+
+export const NavBar = ({todos, getRoute}: Props) => {
   const clearButton = button(
-    {class: 'clear-completed', onclick: () => todos.filterIn(isActive)},
+    {class: 'clear-completed', onclick: () => todos.removeAllCompleted()},
     'Clear completed',
   );
 
@@ -24,8 +26,8 @@ export const FooterControls = ({
     {class: 'footer'},
     span(
       {class: 'todo-count'},
-      strong(getActiveCount),
-      pluralize(getActiveCount, ' item'),
+      strong(() => todos.active),
+      () => pluralize(todos.active, ' item'),
       ' left',
     ),
     ul(
@@ -58,6 +60,6 @@ export const FooterControls = ({
         ),
       ),
     ),
-    () => (getCompletedCount() > 0 ? clearButton : ''),
+    () => todos.items.length - todos.active > 0 && clearButton,
   );
 };
