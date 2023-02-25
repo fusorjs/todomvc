@@ -13,7 +13,7 @@ import {
 } from './data';
 import {getRoute, Route} from './route';
 
-import {TodoItem} from './TodoItem';
+import {Item} from './Item';
 
 const isCompleted = ({completed}: DataItem) => completed;
 
@@ -30,7 +30,7 @@ const getRouteItemsMemoized = memoizeFunctionShallow(
   },
 );
 
-export const ListTodos = () =>
+export const List = () =>
   section(
     {class: 'main'},
     input({
@@ -65,8 +65,8 @@ export const ListTodos = () =>
     // No optimisation
     ul({class: 'todo-list'}, () =>
       getRouteItemsMemoized(getRoute(), getAllData()).map(todo =>
-        TodoItem({
-          getItem: () => todo,
+        Item({
+          getValue: () => todo,
         }),
       ),
     ),

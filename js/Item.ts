@@ -9,23 +9,23 @@ import {
 } from './data';
 
 interface Props {
-  getItem: () => DataItem;
+  getValue: () => DataItem;
 }
 
-export const TodoItem = ({getItem}: Props) => {
+export const Item = ({getValue}: Props) => {
   let editing: boolean;
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const handleUpdate = ({target}: Target<HTMLInputElement>) => {
     const title = target.value.trim();
 
-    if (title) setDataItemTitle(getItem().id, title);
-    else removeDataItem(getItem().id);
+    if (title) setDataItemTitle(getValue().id, title);
+    else removeDataItem(getValue().id);
   };
 
   const textInput = input({
     class: 'edit',
-    value$$: () => getItem().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
+    value$$: () => getValue().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
     onblur: e => {
       editing = false;
 
@@ -51,7 +51,7 @@ export const TodoItem = ({getItem}: Props) => {
   const wrapper = li(
     {
       class: () =>
-        clsx(getItem().completed && 'completed', editing && 'editing'),
+        clsx(getValue().completed && 'completed', editing && 'editing'),
     },
 
     div(
@@ -59,9 +59,9 @@ export const TodoItem = ({getItem}: Props) => {
       input({
         class: 'toggle',
         type: 'checkbox',
-        checked$$: () => getItem().completed,
+        checked$$: () => getValue().completed,
         onchange: () => {
-          const {id, completed} = getItem();
+          const {id, completed} = getValue();
 
           setDataItemCompleted(id, !completed);
         },
@@ -74,9 +74,9 @@ export const TodoItem = ({getItem}: Props) => {
             textInput.element.select(); // after wrapper update
           },
         },
-        () => getItem().title,
+        () => getValue().title,
       ),
-      button({class: 'destroy', onclick: () => removeDataItem(getItem().id)}),
+      button({class: 'destroy', onclick: () => removeDataItem(getValue().id)}),
     ),
 
     textInput,

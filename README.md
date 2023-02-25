@@ -11,9 +11,9 @@ https://github.com/tastejs/todomvc/blob/master/app-spec.md
 remove {type: 'button'}
 remove refs
 
-## Todo
-
 - TodoMVC to typescript
+
+## Todo
 
 - simplify, remove render double calling ()() maybe?
 - simplify, use simple child updater instead of diff maybe?

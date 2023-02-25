@@ -5,8 +5,6 @@ import {setRouteUpdateListener} from './route';
 
 import {App} from './App';
 
-// App
-
 const app = App();
 const appUpdater = () => app.update();
 

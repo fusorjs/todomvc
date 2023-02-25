@@ -8,23 +8,7 @@ import {
 } from './data';
 import {getRoute, Route} from './route';
 
-interface Props {
-  name: string;
-  route: Route;
-}
-
-const RouteLink = ({name, route}: Props) =>
-  li(
-    a(
-      {
-        href: `#${route}`,
-        class: () => clsx(getRoute() === route && 'selected'),
-      },
-      name,
-    ),
-  );
-
-export const NavBar = () => {
+export const Panel = () => {
   const clearButton = button(
     {class: 'clear-completed', onclick: () => removeAllDataCompleted()},
     'Clear completed',
@@ -40,9 +24,9 @@ export const NavBar = () => {
     ),
     ul(
       {class: 'filters'},
-      RouteLink({name: 'All', route: '/'}),
-      RouteLink({name: 'Active', route: '/active'}),
-      RouteLink({name: 'Completed', route: '/completed'}),
+      Link({name: 'All', route: '/'}),
+      Link({name: 'Active', route: '/active'}),
+      Link({name: 'Completed', route: '/completed'}),
     ),
     () => getAllData().length - getAllDataActiveNumber() > 0 && clearButton,
   );
@@ -50,3 +34,19 @@ export const NavBar = () => {
 
 const pluralize = (count: number, word: string) =>
   count === 1 ? word : word + 's';
+
+interface LinkProps {
+  name: string;
+  route: Route;
+}
+
+const Link = ({name, route}: LinkProps) =>
+  li(
+    a(
+      {
+        href: `#${route}`,
+        class: () => clsx(getRoute() === route && 'selected'),
+      },
+      name,
+    ),
+  );
