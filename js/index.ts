@@ -2,7 +2,11 @@ import {memoizeFunctionShallow} from '@efusor/generic';
 
 import 'todomvc-app-css/index.css';
 
-import {Model} from './model';
+import {
+  getAllTodoItems,
+  setAllTodoItems,
+  setTodoItemsUpdateHandler,
+} from './data';
 import {
   ROUTE_ALL,
   ROUTE_ACTIVE,
@@ -31,20 +35,19 @@ let route: string;
 
 const STORAGE_KEY = '@efusor/todomvc';
 
-const todos = new Model(
+setAllTodoItems(
   (s => (s ? JSON.parse(s) : []))(localStorage.getItem(STORAGE_KEY)),
 );
 
 const app = App({
-  todos,
   getRoute: () => route,
-  getRouteItems: () => getRouteItemsMemoized(route, todos.items),
+  getRouteItems: () => getRouteItemsMemoized(route, getAllTodoItems()),
 });
 
-todos.updater = items => {
+setTodoItemsUpdateHandler(items => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   app.update();
-};
+});
 
 document.body.append(app.element);
 

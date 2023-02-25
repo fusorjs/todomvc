@@ -1,22 +1,21 @@
 import {li, div, label, input, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
-import {Model} from './model';
+import {removeTodoItem, setTodoItemCompleted, setTodoItemTitle} from './data';
 
 interface Props {
   getItem: () => Todo;
-  todos: Model;
 }
 
-export const TodoItem = ({getItem, todos}: Props) => {
+export const TodoItem = ({getItem}: Props) => {
   let editing: boolean;
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const handleUpdate = ({target}: Target<HTMLInputElement>) => {
     const title = target.value.trim();
 
-    if (title) todos.updateTitle(getItem().id, title);
-    else todos.remove(getItem().id);
+    if (title) setTodoItemTitle(getItem().id, title);
+    else removeTodoItem(getItem().id);
   };
 
   const textInput = input({
@@ -58,7 +57,8 @@ export const TodoItem = ({getItem, todos}: Props) => {
         checked$$: () => getItem().completed,
         onchange: () => {
           const {id, completed} = getItem();
-          todos.updateCompleted(id, !completed);
+
+          setTodoItemCompleted(id, !completed);
         },
       }),
       label(
@@ -71,7 +71,7 @@ export const TodoItem = ({getItem, todos}: Props) => {
         },
         () => getItem().title,
       ),
-      button({class: 'destroy', onclick: () => todos.remove(getItem().id)}),
+      button({class: 'destroy', onclick: () => removeTodoItem(getItem().id)}),
     ),
 
     textInput,

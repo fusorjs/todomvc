@@ -1,17 +1,17 @@
 import {header, section, h1, input} from '@efusor/dom/html';
 
-import {ListTodos} from './ListTodos';
-import {NavBar} from './NavBar';
-import {Model} from './model';
+import {addNewTodoItem, getAllTodoItems} from './data';
 import {uuid} from './utils';
 
+import {ListTodos} from './ListTodos';
+import {NavBar} from './NavBar';
+
 interface Props {
-  todos: Model;
   getRoute: () => string;
   getRouteItems: () => Todo[];
 }
 
-export const App = ({todos, getRoute, getRouteItems}: Props) => {
+export const App = ({getRoute, getRouteItems}: Props) => {
   const onkeydown = (event: KeyboardEvent & Target<HTMLInputElement>) => {
     if (event.code !== 'Enter') return;
 
@@ -21,7 +21,7 @@ export const App = ({todos, getRoute, getRouteItems}: Props) => {
 
     if (title) {
       event.target.value = '';
-      todos.add({
+      addNewTodoItem({
         id: uuid(),
         title,
         completed: false,
@@ -29,9 +29,9 @@ export const App = ({todos, getRoute, getRouteItems}: Props) => {
     }
   };
 
-  const listTodos = ListTodos({todos, getRouteItems});
+  const listTodos = ListTodos({getRouteItems});
 
-  const navBar = NavBar({todos, getRoute});
+  const navBar = NavBar({getRoute});
 
   return section(
     {class: 'todoapp'},
@@ -45,7 +45,7 @@ export const App = ({todos, getRoute, getRouteItems}: Props) => {
         autofocus: true,
       }),
     ),
-    () => todos.items.length > 0 && listTodos,
-    () => todos.items.length > 0 && navBar,
+    () => getAllTodoItems().length > 0 && listTodos,
+    () => getAllTodoItems().length > 0 && navBar,
   );
 };

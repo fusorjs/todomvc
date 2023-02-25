@@ -2,25 +2,23 @@ import {section, input, label, ul} from '@efusor/dom/html';
 // import {diffChildren, replaceChildren} from '@perform/dom-other';
 // import {MemoizeArrayMapShallow} from '@efusor/generic';
 
+import {getNumberOfActiveTodoItems, setAllTodoItemsCompleted} from './data';
+
 import {TodoItem} from './TodoItem';
-import {Model} from './model';
 
 interface Props {
-  todos: Model;
   getRouteItems: () => Todo[];
 }
 
-export const ListTodos = ({todos, getRouteItems}: Props) =>
+export const ListTodos = ({getRouteItems}: Props) =>
   section(
     {class: 'main'},
     input({
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      checked$$: () => todos.active === 0,
-      onchange: ({target: {checked}}) => {
-        todos.updateCompletedAll(checked);
-      },
+      checked$$: () => getNumberOfActiveTodoItems() === 0,
+      onchange: ({target: {checked}}) => setAllTodoItemsCompleted(checked),
     }),
     label({for: 'toggle-all'}, 'Mark all as complete'),
 
@@ -49,7 +47,6 @@ export const ListTodos = ({todos, getRouteItems}: Props) =>
       getRouteItems().map(todo =>
         TodoItem({
           getItem: () => todo,
-          todos,
         }),
       ),
     ),

@@ -1,24 +1,20 @@
 import {footer, span, strong, ul, li, a, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
-import {Model} from './model';
-
 import {
-  isActive,
-  pluralize,
-  ROUTE_ALL,
-  ROUTE_ACTIVE,
-  ROUTE_COMPLETED,
-} from './utils';
+  getAllTodoItems,
+  getNumberOfActiveTodoItems,
+  removeAllTodoItemsCompleted,
+} from './data';
+import {pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
 
 interface Props {
-  todos: Model;
   getRoute: () => string;
 }
 
-export const NavBar = ({todos, getRoute}: Props) => {
+export const NavBar = ({getRoute}: Props) => {
   const clearButton = button(
-    {class: 'clear-completed', onclick: () => todos.removeCompletedAll()},
+    {class: 'clear-completed', onclick: () => removeAllTodoItemsCompleted()},
     'Clear completed',
   );
 
@@ -26,8 +22,8 @@ export const NavBar = ({todos, getRoute}: Props) => {
     {class: 'footer'},
     span(
       {class: 'todo-count'},
-      strong(() => todos.active),
-      () => pluralize(todos.active, ' item'),
+      strong(() => getNumberOfActiveTodoItems()),
+      () => pluralize(getNumberOfActiveTodoItems(), ' item'),
       ' left',
     ),
     ul(
@@ -60,6 +56,8 @@ export const NavBar = ({todos, getRoute}: Props) => {
         ),
       ),
     ),
-    () => todos.items.length - todos.active > 0 && clearButton,
+    () =>
+      getAllTodoItems().length - getNumberOfActiveTodoItems() > 0 &&
+      clearButton,
   );
 };
