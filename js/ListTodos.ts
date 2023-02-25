@@ -1,16 +1,33 @@
 import {section, input, label, ul} from '@efusor/dom/html';
-// import {diffChildren, replaceChildren} from '@perform/dom-other';
+import {memoizeFunctionShallow} from '@efusor/generic';
+// import {diffChildren} from '@perform/dom-other';
+// import {replaceChildren} from '@perform/dom-other';
 // import {MemoizeArrayMapShallow} from '@efusor/generic';
 
-import {getNumberOfActiveTodoItems, setAllTodoItemsCompleted} from './data';
+import {
+  getAllTodoItems,
+  getNumberOfActiveTodoItems,
+  setAllTodoItemsCompleted,
+} from './data';
+import {getRoute, Route} from './route';
+import {isActive, isCompleted} from './utils';
 
 import {TodoItem} from './TodoItem';
 
-interface Props {
-  getRouteItems: () => Todo[];
-}
+const getRouteItemsMemoized = memoizeFunctionShallow(
+  (route: Route, items: readonly Todo[]) => {
+    switch (route) {
+      case '/active':
+        return items.filter(isActive);
+      case '/completed':
+        return items.filter(isCompleted);
+      default:
+        return items;
+    }
+  },
+);
 
-export const ListTodos = ({getRouteItems}: Props) =>
+export const ListTodos = () =>
   section(
     {class: 'main'},
     input({
@@ -44,7 +61,7 @@ export const ListTodos = ({getRouteItems}: Props) =>
 
     // No optimisation
     ul({class: 'todo-list'}, () =>
-      getRouteItems().map(todo =>
+      getRouteItemsMemoized(getRoute(), getAllTodoItems()).map(todo =>
         TodoItem({
           getItem: () => todo,
         }),

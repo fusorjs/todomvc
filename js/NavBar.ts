@@ -6,13 +6,26 @@ import {
   getNumberOfActiveTodoItems,
   removeAllTodoItemsCompleted,
 } from './data';
-import {pluralize, ROUTE_ALL, ROUTE_ACTIVE, ROUTE_COMPLETED} from './utils';
+import {getRoute, Route} from './route';
+import {pluralize} from './utils';
 
 interface Props {
-  getRoute: () => string;
+  name: string;
+  route: Route;
 }
 
-export const NavBar = ({getRoute}: Props) => {
+const RouteLink = ({name, route}: Props) =>
+  li(
+    a(
+      {
+        href: `#${route}`,
+        class: () => clsx(getRoute() === route && 'selected'),
+      },
+      name,
+    ),
+  );
+
+export const NavBar = () => {
   const clearButton = button(
     {class: 'clear-completed', onclick: () => removeAllTodoItemsCompleted()},
     'Clear completed',
@@ -28,33 +41,9 @@ export const NavBar = ({getRoute}: Props) => {
     ),
     ul(
       {class: 'filters'},
-      li(
-        a(
-          {
-            href: `#${ROUTE_ALL}`,
-            class: () => clsx(getRoute() === ROUTE_ALL && 'selected'),
-          },
-          'All',
-        ),
-      ),
-      li(
-        a(
-          {
-            href: `#${ROUTE_ACTIVE}`,
-            class: () => clsx(getRoute() === ROUTE_ACTIVE && 'selected'),
-          },
-          'Active',
-        ),
-      ),
-      li(
-        a(
-          {
-            href: `#${ROUTE_COMPLETED}`,
-            class: () => clsx(getRoute() === ROUTE_COMPLETED && 'selected'),
-          },
-          'Completed',
-        ),
-      ),
+      RouteLink({name: 'All', route: '/'}),
+      RouteLink({name: 'Active', route: '/active'}),
+      RouteLink({name: 'Completed', route: '/completed'}),
     ),
     () =>
       getAllTodoItems().length - getNumberOfActiveTodoItems() > 0 &&

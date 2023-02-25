@@ -1,7 +1,3 @@
-export const ROUTE_ALL = '/';
-export const ROUTE_ACTIVE = '/active';
-export const ROUTE_COMPLETED = '/completed';
-
 export const pluralize = (count: number, word: string) =>
   count === 1 ? word : word + 's';
 

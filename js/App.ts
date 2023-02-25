@@ -6,12 +6,7 @@ import {uuid} from './utils';
 import {ListTodos} from './ListTodos';
 import {NavBar} from './NavBar';
 
-interface Props {
-  getRoute: () => string;
-  getRouteItems: () => Todo[];
-}
-
-export const App = ({getRoute, getRouteItems}: Props) => {
+export const App = () => {
   const onkeydown = (event: KeyboardEvent & Target<HTMLInputElement>) => {
     if (event.code !== 'Enter') return;
 
@@ -29,9 +24,8 @@ export const App = ({getRoute, getRouteItems}: Props) => {
     }
   };
 
-  const listTodos = ListTodos({getRouteItems});
-
-  const navBar = NavBar({getRoute});
+  const listTodos = ListTodos();
+  const navBar = NavBar();
 
   return section(
     {class: 'todoapp'},
