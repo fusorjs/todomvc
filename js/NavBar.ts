@@ -7,7 +7,6 @@ import {
   removeAllDataCompleted,
 } from './data';
 import {getRoute, Route} from './route';
-import {pluralize} from './utils';
 
 interface Props {
   name: string;
@@ -48,3 +47,6 @@ export const NavBar = () => {
     () => getAllData().length - getAllDataActiveNumber() > 0 && clearButton,
   );
 };
+
+const pluralize = (count: number, word: string) =>
+  count === 1 ? word : word + 's';

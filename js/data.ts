@@ -2,9 +2,6 @@
 // This is non-mutating data model.
 //
 
-import {countActive, isActive} from './utils';
-import {uuid} from './utils';
-
 export interface DataItem {
   id: ID;
   title: string;
@@ -34,6 +31,8 @@ export const setAllDataCompleted = (completed: boolean) =>
   update(data.map(item => ({...item, completed})));
 export const removeAllDataCompleted = () => update(data.filter(isActive));
 
+export const isActive = ({completed}: DataItem) => !completed;
+
 type ID = string & {distinct: 'ID'};
 
 const STORAGE_KEY = '@efusor/todomvc';
@@ -44,6 +43,8 @@ let data: readonly DataItem[] = (s => (s ? JSON.parse(s) : []))(
 
 let activeNumber = 0;
 
+const countActive = (acc: number, {completed}: DataItem) =>
+  completed ? acc : acc + 1;
 const updateNumberOfActive = () => (activeNumber = data.reduce(countActive, 0));
 
 updateNumberOfActive(); // initialize
@@ -56,3 +57,6 @@ const update = (items: readonly DataItem[]) => {
   updateNumberOfActive();
   updateListener();
 };
+
+const uuid = () =>
+  Date.now().toString(36) + Math.random().toString(36).slice(2);

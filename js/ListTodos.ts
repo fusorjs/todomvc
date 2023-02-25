@@ -9,11 +9,13 @@ import {
   getAllData,
   getAllDataActiveNumber,
   setAllDataCompleted,
+  isActive,
 } from './data';
 import {getRoute, Route} from './route';
-import {isActive, isCompleted} from './utils';
 
 import {TodoItem} from './TodoItem';
+
+const isCompleted = ({completed}: DataItem) => completed;
 
 const getRouteItemsMemoized = memoizeFunctionShallow(
   (route: Route, items: readonly DataItem[]) => {
