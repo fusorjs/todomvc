@@ -1,4 +1,3 @@
-import {Component} from '@efusor/dom';
 import {memoizeFunctionShallow} from '@efusor/generic';
 
 import 'todomvc-app-css/index.css';
@@ -13,7 +12,7 @@ import {
 } from './utils';
 import {App} from './App';
 
-const getRouteItemsMem = memoizeFunctionShallow(
+const getRouteItemsMemoized = memoizeFunctionShallow(
   (route: string, items: readonly Todo[]) => {
     switch (route) {
       case ROUTE_ACTIVE:
@@ -26,29 +25,26 @@ const getRouteItemsMem = memoizeFunctionShallow(
   },
 );
 
-// Model
-
-const STORAGE_KEY = '@efusor/todomvc';
-
-let app: Component<Element>;
-
-const todos = new Model(
-  (s => (s ? JSON.parse(s) : []))(localStorage.getItem(STORAGE_KEY)),
-  items => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    app.update();
-  },
-);
-
 // App
 
 let route: string;
 
-app = App({
+const STORAGE_KEY = '@efusor/todomvc';
+
+const todos = new Model(
+  (s => (s ? JSON.parse(s) : []))(localStorage.getItem(STORAGE_KEY)),
+);
+
+const app = App({
   todos,
   getRoute: () => route,
-  getRouteItems: () => getRouteItemsMem(route, todos.items),
+  getRouteItems: () => getRouteItemsMemoized(route, todos.items),
 });
+
+todos.updater = items => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  app.update();
+};
 
 document.body.append(app.element);
 

@@ -18,7 +18,7 @@ interface Props {
 
 export const NavBar = ({todos, getRoute}: Props) => {
   const clearButton = button(
-    {class: 'clear-completed', onclick: () => todos.removeAllCompleted()},
+    {class: 'clear-completed', onclick: () => todos.removeCompletedAll()},
     'Clear completed',
   );
 

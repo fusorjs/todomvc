@@ -4,54 +4,50 @@ import clsx from 'clsx';
 import {Model} from './model';
 
 interface Props {
-  todo: Todo;
+  getItem: () => Todo;
   todos: Model;
 }
 
-export const TodoItem = ({todo, todos}: Props) => {
+export const TodoItem = ({getItem, todos}: Props) => {
   let editing: boolean;
-  let removed: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
+  let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const handleUpdate = ({target}: Target<HTMLInputElement>) => {
     const title = target.value.trim();
 
-    if (title) {
-      editing = false;
-      target.value = title;
-      todos.updateTitle(todo.id, title);
-    } else {
-      removed = true;
-      todos.remove(todo.id);
-    }
+    if (title) todos.updateTitle(getItem().id, title);
+    else todos.remove(getItem().id);
   };
 
   const textInput = input({
     class: 'edit',
-    value$$: () => todo.title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
+    value$$: () => getItem().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
     onblur: e => {
-      removed || handleUpdate(e);
-      wrapper.update();
+      editing = false;
+
+      if (skipBlur) skipBlur = false;
+      else handleUpdate(e);
     },
     onkeydown: event => {
       switch (event.code) {
         case 'Escape':
-          event.target.value = todo.title;
           editing = false;
+          skipBlur = true;
+          wrapper.update();
           break;
         case 'Enter':
+          editing = false;
+          skipBlur = true;
           handleUpdate(event);
           break;
-        default:
-          editing = true;
-          break;
       }
-      wrapper.update();
     },
   });
 
   const wrapper = li(
     {
-      class: () => clsx(todo.completed && 'completed', editing && 'editing'),
+      class: () =>
+        clsx(getItem().completed && 'completed', editing && 'editing'),
     },
 
     div(
@@ -59,9 +55,9 @@ export const TodoItem = ({todo, todos}: Props) => {
       input({
         class: 'toggle',
         type: 'checkbox',
-        checked$$: () => todo.completed,
+        checked$$: () => getItem().completed,
         onchange: () => {
-          const {id, completed} = todo;
+          const {id, completed} = getItem();
           todos.updateCompleted(id, !completed);
         },
       }),
@@ -70,12 +66,12 @@ export const TodoItem = ({todo, todos}: Props) => {
           ondblclick: () => {
             editing = true;
             wrapper.update();
-            textInput.element.select(); // after update
+            textInput.element.select(); // after wrapper update
           },
         },
-        () => todo.title,
+        () => getItem().title,
       ),
-      button({class: 'destroy', onclick: () => todos.remove(todo.id)}),
+      button({class: 'destroy', onclick: () => todos.remove(getItem().id)}),
     ),
 
     textInput,

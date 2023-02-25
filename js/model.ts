@@ -1,20 +1,17 @@
 import {countActive, isActive} from './utils';
 
-type Items = readonly Todo[];
-
 export class Model {
-  #items: Items;
-  #updater;
+  #items: readonly Todo[];
   #active?: number;
+  updater?: (items: readonly Todo[]) => void;
 
-  constructor(items: Items, updater: (items: Items) => void) {
+  constructor(items: readonly Todo[]) {
     this.#items = items;
-    this.#updater = updater;
   }
 
   #update() {
     this.#active = undefined;
-    this.#updater(this.#items);
+    this.updater?.(this.#items);
   }
 
   get items() {
@@ -51,12 +48,12 @@ export class Model {
     this.#update();
   }
 
-  updateAllCompleted(completed: boolean) {
+  updateCompletedAll(completed: boolean) {
     this.#items = this.#items.map(item => ({...item, completed}));
     this.#update();
   }
 
-  removeAllCompleted() {
+  removeCompletedAll() {
     this.#items = this.#items.filter(isActive);
     this.#update();
   }

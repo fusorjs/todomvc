@@ -1,6 +1,6 @@
 import {section, input, label, ul} from '@efusor/dom/html';
 // import {diffChildren, replaceChildren} from '@perform/dom-other';
-import {MemoizeArrayMapShallow} from '@efusor/generic';
+// import {MemoizeArrayMapShallow} from '@efusor/generic';
 
 import {TodoItem} from './TodoItem';
 import {Model} from './model';
@@ -19,7 +19,7 @@ export const ListTodos = ({todos, getRouteItems}: Props) =>
       type: 'checkbox',
       checked$$: () => todos.active === 0,
       onchange: ({target: {checked}}) => {
-        todos.updateAllCompleted(checked);
+        todos.updateCompletedAll(checked);
       },
     }),
     label({for: 'toggle-all'}, 'Mark all as complete'),
@@ -44,17 +44,18 @@ export const ListTodos = ({todos, getRouteItems}: Props) =>
     //   'id',
     // ),
 
-    // ul({class: 'todo-list'}, () =>
-    //   getRouteItems().map(todo =>
-    //     TodoItem({
-    //       todo,
-    //       todos,
-    //     }),
-    //   ),
-    // ),
-
-    ul(
-      {class: 'todo-list'},
-      MemoizeArrayMapShallow(getRouteItems, todo => TodoItem({todo, todos})),
+    // No optimisation
+    ul({class: 'todo-list'}, () =>
+      getRouteItems().map(todo =>
+        TodoItem({
+          getItem: () => todo,
+          todos,
+        }),
+      ),
     ),
+
+    // ul(
+    //   {class: 'todo-list'},
+    //   MemoizeArrayMapShallow(getRouteItems, todo => TodoItem({todo, todos})),
+    // ),
   );
