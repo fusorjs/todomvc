@@ -1,6 +1,6 @@
 import {header, section, h1, input} from '@efusor/dom/html';
 
-import {addNewTodoItem, getAllTodoItems} from './data';
+import {addDataItem, getAllData} from './data';
 import {uuid} from './utils';
 
 import {ListTodos} from './ListTodos';
@@ -16,7 +16,7 @@ export const App = () => {
 
     if (title) {
       event.target.value = '';
-      addNewTodoItem({
+      addDataItem({
         id: uuid(),
         title,
         completed: false,
@@ -39,7 +39,7 @@ export const App = () => {
         autofocus: true,
       }),
     ),
-    () => getAllTodoItems().length > 0 && listTodos,
-    () => getAllTodoItems().length > 0 && navBar,
+    () => getAllData().length > 0 && listTodos,
+    () => getAllData().length > 0 && navBar,
   );
 };

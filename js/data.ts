@@ -1,66 +1,42 @@
 //
-// This is non mutating data model
+// This is non-mutating data model.
 //
 
 import {countActive, isActive} from './utils';
 
-// All todo items
+export const getAllData = () => data;
+export const getAllDataActiveNumber = () => activeNumber;
+export const setAllDataUpdateListener = (callback: typeof updateListener) =>
+  (updateListener = callback);
 
-let allTodoItems: readonly Todo[] = [];
+export const addDataItem = (newItem: Todo) => update([...data, newItem]);
+export const setDataItemTitle = (id: ID, title: string) =>
+  update(data.map(item => (item.id === id ? {...item, title} : item)));
+export const setDataItemCompleted = (id: ID, completed: boolean) =>
+  update(data.map(item => (item.id === id ? {...item, completed} : item)));
+export const removeDataItem = (id: ID) => update(data.filter(i => i.id !== id));
 
-export const setAllTodoItems = (items: readonly Todo[]) => {
-  allTodoItems = items;
+export const setAllDataCompleted = (completed: boolean) =>
+  update(data.map(item => ({...item, completed})));
+export const removeAllDataCompleted = () => update(data.filter(isActive));
+
+const STORAGE_KEY = '@efusor/todomvc';
+
+let data: readonly Todo[] = (s => (s ? JSON.parse(s) : []))(
+  localStorage.getItem(STORAGE_KEY),
+);
+
+let activeNumber = 0;
+
+const updateNumberOfActive = () => (activeNumber = data.reduce(countActive, 0));
+
+updateNumberOfActive(); // initialize
+
+let updateListener = () => {};
+
+const update = (items: readonly Todo[]) => {
+  data = items;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   updateNumberOfActive();
+  updateListener();
 };
-
-export const getAllTodoItems = () => allTodoItems;
-
-// Number of active todo items
-
-let numberOfActive = 0;
-
-export const getNumberOfActiveTodoItems = () => numberOfActive;
-
-const updateNumberOfActive = () =>
-  (numberOfActive = allTodoItems.reduce(countActive, 0));
-
-// Client update handeler
-
-let clientUpdater: undefined | ((items: readonly Todo[]) => void);
-
-export const setTodoItemsUpdateHandler = (callback: typeof clientUpdater) =>
-  (clientUpdater = callback);
-
-// Data updating functions
-
-const updateHelper = (items: readonly Todo[]) => {
-  allTodoItems = items;
-  updateNumberOfActive();
-  clientUpdater?.(allTodoItems);
-};
-
-// One item actions
-
-export const addNewTodoItem = (newItem: Todo) =>
-  updateHelper([...allTodoItems, newItem]);
-
-export const setTodoItemTitle = (id: ID, title: string) =>
-  updateHelper(
-    allTodoItems.map(item => (item.id === id ? {...item, title} : item)),
-  );
-
-export const setTodoItemCompleted = (id: ID, completed: boolean) =>
-  updateHelper(
-    allTodoItems.map(item => (item.id === id ? {...item, completed} : item)),
-  );
-
-export const removeTodoItem = (id: ID) =>
-  updateHelper(allTodoItems.filter(i => i.id !== id));
-
-// Many items actions
-
-export const setAllTodoItemsCompleted = (completed: boolean) =>
-  updateHelper(allTodoItems.map(item => ({...item, completed})));
-
-export const removeAllTodoItemsCompleted = () =>
-  updateHelper(allTodoItems.filter(isActive));

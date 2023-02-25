@@ -4,11 +4,7 @@ import {memoizeFunctionShallow} from '@efusor/generic';
 // import {replaceChildren} from '@perform/dom-other';
 // import {MemoizeArrayMapShallow} from '@efusor/generic';
 
-import {
-  getAllTodoItems,
-  getNumberOfActiveTodoItems,
-  setAllTodoItemsCompleted,
-} from './data';
+import {getAllData, getAllDataActiveNumber, setAllDataCompleted} from './data';
 import {getRoute, Route} from './route';
 import {isActive, isCompleted} from './utils';
 
@@ -34,8 +30,8 @@ export const ListTodos = () =>
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      checked$$: () => getNumberOfActiveTodoItems() === 0,
-      onchange: ({target: {checked}}) => setAllTodoItemsCompleted(checked),
+      checked$$: () => getAllDataActiveNumber() === 0,
+      onchange: ({target: {checked}}) => setAllDataCompleted(checked),
     }),
     label({for: 'toggle-all'}, 'Mark all as complete'),
 
@@ -61,7 +57,7 @@ export const ListTodos = () =>
 
     // No optimisation
     ul({class: 'todo-list'}, () =>
-      getRouteItemsMemoized(getRoute(), getAllTodoItems()).map(todo =>
+      getRouteItemsMemoized(getRoute(), getAllData()).map(todo =>
         TodoItem({
           getItem: () => todo,
         }),

@@ -1,7 +1,5 @@
 export type Route = '/' | '/active' | '/completed';
-
 export const getRoute = () => route;
-
 export const setRouteUpdateListener = (callback: typeof updateListener) =>
   (updateListener = callback);
 

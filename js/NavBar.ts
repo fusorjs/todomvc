@@ -2,9 +2,9 @@ import {footer, span, strong, ul, li, a, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
 import {
-  getAllTodoItems,
-  getNumberOfActiveTodoItems,
-  removeAllTodoItemsCompleted,
+  getAllData,
+  getAllDataActiveNumber,
+  removeAllDataCompleted,
 } from './data';
 import {getRoute, Route} from './route';
 import {pluralize} from './utils';
@@ -27,7 +27,7 @@ const RouteLink = ({name, route}: Props) =>
 
 export const NavBar = () => {
   const clearButton = button(
-    {class: 'clear-completed', onclick: () => removeAllTodoItemsCompleted()},
+    {class: 'clear-completed', onclick: () => removeAllDataCompleted()},
     'Clear completed',
   );
 
@@ -35,8 +35,8 @@ export const NavBar = () => {
     {class: 'footer'},
     span(
       {class: 'todo-count'},
-      strong(() => getNumberOfActiveTodoItems()),
-      () => pluralize(getNumberOfActiveTodoItems(), ' item'),
+      strong(() => getAllDataActiveNumber()),
+      () => pluralize(getAllDataActiveNumber(), ' item'),
       ' left',
     ),
     ul(
@@ -45,8 +45,6 @@ export const NavBar = () => {
       RouteLink({name: 'Active', route: '/active'}),
       RouteLink({name: 'Completed', route: '/completed'}),
     ),
-    () =>
-      getAllTodoItems().length - getNumberOfActiveTodoItems() > 0 &&
-      clearButton,
+    () => getAllData().length - getAllDataActiveNumber() > 0 && clearButton,
   );
 };

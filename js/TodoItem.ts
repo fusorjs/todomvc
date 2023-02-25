@@ -1,7 +1,7 @@
 import {li, div, label, input, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
-import {removeTodoItem, setTodoItemCompleted, setTodoItemTitle} from './data';
+import {removeDataItem, setDataItemCompleted, setDataItemTitle} from './data';
 
 interface Props {
   getItem: () => Todo;
@@ -14,8 +14,8 @@ export const TodoItem = ({getItem}: Props) => {
   const handleUpdate = ({target}: Target<HTMLInputElement>) => {
     const title = target.value.trim();
 
-    if (title) setTodoItemTitle(getItem().id, title);
-    else removeTodoItem(getItem().id);
+    if (title) setDataItemTitle(getItem().id, title);
+    else removeDataItem(getItem().id);
   };
 
   const textInput = input({
@@ -58,7 +58,7 @@ export const TodoItem = ({getItem}: Props) => {
         onchange: () => {
           const {id, completed} = getItem();
 
-          setTodoItemCompleted(id, !completed);
+          setDataItemCompleted(id, !completed);
         },
       }),
       label(
@@ -71,7 +71,7 @@ export const TodoItem = ({getItem}: Props) => {
         },
         () => getItem().title,
       ),
-      button({class: 'destroy', onclick: () => removeTodoItem(getItem().id)}),
+      button({class: 'destroy', onclick: () => removeDataItem(getItem().id)}),
     ),
 
     textInput,
