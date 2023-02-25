@@ -9,6 +9,7 @@ import {
 import {getRoute, Route} from './route';
 
 export const Panel = () => {
+  // cache it, so it won't be recreated on every Panel update
   const clearButton = button(
     {class: 'clear-completed', onclick: () => removeAllDataCompleted()},
     'Clear completed',

@@ -6,6 +6,7 @@ import {List} from './List';
 import {Panel} from './Panel';
 
 export const App = () => {
+  // cache these two components, so they won't be recreated on every App update
   const list = List();
   const panel = Panel();
 

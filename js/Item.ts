@@ -13,14 +13,19 @@ interface Props {
 }
 
 export const Item = ({getValue}: Props) => {
-  let editing: boolean;
+  let editing: boolean; // entering/exiting editing mode will only trigger this component update (not the whole application)
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
-  const handleUpdate = ({target}: Target<HTMLInputElement>) => {
-    const title = target.value.trim();
+  const handleTitle = ({target}: Target<HTMLInputElement>) => {
+    const newTitle = target.value.trim();
+    const {id, title} = getValue();
 
-    if (title) setDataItemTitle(getValue().id, title);
-    else removeDataItem(getValue().id);
+    if (newTitle) {
+      if (newTitle === title) wrapper.update();
+      else setDataItemTitle(id, newTitle);
+    } else {
+      removeDataItem(id);
+    }
   };
 
   const textInput = input({
@@ -30,7 +35,7 @@ export const Item = ({getValue}: Props) => {
       editing = false;
 
       if (skipBlur) skipBlur = false;
-      else handleUpdate(e);
+      else handleTitle(e);
     },
     onkeydown: event => {
       switch (event.code) {
@@ -42,7 +47,7 @@ export const Item = ({getValue}: Props) => {
         case 'Enter':
           editing = false;
           skipBlur = true;
-          handleUpdate(event);
+          handleTitle(event);
           break;
       }
     },
