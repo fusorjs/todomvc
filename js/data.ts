@@ -3,13 +3,27 @@
 //
 
 import {countActive, isActive} from './utils';
+import {uuid} from './utils';
+
+export interface DataItem {
+  id: ID;
+  title: string;
+  completed: boolean;
+}
 
 export const getAllData = () => data;
 export const getAllDataActiveNumber = () => activeNumber;
 export const setAllDataUpdateListener = (callback: typeof updateListener) =>
   (updateListener = callback);
 
-export const addDataItem = (newItem: Todo) => update([...data, newItem]);
+export const addDataItem = (newItem: Omit<DataItem, 'id'>) =>
+  update([
+    ...data,
+    {
+      id: uuid() as ID,
+      ...newItem,
+    },
+  ]);
 export const setDataItemTitle = (id: ID, title: string) =>
   update(data.map(item => (item.id === id ? {...item, title} : item)));
 export const setDataItemCompleted = (id: ID, completed: boolean) =>
@@ -20,9 +34,11 @@ export const setAllDataCompleted = (completed: boolean) =>
   update(data.map(item => ({...item, completed})));
 export const removeAllDataCompleted = () => update(data.filter(isActive));
 
+type ID = string & {distinct: 'ID'};
+
 const STORAGE_KEY = '@efusor/todomvc';
 
-let data: readonly Todo[] = (s => (s ? JSON.parse(s) : []))(
+let data: readonly DataItem[] = (s => (s ? JSON.parse(s) : []))(
   localStorage.getItem(STORAGE_KEY),
 );
 
@@ -34,7 +50,7 @@ updateNumberOfActive(); // initialize
 
 let updateListener = () => {};
 
-const update = (items: readonly Todo[]) => {
+const update = (items: readonly DataItem[]) => {
   data = items;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   updateNumberOfActive();

@@ -1,10 +1,15 @@
 import {li, div, label, input, button} from '@efusor/dom/html';
 import clsx from 'clsx';
 
-import {removeDataItem, setDataItemCompleted, setDataItemTitle} from './data';
+import {
+  DataItem,
+  removeDataItem,
+  setDataItemCompleted,
+  setDataItemTitle,
+} from './data';
 
 interface Props {
-  getItem: () => Todo;
+  getItem: () => DataItem;
 }
 
 export const TodoItem = ({getItem}: Props) => {

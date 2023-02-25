@@ -1,7 +1,6 @@
 import {header, section, h1, input} from '@efusor/dom/html';
 
 import {addDataItem, getAllData} from './data';
-import {uuid} from './utils';
 
 import {ListTodos} from './ListTodos';
 import {NavBar} from './NavBar';
@@ -17,7 +16,6 @@ export const App = () => {
     if (title) {
       event.target.value = '';
       addDataItem({
-        id: uuid(),
         title,
         completed: false,
       });

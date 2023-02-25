@@ -4,14 +4,19 @@ import {memoizeFunctionShallow} from '@efusor/generic';
 // import {replaceChildren} from '@perform/dom-other';
 // import {MemoizeArrayMapShallow} from '@efusor/generic';
 
-import {getAllData, getAllDataActiveNumber, setAllDataCompleted} from './data';
+import {
+  DataItem,
+  getAllData,
+  getAllDataActiveNumber,
+  setAllDataCompleted,
+} from './data';
 import {getRoute, Route} from './route';
 import {isActive, isCompleted} from './utils';
 
 import {TodoItem} from './TodoItem';
 
 const getRouteItemsMemoized = memoizeFunctionShallow(
-  (route: Route, items: readonly Todo[]) => {
+  (route: Route, items: readonly DataItem[]) => {
     switch (route) {
       case '/active':
         return items.filter(isActive);
