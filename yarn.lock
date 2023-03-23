@@ -7,13 +7,10 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@efusor/dom@link:../dom":
-  version "0.0.0"
-  uid ""
-
-"@efusor/generic@link:../generic":
-  version "0.0.0"
-  uid ""
+"@fusorjs/dom@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@fusorjs/dom/-/dom-1.0.0.tgz#1439a848be8caaf25698ec73be92bdfbbb5f63ae"
+  integrity sha512-k3loXczdr5SCXxhVxB9kIgXqX2SwDb4pFdZEO3py8We8GYaXNTTO2/RbcBIWFhuhRULoh1c1LsF735M0n6xSiA==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.1"

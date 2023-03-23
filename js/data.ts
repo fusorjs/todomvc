@@ -35,7 +35,7 @@ export const isActive = ({completed}: DataItem) => !completed;
 
 type ID = string & {distinct: 'ID'};
 
-const STORAGE_KEY = '@efusor/todomvc';
+const STORAGE_KEY = '@fusorjs/todomvc';
 
 let data: readonly DataItem[] = (s => (s ? JSON.parse(s) : []))(
   localStorage.getItem(STORAGE_KEY),

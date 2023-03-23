@@ -1,20 +1,21 @@
 {
-  "name": "@efusor/todomvc",
+  "name": "@fusorjs/todomvc",
   "version": "1.0.0",
-  "description": "@efusor todo-mvc implementation",
+  "description": "@fusorjs todomvc implementation",
   "keywords": [
-    "@efusor",
-    "todomvc"
+    "@fusorjs",
+    "todomvc",
+    "todo"
   ],
   "license": "ISC",
   "author": "Igor Sukharev <imixaly4@gmail.com>",
   "scripts": {
     "start": "NODE_ENV=development  webpack serve --open",
+    "build": "NODE_ENV=production  webpack",
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@efusor/dom": "link:../dom",
-    "@efusor/generic": "link:../generic",
+    "@fusorjs/dom": "^1.0.0",
     "clsx": "^1.1.1",
     "todomvc-app-css": "^2.4.2",
     "todomvc-common": "^1.0.5"

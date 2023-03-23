@@ -7,7 +7,7 @@ const isDevelopment =
 module.exports = {
   entry: './js/index.ts',
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/', // for the historyApiFallback to function
     clean: true,
@@ -26,14 +26,6 @@ module.exports = {
       {
         test: /\.ts$/,
         use: 'ts-loader',
-        // use: {
-        //   loader: 'ts-loader',
-        //   options: {
-        //     compilerOptions: {
-        //       sourceMap: isDevelopment,
-        //     },
-        //   },
-        // },
         exclude: /node_modules/,
       },
     ],

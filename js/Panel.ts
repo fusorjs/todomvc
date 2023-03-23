@@ -1,4 +1,4 @@
-import {footer, span, strong, ul, li, a, button} from '@efusor/dom/html';
+import {footer, span, strong, ul, li, a, button} from '@fusorjs/dom/html';
 import clsx from 'clsx';
 
 import {

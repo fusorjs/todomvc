@@ -1,20 +1,18 @@
-# @efusor/todomvc
+# @fusorjs/todomvc
 
-## @efusor TodoMVC implementation
+This is a simple `Todo` list application.
 
-http://todomvc.com/
-https://github.com/tastejs/todomvc/blob/master/app-spec.md
+**[Demo Application Website](https://fusorjs.github.io/todomvc/)**
 
-## Done
-
-072788f - last js version
-remove {type: 'button'}
-remove refs
-
-- TodoMVC to typescript
+This is an implementation of [TodoMVC specification](http://todomvc.com/) using [@fusorjs front-end library](https://github.com/fusorjs/dom).
 
 ## Todo
 
-- simplify, remove render double calling ()() maybe?
-- simplify, use simple child updater instead of diff maybe?
-- TodoMVC model: try to propagate changes directly: push/pop/insert/remove... (instead of diff)
+- continue developing more optimisation techniques in `List.ts`
+- combine in array `[list, panel]` in `App.ts` when it will be supported by the `@fusorjs/dom`
+
+## Done
+
+- @efusor to @fusorjs
+- total refactor, simplify, use modules
+- migrate to typescript

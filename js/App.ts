@@ -1,4 +1,4 @@
-import {header, section, h1, input} from '@efusor/dom/html';
+import {header, section, h1, input} from '@fusorjs/dom/html';
 
 import {addDataItem, getAllData} from './data';
 

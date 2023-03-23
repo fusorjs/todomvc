@@ -1,4 +1,4 @@
-import {li, div, label, input, button} from '@efusor/dom/html';
+import {li, div, label, input, button} from '@fusorjs/dom/html';
 import clsx from 'clsx';
 
 import {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const Item = ({getValue}: Props) => {
-  let editing: boolean; // entering/exiting editing mode will only trigger this component update (not the whole application)
+  let editing: boolean; // entering/exiting editing mode will only trigger this component update, not the whole application, unless data was changed
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const handleTitle = ({target}: Target<HTMLInputElement>) => {
@@ -40,6 +40,7 @@ export const Item = ({getValue}: Props) => {
     onkeydown: event => {
       switch (event.code) {
         case 'Escape':
+          textInput.element.value = getValue().title; // the value is not updated for some reason (maybe display:none)
           editing = false;
           skipBlur = true;
           wrapper.update();

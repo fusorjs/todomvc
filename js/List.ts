@@ -1,8 +1,10 @@
-import {section, input, label, ul} from '@efusor/dom/html';
-import {memoizeFunctionShallow} from '@efusor/generic';
-// import {diffChildren} from '@perform/dom-other';
-// import {replaceChildren} from '@perform/dom-other';
-// import {MemoizeArrayMapShallow} from '@efusor/generic';
+import {section, input, label, ul} from '@fusorjs/dom/html';
+// import {memoizeFunctionShallow} from '@fusorjs/generic';
+// import {diffChildren} from '@fusorjs/dom-other';
+// import {replaceChildren} from '@fusorjs/dom-other';
+// import {MemoizeArrayMapShallow} from '@fusorjs/generic';
+
+import {memoizeFunctionShallow} from './lib';
 
 import {
   DataItem,
@@ -37,7 +39,7 @@ export const List = () =>
      * Each Item component/element will be recreated on every application update.
      */
     // ul({class: 'todo-list'}, () =>
-    //   getRouteData(getRoute(), getAllData()).map(createItem),
+    //   getRouteData(getRoute(), getAllData()).map(mapItem),
     // ),
 
     /**
@@ -48,6 +50,9 @@ export const List = () =>
       getRouteItemsMemoized(getRoute(), getAllData()),
     ),
 
+    /**
+     * Not available, experimental.
+     */
     // replaceChildren(
     //   ul({class: 'todo-list'}),
     //   () => getRouteItems().map(i => TodoItem({
@@ -57,6 +62,9 @@ export const List = () =>
     //   })),
     // ),
 
+    /**
+     * Not available, experimental.
+     */
     // diffChildren(
     //   ul({class: 'todo-list'}),
     //   getItem => TodoItem({
@@ -68,11 +76,19 @@ export const List = () =>
     //   'id',
     // ),
 
+    /**
+     * Not available, experimental.
+     */
     // ul(
     //   {class: 'todo-list'},
     //   MemoizeArrayMapShallow(getRouteItems, todo => TodoItem({todo, todos})),
     // ),
   );
+
+const mapItem = (value: DataItem) =>
+  Item({
+    getValue: () => value,
+  });
 
 const isCompleted = ({completed}: DataItem) => completed;
 
@@ -87,12 +103,7 @@ const getRouteData = (route: Route, data: readonly DataItem[]) => {
   }
 };
 
-const createItem = (value: DataItem) =>
-  Item({
-    getValue: () => value,
-  });
-
 const getRouteItemsMemoized = memoizeFunctionShallow(
   (route: Route, items: readonly DataItem[]) =>
-    getRouteData(route, items).map(createItem),
+    getRouteData(route, items).map(mapItem),
 );
