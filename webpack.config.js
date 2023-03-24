@@ -1,15 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const isDevelopment =
-  process.env.NODE_ENV?.trim().toLowerCase() === 'development';
+const isDevelopment = process.env.NODE_ENV?.trim() === 'development';
+const webpackPublicPath = process.env.WEBPACK_PUBLIC_PATH?.trim();
 
 module.exports = {
   entry: './js/index.ts',
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/', // for the historyApiFallback to function
+    publicPath: webpackPublicPath ?? '/',
     clean: true,
   },
   plugins: [
