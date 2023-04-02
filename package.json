@@ -1,8 +1,10 @@
 {
   "name": "@fusorjs/todomvc",
   "version": "1.0.0",
-  "description": "@fusorjs todomvc implementation",
+  "description": "Fusor Todomvc implementation",
   "keywords": [
+    "fusor",
+    "fusorjs",
     "@fusorjs",
     "todomvc",
     "todo"

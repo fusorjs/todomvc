@@ -6,7 +6,7 @@ import {
   removeDataItem,
   setDataItemCompleted,
   setDataItemTitle,
-} from './data';
+} from '../data';
 
 interface Props {
   getValue: () => DataItem;

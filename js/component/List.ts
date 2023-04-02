@@ -4,7 +4,7 @@ import {section, input, label, ul} from '@fusorjs/dom/html';
 // import {replaceChildren} from '@fusorjs/dom-other';
 // import {MemoizeArrayMapShallow} from '@fusorjs/generic';
 
-import {memoizeFunctionShallow} from './lib';
+import {memoizeFunctionShallow} from '../lib';
 
 import {
   DataItem,
@@ -12,8 +12,8 @@ import {
   getAllDataActiveNumber,
   setAllDataCompleted,
   isActive,
-} from './data';
-import {getRoute, Route} from './route';
+} from '../data';
+import {getRoute, Route} from '../route';
 
 import {Item} from './Item';
 

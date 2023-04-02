@@ -1,6 +1,6 @@
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
-import {addDataItem, getAllData} from './data';
+import {addDataItem, getAllData} from '../data';
 
 import {List} from './List';
 import {Panel} from './Panel';

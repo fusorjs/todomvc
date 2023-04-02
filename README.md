@@ -1,10 +1,8 @@
 # @fusorjs/todomvc
 
-This is a simple `Todo` list application.
-
 **[Demo Application Website](https://fusorjs.github.io/todomvc/)**
 
-This is an implementation of [TodoMVC specification](http://todomvc.com/) using [@fusorjs front-end library](https://github.com/fusorjs/dom).
+Todomvc is a simple todo-list application and an implementation of the [TodoMVC specification](http://todomvc.com/) using [Fusor DOM library](https://github.com/fusorjs/dom#readme).
 
 ## Todo
 

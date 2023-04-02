@@ -5,8 +5,8 @@ import {
   getAllData,
   getAllDataActiveNumber,
   removeAllDataCompleted,
-} from './data';
-import {getRoute, Route} from './route';
+} from '../data';
+import {getRoute, Route} from '../route';
 
 export const Panel = () => {
   // cache it, so it won't be recreated on every Panel update
