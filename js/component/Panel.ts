@@ -9,9 +9,9 @@ import {
 import {getRoute, Route} from '../route';
 
 export const Panel = () => {
-  // cache it, so it won't be recreated on every Panel update
+  // cache it, so it won't be re-created on every Panel update, it is static button // todo should typecheck to be static
   const clearButton = button(
-    {class: 'clear-completed', onclick: () => removeAllDataCompleted()},
+    {class: 'clear-completed', click$e: () => removeAllDataCompleted()},
     'Clear completed',
   );
 

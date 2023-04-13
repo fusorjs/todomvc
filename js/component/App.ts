@@ -1,3 +1,4 @@
+import {Component} from '@fusorjs/dom';
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
 import {addDataItem, getAllData} from '../data';
@@ -6,9 +7,9 @@ import {List} from './List';
 import {Panel} from './Panel';
 
 export const App = () => {
-  // cache these two components, so they won't be recreated on every App update
-  const list = List();
-  const panel = Panel();
+  // cache components, >to not re-created them on every App update
+  let list: undefined | Component<HTMLElement>;
+  let panel: undefined | Component<HTMLElement>;
 
   return section(
     {class: 'todoapp'},
@@ -21,7 +22,7 @@ export const App = () => {
         placeholder: 'What needs to be done?',
         autofocus: true,
 
-        onkeydown: (event: KeyboardEvent & Target<HTMLInputElement>) => {
+        keydown$e: (event: KeyboardEvent & Target<HTMLInputElement>) => {
           if (event.code !== 'Enter') return;
 
           event.preventDefault();
@@ -39,7 +40,7 @@ export const App = () => {
       }),
     ),
 
-    () => getAllData().length > 0 && list,
-    () => getAllData().length > 0 && panel,
+    () => getAllData().length > 0 && (list?.update() ?? (list = List())),
+    () => getAllData().length > 0 && (panel?.update() ?? (panel = Panel())),
   );
 };

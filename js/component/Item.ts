@@ -30,14 +30,14 @@ export const Item = ({getValue}: Props) => {
 
   const textInput = input({
     class: 'edit',
-    value$$: () => getValue().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
-    onblur: e => {
+    value$p: () => getValue().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
+    blur$e: e => {
       editing = false;
 
       if (skipBlur) skipBlur = false;
       else handleTitle(e);
     },
-    onkeydown: event => {
+    keydown$e: event => {
       switch (event.code) {
         case 'Escape':
           textInput.element.value = getValue().title; // the value is not updated for some reason (maybe display:none)
@@ -65,8 +65,8 @@ export const Item = ({getValue}: Props) => {
       input({
         class: 'toggle',
         type: 'checkbox',
-        checked$$: () => getValue().completed,
-        onchange: () => {
+        checked: () => getValue().completed,
+        change$e: () => {
           const {id, completed} = getValue();
 
           setDataItemCompleted(id, !completed);
@@ -74,7 +74,7 @@ export const Item = ({getValue}: Props) => {
       }),
       label(
         {
-          ondblclick: () => {
+          dblclick$e: () => {
             editing = true;
             wrapper.update();
             textInput.element.select(); // after wrapper update
@@ -82,7 +82,7 @@ export const Item = ({getValue}: Props) => {
         },
         () => getValue().title,
       ),
-      button({class: 'destroy', onclick: () => removeDataItem(getValue().id)}),
+      button({class: 'destroy', click$e: () => removeDataItem(getValue().id)}),
     ),
 
     textInput,

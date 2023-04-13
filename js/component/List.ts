@@ -1,8 +1,4 @@
 import {section, input, label, ul} from '@fusorjs/dom/html';
-// import {memoizeFunctionShallow} from '@fusorjs/generic';
-// import {diffChildren} from '@fusorjs/dom-other';
-// import {replaceChildren} from '@fusorjs/dom-other';
-// import {MemoizeArrayMapShallow} from '@fusorjs/generic';
 
 import {memoizeFunctionShallow} from '../lib';
 
@@ -24,8 +20,8 @@ export const List = () =>
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      checked$$: () => getAllDataActiveNumber() === 0,
-      onchange: ({target: {checked}}) => setAllDataCompleted(checked),
+      checked: () => getAllDataActiveNumber() === 0,
+      change$e: ({target: {checked}}) => setAllDataCompleted(checked),
     }),
     label({for: 'toggle-all'}, 'Mark all as complete'),
 
@@ -49,40 +45,6 @@ export const List = () =>
     ul({class: 'todo-list'}, () =>
       getRouteItemsMemoized(getRoute(), getAllData()),
     ),
-
-    /**
-     * Not available, experimental.
-     */
-    // replaceChildren(
-    //   ul({class: 'todo-list'}),
-    //   () => getRouteItems().map(i => TodoItem({
-    //     getItem: () => i,
-    //     update,
-    //     remove,
-    //   })),
-    // ),
-
-    /**
-     * Not available, experimental.
-     */
-    // diffChildren(
-    //   ul({class: 'todo-list'}),
-    //   getItem => TodoItem({
-    //     getItem,
-    //     update,
-    //     remove,
-    //   }),
-    //   getRouteItems,
-    //   'id',
-    // ),
-
-    /**
-     * Not available, experimental.
-     */
-    // ul(
-    //   {class: 'todo-list'},
-    //   MemoizeArrayMapShallow(getRouteItems, todo => TodoItem({todo, todos})),
-    // ),
   );
 
 const mapItem = (value: DataItem) =>
