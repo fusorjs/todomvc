@@ -2,9 +2,9 @@
 
 **[Demo Application Website](https://fusorjs.github.io/todomvc/)**
 
-Todomvc is a simple todo-list application and an implementation of the [TodoMVC specification](http://todomvc.com/) using [Fusor DOM library](https://github.com/fusorjs/dom#readme).
+Todomvc is a simple todo-list application and an implementation of the [TodoMVC specification](http://todomvc.com/) using the [Fusor DOM library](https://github.com/fusorjs/dom#readme).
 
-This is not the most simplest solution. It is designed to be efficient and update the DOM only when necessary. Therefore it adds these techniques:
+This is not the simplest solution. It is designed to be efficient and update DOM only when necessary. Therefore it adds these techniques:
 
 - immutable data/array manipulation
 - component caching and memoization
