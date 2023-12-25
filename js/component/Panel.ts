@@ -1,12 +1,15 @@
+import {Component} from '@fusorjs/dom';
 import {footer, span, strong, ul, li, a, button} from '@fusorjs/dom/html';
 import clsx from 'clsx';
 
+import {subscribe} from '../lib/publishSubscribe';
+
+import {Route, routeId} from '../share';
 import {
   getAllData,
   getAllDataActiveNumber,
   removeAllDataCompleted,
 } from '../data';
-import {getRoute, Route} from '../route';
 
 export const Panel = () => {
   // cache it, so it won't be re-created on every Panel update, it is static button // todo should typecheck to be static
@@ -15,8 +18,20 @@ export const Panel = () => {
     'Clear completed',
   );
 
+  let route: Route;
+  const getRoute = () => route;
+
   return footer(
-    {class: 'footer'},
+    {
+      class: 'footer',
+      mount: (self: Component<Element>) => {
+        return subscribe(routeId, self.element, (r: Route) => {
+          route = r;
+          self.update();
+        });
+      },
+    },
+
     span(
       {class: 'todo-count'},
       strong(() => getAllDataActiveNumber()),
@@ -25,9 +40,9 @@ export const Panel = () => {
     ),
     ul(
       {class: 'filters'},
-      Link({name: 'All', route: '/'}),
-      Link({name: 'Active', route: '/active'}),
-      Link({name: 'Completed', route: '/completed'}),
+      Link({name: 'All', route: '/', getRoute}),
+      Link({name: 'Active', route: '/active', getRoute}),
+      Link({name: 'Completed', route: '/completed', getRoute}),
     ),
     () => getAllData().length - getAllDataActiveNumber() > 0 && clearButton,
   );
@@ -38,14 +53,16 @@ const pluralize = (count: number, word: string) =>
 
 interface LinkProps {
   name: string;
-  route: Route;
+  route: string;
+  getRoute: () => string;
 }
 
-const Link = ({name, route}: LinkProps) =>
+const Link = ({name, route, getRoute}: LinkProps) =>
   li(
     a(
       {
         href: `#${route}`,
+        // todo class$subscribe$route: (r) => clsx(r === route && 'selected'),
         class: () => clsx(getRoute() === route && 'selected'),
       },
       name,

@@ -1,7 +1,10 @@
+import {Component} from '@fusorjs/dom';
 import {section, input, label, ul} from '@fusorjs/dom/html';
 
-import {memoizeFunctionShallow} from '../lib';
+import {memoizeFunctionShallow} from '../lib/memoize';
+import {subscribe} from '../lib/publishSubscribe';
 
+import {Route, routeId} from '../share';
 import {
   DataItem,
   getAllData,
@@ -9,13 +12,24 @@ import {
   setAllDataCompleted,
   isActive,
 } from '../data';
-import {getRoute, Route} from '../route';
 
 import {Item} from './Item';
 
-export const List = () =>
-  section(
-    {class: 'main'},
+export const List = () => {
+  let route: Route;
+  const getRoute = () => route;
+
+  return section(
+    {
+      class: 'main',
+      mount: (self: Component<Element>) => {
+        return subscribe(routeId, self.element, (r: Route) => {
+          route = r;
+          self.update();
+        });
+      },
+    },
+
     input({
       id: 'toggle-all',
       class: 'toggle-all',
@@ -42,10 +56,13 @@ export const List = () =>
      * Not recreate items when switching to the same route.
      * Try clicking on one of All/Active/Completed links multiple times.
      */
+    // todo Subscribe(['route','data'],
+    // todo   (route, data) => getRouteItemsMemoized(route, data))
     ul({class: 'todo-list'}, () =>
       getRouteItemsMemoized(getRoute(), getAllData()),
     ),
   );
+};
 
 const mapItem = (value: DataItem) =>
   Item({

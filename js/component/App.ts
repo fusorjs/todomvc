@@ -1,18 +1,48 @@
 import {Component} from '@fusorjs/dom';
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
+import {ValueObserver} from '../lib/valueObserver';
+import {publish} from '../lib/publishSubscribe';
+
+import {Route, routeId} from '../share';
 import {addDataItem, getAllData} from '../data';
 
 import {List} from './List';
 import {Panel} from './Panel';
 
 export const App = () => {
-  // cache components, >to not re-created them on every App update
-  let list: undefined | Component<HTMLElement>;
-  let panel: undefined | Component<HTMLElement>;
+  const routeObserver = new ValueObserver<Route>();
+  const reroute = () => {
+    let route = location.hash.substring(1) as Route;
+    // sanitize route
+    switch (route) {
+      case '/':
+      case '/active':
+      case '/completed':
+        break;
+      default:
+        route = '/';
+    }
+    routeObserver.setValue(route);
+    console.log('reroute');
+  };
+
+  const list = LazyCached(() => List());
+  const panel = LazyCached(() => Panel());
 
   return section(
-    {class: 'todoapp'},
+    {
+      class: 'todoapp',
+      mount: () => {
+        window.addEventListener('popstate', reroute, false);
+        setTimeout(reroute);
+        return () => {
+          window.removeEventListener('popstate', reroute, false);
+        };
+      },
+    },
+    publish(routeId, routeObserver),
+
     header(
       {class: 'header'},
       h1('todos'),
@@ -40,7 +70,14 @@ export const App = () => {
       }),
     ),
 
-    () => getAllData().length > 0 && (list?.update() ?? (list = List())),
-    () => getAllData().length > 0 && (panel?.update() ?? (panel = Panel())),
+    () => getAllData().length > 0 && list(),
+    () => getAllData().length > 0 && panel(),
   );
+};
+
+/** Prevent first update */
+const LazyCached = <T extends Element>(lazy: () => Component<T>) => {
+  let cache: undefined | Component<T>;
+
+  return () => cache?.update() ?? (cache = lazy());
 };
