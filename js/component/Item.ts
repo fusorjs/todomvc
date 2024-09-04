@@ -1,3 +1,4 @@
+import {getElement, update} from '@fusorjs/dom';
 import {li, div, label, input, button} from '@fusorjs/dom/html';
 import clsx from 'clsx';
 
@@ -21,7 +22,7 @@ export const Item = ({getValue}: Props) => {
     const {id, title} = getValue();
 
     if (newTitle) {
-      if (newTitle === title) wrapper.update();
+      if (newTitle === title) update(wrapper);
       else setDataItemTitle(id, newTitle);
     } else {
       removeDataItem(id);
@@ -30,20 +31,25 @@ export const Item = ({getValue}: Props) => {
 
   const textInput = input({
     class: 'edit',
-    value$p: () => getValue().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
-    blur$e: e => {
+    // ? remove _p
+    value_p: () => getValue().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
+    blur_e: e => {
       editing = false;
 
       if (skipBlur) skipBlur = false;
-      else handleTitle(e);
+      else handleTitle(e as any); // todo any
     },
-    keydown$e: event => {
+    keydown_e: e => {
+      // todo e
+      const event = e as any as KeyboardEvent & Target<HTMLInputElement>;
+
       switch (event.code) {
         case 'Escape':
-          textInput.element.value = getValue().title; // the value is not updated for some reason (maybe display:none)
+          // todo as ...
+          (getElement(textInput) as HTMLInputElement).value = getValue().title; // the value is not updated for some reason (maybe display:none)
           editing = false;
           skipBlur = true;
-          wrapper.update();
+          update(wrapper);
           break;
         case 'Enter':
           editing = false;
@@ -66,7 +72,7 @@ export const Item = ({getValue}: Props) => {
         class: 'toggle',
         type: 'checkbox',
         checked: () => getValue().completed,
-        change$e: () => {
+        change_e: () => {
           const {id, completed} = getValue();
 
           setDataItemCompleted(id, !completed);
@@ -74,15 +80,16 @@ export const Item = ({getValue}: Props) => {
       }),
       label(
         {
-          dblclick$e: () => {
+          dblclick_e: () => {
             editing = true;
-            wrapper.update();
-            textInput.element.select(); // after wrapper update
+            update(wrapper);
+            // todo as ...
+            (getElement(textInput) as HTMLInputElement).select(); // after wrapper update
           },
         },
         () => getValue().title,
       ),
-      button({class: 'destroy', click$e: () => removeDataItem(getValue().id)}),
+      button({class: 'destroy', click_e: () => removeDataItem(getValue().id)}),
     ),
 
     textInput,

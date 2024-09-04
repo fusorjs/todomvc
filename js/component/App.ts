@@ -1,4 +1,4 @@
-import {Component} from '@fusorjs/dom';
+import {Fusion, update} from '@fusorjs/dom';
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
 import {addDataItem, getAllData} from '../data';
@@ -22,12 +22,15 @@ export const App = () => {
         placeholder: 'What needs to be done?',
         autofocus: true,
 
-        keydown$e: (event: KeyboardEvent & Target<HTMLInputElement>) => {
+        keydown_e: e => {
+          // todo e
+          const event = e as any as KeyboardEvent & Target<HTMLInputElement>;
+
           if (event.code !== 'Enter') return;
 
           event.preventDefault();
 
-          const title = event.target.value.trim();
+          const title = event.target.value.trim(); // todo managed
 
           if (title) {
             event.target.value = '';
@@ -46,8 +49,8 @@ export const App = () => {
 };
 
 /** Prevent first update */
-const LazyCached = <T extends Element>(lazy: () => Component<T>) => {
-  let cache: undefined | Component<T>;
+const LazyCached = <T extends Element>(lazy: () => Fusion) => {
+  let cache: undefined | Fusion;
 
-  return () => cache?.update() ?? (cache = lazy());
+  return () => (cache ? update(cache) : (cache = lazy()));
 };

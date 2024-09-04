@@ -11,7 +11,7 @@ import {RouteLink} from './RouteLink';
 export const Panel = () => {
   // cache it, so it won't be re-created on every Panel update, it is static button // todo should typecheck to be static
   const clearButton = button(
-    {class: 'clear-completed', click$e: () => removeAllDataCompleted()},
+    {class: 'clear-completed', click_e: () => removeAllDataCompleted()},
     'Clear completed',
   );
 
