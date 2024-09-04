@@ -1,47 +1,17 @@
 import {Component} from '@fusorjs/dom';
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
-import {ValueObserver} from '../lib/valueObserver';
-import {publish} from '../lib/publishSubscribe';
-
-import {Route, routeId} from '../share';
 import {addDataItem, getAllData} from '../data';
 
 import {List} from './List';
 import {Panel} from './Panel';
 
 export const App = () => {
-  const routeObserver = new ValueObserver<Route>();
-  const reroute = () => {
-    let route = location.hash.substring(1) as Route;
-    // sanitize route
-    switch (route) {
-      case '/':
-      case '/active':
-      case '/completed':
-        break;
-      default:
-        route = '/';
-    }
-    routeObserver.setValue(route);
-    console.log('reroute');
-  };
-
   const list = LazyCached(() => List());
   const panel = LazyCached(() => Panel());
 
   return section(
-    {
-      class: 'todoapp',
-      mount: () => {
-        window.addEventListener('popstate', reroute, false);
-        setTimeout(reroute);
-        return () => {
-          window.removeEventListener('popstate', reroute, false);
-        };
-      },
-    },
-    publish(routeId, routeObserver),
+    {class: 'todoapp'},
 
     header(
       {class: 'header'},

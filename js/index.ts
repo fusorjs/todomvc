@@ -11,6 +11,4 @@ const appUpdater = () => app.update();
 setAllDataUpdateListener(appUpdater); // adding/editing/removing todo items
 
 document.body.append(app.element);
-
-// setTimeout(() => document.body.append(app.element), 2000);
-// setTimeout(() => document.body.removeChild(app.element), 10000);
+// setTimeout(() => document.body.removeChild(app.element), 4000);
