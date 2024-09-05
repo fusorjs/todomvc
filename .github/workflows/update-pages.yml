@@ -29,15 +29,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: yarn
+          node-version: 20
+          cache: npm
       - name: Configure Pages
         uses: actions/configure-pages@v3
       # todo actions/cache@v3
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
       - name: Build Application
-        run: yarn build
+        run: npm run build
         env:
           WEBPACK_PUBLIC_PATH: /todomvc/
       - name: Upload Artifact
