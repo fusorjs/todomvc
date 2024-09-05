@@ -31,22 +31,17 @@ export const Item = ({getValue}: Props) => {
 
   const textInput = input({
     class: 'edit',
-    // ? remove _p
-    value_p: () => getValue().title, // Value is not updating because the attribute is shown in inspector, but the property is updating fine!
-    blur_e: e => {
+    value: () => getValue().title,
+    blur_e: (e: FocusEvent & Target<HTMLInputElement>) => {
       editing = false;
 
       if (skipBlur) skipBlur = false;
-      else handleTitle(e as any); // todo any
+      else handleTitle(e);
     },
-    keydown_e: e => {
-      // todo e
-      const event = e as any as KeyboardEvent & Target<HTMLInputElement>;
-
+    keydown_e: (event: KeyboardEvent & Target<HTMLInputElement>) => {
       switch (event.code) {
         case 'Escape':
-          // todo as ...
-          (getElement(textInput) as HTMLInputElement).value = getValue().title; // the value is not updated for some reason (maybe display:none)
+          getElement(textInput).value = getValue().title;
           editing = false;
           skipBlur = true;
           update(wrapper);
@@ -83,8 +78,7 @@ export const Item = ({getValue}: Props) => {
           dblclick_e: () => {
             editing = true;
             update(wrapper);
-            // todo as ...
-            (getElement(textInput) as HTMLInputElement).select(); // after wrapper update
+            getElement(textInput).select(); // ! after wrapper update
           },
         },
         () => getValue().title,

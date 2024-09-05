@@ -24,8 +24,8 @@ export const List = () => {
       class: 'toggle-all',
       type: 'checkbox',
       checked: () => getAllDataActiveNumber() === 0,
-      // todo any
-      change_e: ({target: {checked}}: any) => setAllDataCompleted(checked),
+      change_e: ({target: {checked}}: Target<HTMLInputElement>) =>
+        setAllDataCompleted(checked),
     }),
 
     label({for: 'toggle-all'}, 'Mark all as complete'),

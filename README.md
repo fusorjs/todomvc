@@ -9,16 +9,23 @@ This is not the simplest solution. It is designed to be efficient and update DOM
 - immutable data/array manipulation
 - component caching and memoization
 
+## Start
+
+```sh
+npm install
+npm start
+```
+
 ## Todo
 
 - continue developing more optimisation techniques in `List.ts`
 - combine in array `[list, panel]` in `App.ts` when it will be supported by the `@fusorjs/dom`
-- simplify routing
 - simplify data
 - add shared folder and webpack aliases
 
 ## Done
 
+- simplify routing
 - update to @fusorjs version 2
 - @efusor to @fusorjs
 - total refactor, simplify, use modules

@@ -1,6 +1,6 @@
 import {Fusion, update} from '@fusorjs/dom';
 
-const DEVELOPMENT = process.env.NODE_ENV === 'development';
+const DEVELOPMENT = process.env.NODE_ENV?.trim() === 'development';
 
 export type Observer<A extends [], R> = (...a: A) => R;
 
