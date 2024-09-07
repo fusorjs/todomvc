@@ -6,15 +6,13 @@ import {addDataItem, getAllData} from '../data';
 import {List} from './List';
 import {Panel} from './Panel';
 
-export const App = () => {
-  const list = LazyCached(() => List());
-  const panel = LazyCached(() => Panel());
-
-  return section(
+export const App = () =>
+  section(
     {class: 'todoapp'},
 
     header(
       {class: 'header'},
+
       h1('todos'),
 
       input({
@@ -27,7 +25,7 @@ export const App = () => {
 
           event.preventDefault();
 
-          const title = event.target.value.trim(); // todo managed
+          const title = event.target.value.trim();
 
           if (title) {
             event.target.value = '';
@@ -40,14 +38,9 @@ export const App = () => {
       }),
     ),
 
-    () => getAllData().length > 0 && list(),
-    () => getAllData().length > 0 && panel(),
+    // prevent creation and updating on the first run
+    (
+      (c?: Fusion[]) => () =>
+        getAllData().length > 0 && (c ? c.map(update) : (c = [List(), Panel()]))
+    )(),
   );
-};
-
-/** Prevent first update */
-const LazyCached = <T extends Element>(lazy: () => Fusion) => {
-  let cache: undefined | Fusion;
-
-  return () => (cache ? update(cache) : (cache = lazy()));
-};
