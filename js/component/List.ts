@@ -5,27 +5,26 @@ import {memoizeFunctionShallow} from '../lib/memoize';
 import {Route, getRoute, mountRoute} from '../share/route';
 import {
   DataItem,
-  getAllData,
-  getAllDataActiveNumber,
-  setAllDataCompleted,
+  getData,
+  activeDataCount,
+  setDataCompleted,
   isActive,
-} from '../data';
+  isCompleted,
+} from '../share/data';
 
 import {Item} from './Item';
 
-export const List = () => {
-  return section(
-    {
-      class: 'main',
-    },
+export const List = () =>
+  section(
+    {class: 'main'},
 
     input({
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      checked: () => getAllDataActiveNumber() === 0,
+      checked: () => activeDataCount() === 0,
       change_e: ({target: {checked}}: Target<HTMLInputElement>) =>
-        setAllDataCompleted(checked),
+        setDataCompleted(checked),
     }),
 
     label({for: 'toggle-all'}, 'Mark all as complete'),
@@ -53,17 +52,14 @@ export const List = () => {
         mount: mountRoute,
       },
 
-      () => getRouteItemsMemoized(getRoute(), getAllData()),
+      () => getRouteItemsMemoized(getRoute(), getData()),
     ),
   );
-};
 
 const mapItem = (value: DataItem) =>
   Item({
     getValue: () => value,
   });
-
-const isCompleted = ({completed}: DataItem) => completed;
 
 const getRouteData = (route: Route, data: readonly DataItem[]) => {
   switch (route) {

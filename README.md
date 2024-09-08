@@ -2,12 +2,14 @@
 
 **[Demo Application Website](https://fusorjs.github.io/todomvc/)**
 
-Todomvc is a simple todo-list application and an implementation of the [TodoMVC specification](http://todomvc.com/) using the [Fusor DOM library](https://github.com/fusorjs/dom#readme).
+Todomvc is a simple todo-list application and an implementation of the [TodoMVC specification](http://todomvc.com/) using the [Fusor DOM library](https://github.com/fusorjs/dom).
 
-This is not the simplest solution. It is designed to be efficient and update DOM only when necessary. Therefore it adds these techniques:
+This is not the simplest solution. It is designed to showcase the proper approach for large-scale application development. It has these features:
 
-- immutable data/array manipulation
-- component caching and memoization
+- Routing
+- Immutable data store
+- Component caching and memoization
+- The DOM is updated only where/when necessary
 
 ## Start
 
@@ -18,14 +20,15 @@ npm start
 
 ## Todo
 
-- continue developing more optimisation techniques in `List.ts`
-- combine in array `[list, panel]` in `App.ts` when it will be supported by the `@fusorjs/dom`
-- simplify data
+- continue developing more optimisation/diffing techniques in `List.ts`
 - add shared folder and webpack aliases
+- simplify editing
 
 ## Done
 
+- simplify data
 - simplify routing
+- combine in array `[list, panel]` in `App.ts` when it will be supported
 - update to @fusorjs version 2
 - @efusor to @fusorjs
 - total refactor, simplify, use modules

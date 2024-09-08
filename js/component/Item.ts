@@ -7,7 +7,7 @@ import {
   removeDataItem,
   setDataItemCompleted,
   setDataItemTitle,
-} from '../data';
+} from '../share/data';
 
 interface Props {
   getValue: () => DataItem;

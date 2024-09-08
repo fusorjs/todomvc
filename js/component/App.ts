@@ -1,14 +1,14 @@
 import {Fusion, update} from '@fusorjs/dom';
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
-import {addDataItem, getAllData} from '../data';
+import {addDataItem, getData, mountData} from '../share/data';
 
 import {List} from './List';
 import {Panel} from './Panel';
 
 export const App = () =>
   section(
-    {class: 'todoapp'},
+    {class: 'todoapp', mount: mountData},
 
     header(
       {class: 'header'},
@@ -38,9 +38,9 @@ export const App = () =>
       }),
     ),
 
-    // prevent creation and updating on the first run
     (
-      (c?: Fusion[]) => () =>
-        getAllData().length > 0 && (c ? c.map(update) : (c = [List(), Panel()]))
+      (cache?: Fusion[]) => () =>
+        getData().length > 0 &&
+        (cache ? cache.map(update) : (cache = [List(), Panel()]))
     )(),
   );
