@@ -23,8 +23,7 @@ export const List = () =>
       class: 'toggle-all',
       type: 'checkbox',
       checked: () => activeDataCount() === 0,
-      change_e: ({target: {checked}}: Target<HTMLInputElement>) =>
-        setDataCompleted(checked),
+      change_e: ({target: {checked}}) => setDataCompleted(checked),
     }),
 
     label({for: 'toggle-all'}, 'Mark all as complete'),

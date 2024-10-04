@@ -1,4 +1,4 @@
-import {Fusion, update} from '@fusorjs/dom';
+import {Mount, update} from '@fusorjs/dom';
 
 const DEVELOPMENT = process.env.NODE_ENV?.trim() === 'development';
 
@@ -45,5 +45,5 @@ export class BoundObservable<A extends [], R> extends Observable<A, R> {
     return unsubscribe;
   };
 
-  mount = (self: Fusion) => this.on((() => update(self)) as Observer<A, R>);
+  mount: Mount = self => this.on((() => update(self)) as Observer<A, R>);
 }

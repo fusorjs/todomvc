@@ -17,8 +17,8 @@ export const Item = ({getValue}: Props) => {
   let editing: boolean; // entering/exiting editing mode will only trigger this component update, not the whole application, unless data was changed
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
-  const handleTitle = ({target}: Target<HTMLInputElement>) => {
-    const newTitle = target.value.trim();
+  const handleTitle = (value: string) => {
+    const newTitle = value.trim();
     const {id, title} = getValue();
 
     if (newTitle) {
@@ -32,14 +32,14 @@ export const Item = ({getValue}: Props) => {
   const textInput = input({
     class: 'edit',
     value: () => getValue().title,
-    blur_e: (e: FocusEvent & Target<HTMLInputElement>) => {
+    blur_e: event => {
       editing = false;
 
       if (skipBlur) skipBlur = false;
-      else handleTitle(e);
+      else handleTitle(event.target.value);
     },
-    keydown_e: (event: KeyboardEvent & Target<HTMLInputElement>) => {
-      switch (event.code) {
+    keydown_e: event => {
+      switch ((event as any as KeyboardEvent).code) {
         case 'Escape':
           getElement(textInput).value = getValue().title;
           editing = false;
@@ -49,7 +49,7 @@ export const Item = ({getValue}: Props) => {
         case 'Enter':
           editing = false;
           skipBlur = true;
-          handleTitle(event);
+          handleTitle(event.target.value);
           break;
       }
     },

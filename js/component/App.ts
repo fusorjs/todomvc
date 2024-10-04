@@ -20,8 +20,8 @@ export const App = () =>
         placeholder: 'What needs to be done?',
         autofocus: true,
 
-        keydown_e: (event: KeyboardEvent & Target<HTMLInputElement>) => {
-          if (event.code !== 'Enter') return;
+        keydown_e: event => {
+          if ((event as any as KeyboardEvent).code !== 'Enter') return;
 
           event.preventDefault();
 
