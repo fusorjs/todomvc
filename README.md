@@ -20,9 +20,11 @@ npm start
 
 ## Todo
 
+- refactor global state, maybe https://immerjs.github.io/immer/
 - continue developing more optimisation/diffing techniques in `List.ts`
 - add shared folder and webpack aliases
 - simplify editing
+- remove clsx
 
 ## Done
 

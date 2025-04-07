@@ -1,4 +1,4 @@
-import {footer, span, strong, ul, button} from '@fusorjs/dom/html';
+import {footer, span, strong, ul, li, button} from '@fusorjs/dom/html';
 
 import {getData, activeDataCount, removeDataCompleted} from '../share/data';
 
@@ -17,9 +17,9 @@ export const Panel = () =>
 
     ul(
       {class: 'filters'},
-      RouteLink('All', '/'),
-      RouteLink('Active', '/active'),
-      RouteLink('Completed', '/completed'),
+      li(RouteLink('All', '/')),
+      li(RouteLink('Active', '/active')),
+      li(RouteLink('Completed', '/completed')),
     ),
 
     (

@@ -1,5 +1,6 @@
 import {uuid} from '../lib/uuid';
-import {BoundObservable} from '../lib/Observable';
+import {Observable} from '../lib/Observable';
+import {mountObservable} from '../lib/mountObservable';
 import {not} from '../lib/fp';
 
 //
@@ -15,7 +16,7 @@ export interface DataItem {
 }
 
 const STORAGE_KEY = '@fusorjs/todomvc';
-const dataObservable = new BoundObservable();
+const dataObservable = new Observable();
 
 let data: readonly DataItem[] = (s => (s ? JSON.parse(s) : []))(
   localStorage.getItem(STORAGE_KEY),
@@ -33,7 +34,7 @@ const update = (newData: readonly DataItem[]) => {
 
 export const getData = () => data;
 
-export const {mount: mountData} = dataObservable;
+export const mountData = mountObservable(dataObservable);
 
 export const activeDataCount = () => activeCountCache;
 

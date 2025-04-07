@@ -1,28 +1,34 @@
-import {BoundObservable} from '../lib/Observable';
+import {Observable} from '../lib/Observable';
+import {mountObservable} from '../lib/mountObservable';
+
+const observable = new Observable();
 
 export type Route = '/' | '/active' | '/completed';
+export const getRoute = () => route;
+export const mountRoute = mountObservable(observable);
+export const routeRoot = '#';
 
-const sanitize = (r = location.hash.substring(1)): Route => {
+const readRoute = (r = location.hash.substring(1)): Route => {
   switch (r) {
     case '/active':
     case '/completed':
       return r;
-    default:
-      return '/';
   }
+
+  return '/';
 };
 
-let route: Route = sanitize();
-const observable = new BoundObservable();
+let route: Route = readRoute();
 
 window.addEventListener(
   'popstate',
   () => {
-    route = sanitize();
+    const next = readRoute();
+
+    if (route === next) return;
+
+    route = next;
     observable.notify();
   },
   false,
 );
-
-export const getRoute = () => route;
-export const {mount: mountRoute} = observable;
