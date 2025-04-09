@@ -3,8 +3,8 @@ import {header, section, h1, input} from '@fusorjs/dom/html';
 
 import {addDataItem, getData, mountData} from '../share/data';
 
-import {List} from './List';
-import {Panel} from './Panel';
+import {Main} from './Main';
+import {Footer} from './Footer';
 
 export const App = () =>
   section(
@@ -41,6 +41,6 @@ export const App = () =>
     (
       (cache?: Fusion[]) => () =>
         getData().length > 0 &&
-        (cache ? cache.map(update) : (cache = [List(), Panel()]))
+        (cache ? cache.map(update) : (cache = [Main(), Footer()]))
     )(),
   );

@@ -3,6 +3,12 @@ import {Observable} from '../lib/Observable';
 import {mountObservable} from '../lib/mountObservable';
 import {not} from '../lib/fp';
 
+const STORAGE_KEY = '@fusorjs/todomvc';
+const observable = new Observable();
+
+export const getData = () => data;
+export const mountData = mountObservable(observable);
+
 //
 // This is a non-mutating data model.
 //
@@ -15,38 +21,24 @@ export interface DataItem {
   completed: boolean;
 }
 
-const STORAGE_KEY = '@fusorjs/todomvc';
-const dataObservable = new Observable();
-
 let data: readonly DataItem[] = (s => (s ? JSON.parse(s) : []))(
   localStorage.getItem(STORAGE_KEY),
 );
 let activeCountCache = countActive();
 
-const update = (newData: readonly DataItem[]) => {
+const replace = (newData: readonly DataItem[]) => {
   data = newData;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
   activeCountCache = countActive();
-  dataObservable.notify();
+  observable.notify();
 };
 
-// whole data
+export const getDataActive = () => activeCountCache;
 
-export const getData = () => data;
-
-export const mountData = mountObservable(dataObservable);
-
-export const activeDataCount = () => activeCountCache;
-
-export const setDataCompleted = (completed: boolean) =>
-  update(data.map(item => ({...item, completed})));
-
-export const removeDataCompleted = () => update(data.filter(isActive));
-
-// one data item
+// replace whole list
 
 export const addDataItem = (newItem: Omit<DataItem, 'id'>) =>
-  update([
+  replace([
     ...data,
     {
       id: uuid() as ID,
@@ -54,13 +46,21 @@ export const addDataItem = (newItem: Omit<DataItem, 'id'>) =>
     },
   ]);
 
+export const removeDataItem = (id: ID) =>
+  replace(data.filter(i => i.id !== id));
+
+export const setDataCompleted = (completed: boolean) =>
+  replace(data.map(item => ({...item, completed})));
+
+export const removeDataCompleted = () => replace(data.filter(isActive));
+
+// replace one item
+
 export const setDataItemTitle = (id: ID, title: string) =>
-  update(data.map(item => (item.id === id ? {...item, title} : item)));
+  replace(data.map(item => (item.id === id ? {...item, title} : item)));
 
 export const setDataItemCompleted = (id: ID, completed: boolean) =>
-  update(data.map(item => (item.id === id ? {...item, completed} : item)));
-
-export const removeDataItem = (id: ID) => update(data.filter(i => i.id !== id));
+  replace(data.map(item => (item.id === id ? {...item, completed} : item)));
 
 // utils
 

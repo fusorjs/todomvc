@@ -1,17 +1,17 @@
 import {footer, span, strong, ul, li, button} from '@fusorjs/dom/html';
 
-import {getData, activeDataCount, removeDataCompleted} from '../share/data';
+import {getData, getDataActive, removeDataCompleted} from '../share/data';
 
 import {RouteLink} from './RouteLink';
 
-export const Panel = () =>
+export const Footer = () =>
   footer(
     {class: 'footer'},
 
     span(
       {class: 'todo-count'},
-      strong(activeDataCount),
-      () => pluralize(activeDataCount(), ' item'),
+      strong(getDataActive),
+      () => pluralize(getDataActive(), ' item'),
       ' left',
     ),
 
@@ -30,7 +30,7 @@ export const Panel = () =>
         ),
       ) =>
       () =>
-        getData().length - activeDataCount() > 0 && cache
+        getData().length - getDataActive() > 0 && cache
     )(),
   );
 

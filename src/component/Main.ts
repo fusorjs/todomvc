@@ -1,4 +1,4 @@
-import {section, input, label, ul} from '@fusorjs/dom/html';
+import {main, input, label, ul} from '@fusorjs/dom/html';
 
 import {memoizeFunctionShallow} from '../lib/memoize';
 
@@ -6,7 +6,7 @@ import {Route, getRoute, mountRoute} from '../share/route';
 import {
   DataItem,
   getData,
-  activeDataCount,
+  getDataActive,
   setDataCompleted,
   isActive,
   isCompleted,
@@ -14,15 +14,15 @@ import {
 
 import {Item} from './Item';
 
-export const List = () =>
-  section(
+export const Main = () =>
+  main(
     {class: 'main'},
 
     input({
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      checked: () => activeDataCount() === 0,
+      checked: () => getDataActive() === 0,
       change_e: ({target: {checked}}) => setDataCompleted(checked),
     }),
 
