@@ -5,7 +5,7 @@ const isDevelopment = process.env.NODE_ENV?.trim() === 'development';
 const webpackPublicPath = process.env.WEBPACK_PUBLIC_PATH?.trim();
 
 module.exports = {
-  entry: './js/index.ts',
+  entry: './src/index.ts',
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
