@@ -38,9 +38,10 @@ export const App = () =>
       }),
     ),
 
+    // break updating
     (
-      (cache?: Fusion[]) => () =>
-        getData().length > 0 &&
-        (cache ? cache.map(update) : (cache = [Main(), Footer()]))
+      (cache = [Main(), Footer()]) =>
+      () =>
+        getData().length > 0 && cache
     )(),
   );

@@ -9,9 +9,8 @@ const areArraysEqualShallow = (a: Array<unknown>, b: Array<unknown>) => {
   return true;
 };
 
-export const memoizeFunctionShallow = <Result>(
-  f: (...args: any[]) => Result,
-) => {
+/** Shallow */
+export const memoize = <Result>(f: (...args: any[]) => Result) => {
   let prevArgs: any[], prevResult: Result;
 
   return (...nextArgs: any[]) => {

@@ -1,6 +1,6 @@
-export type Observer<A extends [] = [], R = unknown> = (...a: A) => R;
+export type Observer<A extends any[] = [], R = unknown> = (...a: A) => R;
 
-export class Observable<A extends [] = [], R = unknown> {
+export class Observable<A extends any[] = [], R = unknown> {
   #callbacks = new Set<Observer<A, R>>();
 
   notify(...args: A) {

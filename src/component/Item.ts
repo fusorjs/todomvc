@@ -7,19 +7,16 @@ import {
   removeDataItem,
   setDataItemCompleted,
   setDataItemTitle,
+  subscribeItem,
 } from '../share/data';
 
-interface Props {
-  getValue: () => DataItem;
-}
-
-export const Item = ({getValue}: Props) => {
+export const Item = (item: DataItem) => {
   let editing: boolean; // entering/exiting editing mode will only trigger this component update, not the whole application, unless data was changed
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
   const handleTitle = (value: string) => {
     const newTitle = value.trim();
-    const {id, title} = getValue();
+    const {id, title} = item;
 
     if (newTitle) {
       if (newTitle === title) update(wrapper);
@@ -31,7 +28,7 @@ export const Item = ({getValue}: Props) => {
 
   const textInput = input({
     class: 'edit',
-    value: () => getValue().title,
+    value: () => item.title,
     blur_e: event => {
       editing = false;
 
@@ -41,7 +38,7 @@ export const Item = ({getValue}: Props) => {
     keydown_e: event => {
       switch ((event as any as KeyboardEvent).code) {
         case 'Escape':
-          getElement(textInput).value = getValue().title;
+          getElement(textInput).value = item.title;
           editing = false;
           skipBlur = true;
           update(wrapper);
@@ -57,8 +54,13 @@ export const Item = ({getValue}: Props) => {
 
   const wrapper = li(
     {
-      class: () =>
-        clsx(getValue().completed && 'completed', editing && 'editing'),
+      class: () => clsx(item.completed && 'completed', editing && 'editing'),
+      mount: () =>
+        subscribeItem(change => {
+          if (change.id !== item.id) return;
+          item = change;
+          update(wrapper);
+        }),
     },
 
     div(
@@ -66,9 +68,9 @@ export const Item = ({getValue}: Props) => {
       input({
         class: 'toggle',
         type: 'checkbox',
-        checked: () => getValue().completed,
+        checked: () => item.completed,
         change_e: () => {
-          const {id, completed} = getValue();
+          const {id, completed} = item;
 
           setDataItemCompleted(id, !completed);
         },
@@ -81,9 +83,9 @@ export const Item = ({getValue}: Props) => {
             getElement(textInput).select(); // ! after wrapper update
           },
         },
-        () => getValue().title,
+        () => item.title,
       ),
-      button({class: 'destroy', click_e: () => removeDataItem(getValue().id)}),
+      button({class: 'destroy', click_e: () => removeDataItem(item.id)}),
     ),
 
     textInput,

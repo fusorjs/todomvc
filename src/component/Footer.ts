@@ -1,12 +1,17 @@
 import {footer, span, strong, ul, li, button} from '@fusorjs/dom/html';
 
-import {getData, getDataActive, removeDataCompleted} from '../share/data';
+import {
+  getData,
+  getDataActive,
+  mountData,
+  removeDataCompleted,
+} from '../share/data';
 
 import {RouteLink} from './RouteLink';
 
 export const Footer = () =>
   footer(
-    {class: 'footer'},
+    {class: 'footer', mount: mountData},
 
     span(
       {class: 'todo-count'},

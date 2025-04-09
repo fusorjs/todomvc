@@ -10,13 +10,14 @@ import {
   setDataCompleted,
   isActive,
   isCompleted,
+  mountData,
 } from '../share/data';
 
 import {Item} from './Item';
 
 export const Main = () =>
   main(
-    {class: 'main'},
+    {class: 'main', mount: mountData},
 
     input({
       id: 'toggle-all',
@@ -28,37 +29,15 @@ export const Main = () =>
 
     label({for: 'toggle-all'}, 'Mark all as complete'),
 
-    //
-    // Please note, the following code contains various array optimisation techniques.
-    // Uncomment the apropriate solution and see how it behaves in your DOM Inspector.
-    //
-
-    /**
-     * No optimisation.
-     * Each Item component/element will be recreated on every application update.
-     */
-    // ul({class: 'todo-list'}, () =>
-    //   getRouteData(getRoute(), getAllData()).map(mapItem),
-    // ),
-
-    /**
-     * Not recreate items when switching to the same route.
-     * Try clicking on one of All/Active/Completed links multiple times.
-     */
     ul(
       {
         class: 'todo-list',
         mount: mountRoute,
       },
 
-      () => getRouteItemsMemoized(getRoute(), getData()),
+      () => getRouteData(getRoute(), getData()).map(Item),
     ),
   );
-
-const mapItem = (value: DataItem) =>
-  Item({
-    getValue: () => value,
-  });
 
 const getRouteData = (route: Route, data: readonly DataItem[]) => {
   switch (route) {
@@ -71,7 +50,7 @@ const getRouteData = (route: Route, data: readonly DataItem[]) => {
   }
 };
 
-const getRouteItemsMemoized = memoizeFunctionShallow(
-  (route: Route, items: readonly DataItem[]) =>
-    getRouteData(route, items).map(mapItem),
-);
+// const getRouteItemsMemoized = memoizeFunctionShallow(
+//   (route: Route, items: readonly DataItem[]) =>
+//     getRouteData(route, items).map(mapItem),
+// );
