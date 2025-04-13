@@ -1,11 +1,11 @@
 import {Observable} from '../lib/Observable';
-import {mountObservable} from '../lib/mountObservable';
 
 const observable = new Observable();
 
 export type Route = '/' | '/active' | '/completed';
 export const getRoute = () => route;
-export const mountRoute = mountObservable(observable);
+export const subscribeRoute = observable.subscribe.bind(observable);
+
 export const routeRoot = '#';
 
 const readRoute = (r = location.hash.substring(1)): Route => {

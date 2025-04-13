@@ -6,6 +6,7 @@ Todomvc is a simple todo-list application and an implementation of the [TodoMVC 
 
 This is not the simplest solution. It is designed to showcase the proper approach for large-scale application development. It has these features:
 
+- Cypress E2E performance?
 - Routing
 - Immutable data store
 - Component caching and memoization

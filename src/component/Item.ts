@@ -7,7 +7,7 @@ import {
   removeDataItem,
   setDataItemCompleted,
   setDataItemTitle,
-  subscribeItem,
+  subscribeData,
 } from '../share/data';
 
 export const Item = (item: DataItem) => {
@@ -56,9 +56,8 @@ export const Item = (item: DataItem) => {
     {
       class: () => clsx(item.completed && 'completed', editing && 'editing'),
       mount: () =>
-        subscribeItem(change => {
-          if (change.id !== item.id) return;
-          item = change;
+        subscribeData(({changeItem}) => {
+          if (!(changeItem === null || changeItem === item.id)) return;
           update(wrapper);
         }),
     },

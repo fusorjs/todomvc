@@ -1,9 +1,10 @@
+import {update} from '@fusorjs/dom';
 import {footer, span, strong, ul, li, button} from '@fusorjs/dom/html';
 
 import {
-  getData,
+  getDataLength,
   getDataActive,
-  mountData,
+  subscribeData,
   removeDataCompleted,
 } from '../share/data';
 
@@ -11,7 +12,14 @@ import {RouteLink} from './RouteLink';
 
 export const Footer = () =>
   footer(
-    {class: 'footer', mount: mountData},
+    {
+      class: 'footer',
+      mount: self =>
+        subscribeData(
+          ({changeLength, changeActive}) =>
+            (changeLength || changeActive) && update(self),
+        ),
+    },
 
     span(
       {class: 'todo-count'},
@@ -35,7 +43,7 @@ export const Footer = () =>
         ),
       ) =>
       () =>
-        getData().length - getDataActive() > 0 && cache
+        getDataLength() - getDataActive() > 0 && cache
     )(),
   );
 
