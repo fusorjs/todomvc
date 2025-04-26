@@ -1,17 +1,16 @@
 import {update} from '@fusorjs/dom';
 import {main, input, label, ul} from '@fusorjs/dom/html';
 
-import {memoize} from '../lib/memoize';
-
 import {Route, getRoute, subscribeRoute} from '../share/route';
 import {
   getData,
-  getDataActive,
-  setDataCompleted,
-  isActive,
-  isCompleted,
   subscribeData,
   Data,
+  changeDataCompletion,
+  getDataSizes,
+  getDataBy,
+  ID,
+  DataItem,
 } from '../share/data';
 
 import {Item} from './Item';
@@ -24,10 +23,9 @@ export const Main = () =>
       id: 'toggle-all',
       class: 'toggle-all',
       type: 'checkbox',
-      change_e: ({target: {checked}}) => setDataCompleted(checked),
-      checked: () => getDataActive() === 0,
-      mount: self =>
-        subscribeData(({changeActive}) => changeActive && update(self)),
+      change_e: ({target: {checked}}) => changeDataCompletion(checked),
+      checked: () => getDataSizes()['active'] === 0,
+      mount: self => subscribeData(() => update(self)),
     }),
 
     label({for: 'toggle-all'}, 'Mark all as complete'),
@@ -40,36 +38,36 @@ export const Main = () =>
             subscribeRoute(() => update(self)),
             subscribeData(() => update(self)),
           ];
-          return () => unsubscribe.forEach(i => i()); // todo
+          return () => unsubscribe.forEach(i => i());
         },
       },
 
-      // () => getRouteData(getRoute(), getData()).map(Item),
-      // () => getRouteItems(getRoute(), getData()),
       (
         (getItems = memoMap(Item)) =>
         () =>
-          getItems(getRouteData(getRoute(), getData()).map(([k, v]) => v))
-      )(),
+          getItems(Object.entries(getRouteData(getRoute())) as [ID, DataItem][])
+      )(), // todo entries
     ),
   );
 
+const getRouteData = (route: Route): Data =>
+  route === '/' ? getData() : getDataBy(route === '/completed');
+
 const memoMap =
-  <Value, Result>(
-    getResult: (v: Value) => Result,
+  <Key, Value, Result>(
+    getResult: (k: Key, v: Value) => Result,
     // todo getKey
-    prevCache = new Map<Value, Result>(),
+    prevCache = new Map<Key, Result>(),
   ) =>
   // todo iterable
-  (values: Value[]) => {
+  (values: [Key, Value][]) => {
     // todo DEVELOPMENT check dublicates in values and request getKey
-    const nextCache = new Map<Value, Result>();
-    const results = values.map(value => {
-      let result: Result;
-      if (prevCache.has(value)) {
-        result = prevCache.get(value)!;
-      } else result = getResult(value);
-      nextCache.set(value, result);
+    const nextCache = new Map<Key, Result>();
+    const results = values.map(([key, value]) => {
+      const result = prevCache.has(key)
+        ? prevCache.get(key)!
+        : getResult(key, value);
+      nextCache.set(key, result);
       return result;
     });
     // console.log(nextCache);
@@ -77,18 +75,13 @@ const memoMap =
     return results;
   };
 
-const getRouteData = (route: Route, data: Data) => {
-  switch (route) {
-    case '/active':
-      return Object.entries(data).filter(([k, v]) => isActive(v));
+const getRouteData = (route: Route): Data =>
+  route === '/' ? getData() : getDataBy(route === '/completed');
+
+      return getFilteredDataBy(false);
     case '/completed':
-      return Object.entries(data).filter(([k, v]) => isCompleted(v));
+      return getFilteredDataBy(true);
     default:
-      return Object.entries(data);
+      return getData();
   }
 };
-
-const getRouteItems = memoize((route: Route, data: Data) =>
-  // todo memoize each item, escape updation
-  getRouteData(route, data).map(([k, v]) => Item(v)),
-);

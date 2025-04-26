@@ -1,7 +1,7 @@
 import {update} from '@fusorjs/dom';
 import {header, section, h1, input} from '@fusorjs/dom/html';
 
-import {addDataItem, getDataLength, subscribeData} from '../share/data';
+import {appendDataItem, getDataSizes, subscribeData} from '../share/data';
 
 import {Main} from './Main';
 import {Footer} from './Footer';
@@ -10,8 +10,7 @@ export const App = () =>
   section(
     {
       class: 'todoapp',
-      mount: self =>
-        subscribeData(({changeLength}) => changeLength && update(self)),
+      mount: self => subscribeData(() => update(self)),
     },
 
     header(
@@ -33,7 +32,7 @@ export const App = () =>
 
           if (title) {
             event.target.value = '';
-            addDataItem(title);
+            appendDataItem({title});
           }
         },
       }),
@@ -43,6 +42,6 @@ export const App = () =>
     (
       (cache = [Main(), Footer()]) =>
       () =>
-        getDataLength() > 0 && cache
+        getDataSizes()['total'] > 0 && cache
     )(),
   );

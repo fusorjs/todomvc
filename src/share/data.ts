@@ -1,21 +1,15 @@
 import {uuid} from '../lib/uuid';
 import {Observable} from '../lib/Observable';
-import {not} from '../lib/fp';
+import {memo} from '../lib/memo';
 
 export type ID = string & {distinct: 'ID'};
-export interface DataItem {
-  id: ID;
+export type DataItem = {
   title: string;
-  completed?: boolean;
-}
-export type Data = {[k: ID]: DataItem}; // todo remove
+  completed?: true;
+};
+export type Data = Record<ID, DataItem>;
 
-interface Action {
-  changeLength?: boolean;
-  changeActive?: boolean;
-  changeItem?: ID | null;
-}
-const observable = new Observable<[Action]>();
+const observable = new Observable();
 export const subscribeData = observable.subscribe.bind(observable);
 
 const STORAGE_KEY = '@fusorjs/todomvc';
@@ -25,99 +19,78 @@ const save = (d: Data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
 
 let data = load();
 export const getData = () => data;
-let length = 0;
-export const getDataLength = () => length;
-let active = 0;
-export const getDataActive = () => active;
-for (const key in data) {
-  length++;
-  if (!data[key as ID].completed) active++;
-}
+export const getDataBy = (() => {
+  const get = memo((data: Data, completed: boolean) => {
+    const result: Data = {};
+    for (const key in data) {
+      const item = data[key as ID];
+      if (Boolean(item.completed) === completed) result[key as ID] = item;
+    }
+    return result;
+  });
+  return (completed: boolean) => get(data, completed);
+})();
+export const getDataSizes = (() => {
+  const get = memo((data: Data) => {
+    let total = 0;
+    let completed = 0;
+    for (const key in data) {
+      total++;
+      if (data[key as ID].completed) completed++;
+    }
+    return {total, active: total - completed, completed};
+  });
+  return () => get(data);
+})();
 
-export const setDataItemTitle = (id: ID, title: string) => {
-  if (data[id].title === title) return;
-  data = {
-    ...data,
-    [id]: {
-      ...data[id],
-      title,
-    },
-  };
-  observable.notify({changeItem: id});
-  save(data);
-};
-
-export const setDataItemCompleted = (id: ID, completed: boolean) => {
-  if (data[id].completed === completed) return;
-  if (completed) active--;
-  else active++;
-  data = {
-    ...data,
-    [id]: {
-      ...data[id],
-      completed,
-    },
-  };
-  observable.notify({changeItem: id, changeActive: true});
-  save(data);
-};
-
-export const addDataItem = (title: DataItem['title']) => {
-  length++;
-  active++;
-  const id = uuid() as ID;
-  data = {
-    ...data,
-    [id]: {id, title},
-  };
-  observable.notify({changeLength: true, changeActive: true});
+export const appendDataItem = (next: DataItem) => {
+  data = {...data, [uuid()]: next};
+  observable.notify();
   save(data);
 };
 
 export const removeDataItem = (id: ID) => {
-  length--;
-  const {completed} = data[id];
-  if (!completed) active--;
+  if (!(id in data)) return;
   data = {...data};
   delete data[id];
-  observable.notify({changeLength: true, changeActive: !completed});
+  observable.notify();
   save(data);
 };
 
-export const setDataCompleted = (completed: boolean) => {
-  if (completed && active === 0) return;
-  active = completed ? 0 : length;
+export const changeDataItem = (id: ID, next: DataItem) => {
+  if (data[id].title === next.title && data[id].completed === next.completed)
+    return;
+  data = {...data, [id]: next};
+  observable.notify();
+  save(data);
+};
+
+export const changeDataCompletion = (completed: boolean) => {
   const next = {...data};
-  let changeActive = false;
+  let changed = false;
   for (const key in next) {
     const item = next[key as ID];
     if (item.completed === completed) continue;
-    item.completed = completed;
-    changeActive = true;
+    changed = true;
+    next[key as ID] = {...item, completed: completed || undefined};
   }
-  if (!changeActive) return;
+  if (!changed) return;
   data = next;
-  observable.notify({changeActive, changeItem: null}); // todo changeItem: [...]
+  observable.notify();
   save(data);
 };
 
-export const removeDataCompleted = () => {
-  if (length === active) return;
-  length = active;
+export const removeCompletedData = () => {
   const next = {...data};
-  let changeLength = false;
+  let changed = false;
   for (const key in next) {
     const {completed} = next[key as ID];
     if (!completed) continue;
     delete next[key as ID];
-    changeLength = true;
+    changed = true;
   }
-  if (!changeLength) return;
+  if (!changed) return;
   data = next;
-  observable.notify({changeLength});
+  observable.notify();
   save(data);
 };
-
-export const isCompleted = ({completed}: DataItem) => Boolean(completed);
-
-export const isActive = not(isCompleted);

@@ -3,27 +3,23 @@ import {li, div, label, input, button} from '@fusorjs/dom/html';
 import clsx from 'clsx';
 
 import {
+  changeDataItem,
   DataItem,
+  getData,
+  ID,
   removeDataItem,
-  setDataItemCompleted,
-  setDataItemTitle,
   subscribeData,
 } from '../share/data';
 
-export const Item = (item: DataItem) => {
+export const Item = (id: ID, item: DataItem) => {
   let editing: boolean; // entering/exiting editing mode will only trigger this component update, not the whole application, unless data was changed
   let skipBlur: boolean; // https://stackoverflow.com/questions/21926083/failed-to-execute-removechild-on-node
 
-  const handleTitle = (value: string) => {
-    const newTitle = value.trim();
-    const {id, title} = item;
-
-    if (newTitle) {
-      if (newTitle === title) update(wrapper);
-      else setDataItemTitle(id, newTitle);
-    } else {
-      removeDataItem(id);
-    }
+  const updateTitle = (value: string) => {
+    const title = value.trim();
+    if (title === item.title) update(wrapper);
+    else if (title) changeDataItem(id, {...item, title});
+    else removeDataItem(id);
   };
 
   const textInput = input({
@@ -31,9 +27,8 @@ export const Item = (item: DataItem) => {
     value: () => item.title,
     blur_e: event => {
       editing = false;
-
       if (skipBlur) skipBlur = false;
-      else handleTitle(event.target.value);
+      else updateTitle(event.target.value);
     },
     keydown_e: event => {
       switch ((event as any as KeyboardEvent).code) {
@@ -46,7 +41,7 @@ export const Item = (item: DataItem) => {
         case 'Enter':
           editing = false;
           skipBlur = true;
-          handleTitle(event.target.value);
+          updateTitle(event.target.value);
           break;
       }
     },
@@ -56,8 +51,10 @@ export const Item = (item: DataItem) => {
     {
       class: () => clsx(item.completed && 'completed', editing && 'editing'),
       mount: () =>
-        subscribeData(({changeItem}) => {
-          if (!(changeItem === null || changeItem === item.id)) return;
+        subscribeData(() => {
+          const next = getData()[id];
+          if (item === next) return;
+          item = next;
           update(wrapper);
         }),
     },
@@ -69,9 +66,8 @@ export const Item = (item: DataItem) => {
         type: 'checkbox',
         checked: () => item.completed,
         change_e: () => {
-          const {id, completed} = item;
-
-          setDataItemCompleted(id, !completed);
+          const {completed} = item;
+          changeDataItem(id, {...item, completed: !completed || undefined});
         },
       }),
       label(
@@ -84,10 +80,10 @@ export const Item = (item: DataItem) => {
         },
         () => item.title,
       ),
-      button({class: 'destroy', click_e: () => removeDataItem(item.id)}),
+      button({class: 'destroy', click_e: () => removeDataItem(id)}),
     ),
 
-    textInput,
+    textInput, // todo load only when needed, do not pollute DOM
   );
 
   return wrapper;
