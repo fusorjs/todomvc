@@ -1,6 +1,9 @@
 import {update} from '@fusorjs/dom';
 import {main, input, label, ul} from '@fusorjs/dom/html';
 
+import {memoMap} from '../lib/memoMap';
+import {entries} from '../lib/entries';
+
 import {Route, getRoute, subscribeRoute} from '../share/route';
 import {
   getData,
@@ -9,8 +12,6 @@ import {
   changeDataCompletion,
   getDataSizes,
   getDataBy,
-  ID,
-  DataItem,
 } from '../share/data';
 
 import {Item} from './Item';
@@ -44,44 +45,16 @@ export const Main = () =>
 
       (
         (getItems = memoMap(Item)) =>
-        () =>
-          getItems(Object.entries(getRouteData(getRoute())) as [ID, DataItem][])
-      )(), // todo entries
+        () => [...getItems(entries(getRouteData(getRoute()))).values()]
+      )(),
     ),
   );
 
 const getRouteData = (route: Route): Data =>
   route === '/' ? getData() : getDataBy(route === '/completed');
 
-const memoMap =
-  <Key, Value, Result>(
-    getResult: (k: Key, v: Value) => Result,
-    // todo getKey
-    prevCache = new Map<Key, Result>(),
-  ) =>
-  // todo iterable
-  (values: [Key, Value][]) => {
-    // todo DEVELOPMENT check dublicates in values and request getKey
-    const nextCache = new Map<Key, Result>();
-    const results = values.map(([key, value]) => {
-      const result = prevCache.has(key)
-        ? prevCache.get(key)!
-        : getResult(key, value);
-      nextCache.set(key, result);
-      return result;
-    });
-    // console.log(nextCache);
-    prevCache = nextCache;
-    return results;
-  };
+// const xxx = entries({aaa: 111, bbb: 222});
+// for (const x of xxx) console.log(x);
 
-const getRouteData = (route: Route): Data =>
-  route === '/' ? getData() : getDataBy(route === '/completed');
-
-      return getFilteredDataBy(false);
-    case '/completed':
-      return getFilteredDataBy(true);
-    default:
-      return getData();
-  }
-};
+// const yyy = entries(getRouteData(getRoute()));
+// for (const x of yyy) console.log(x);
