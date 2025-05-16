@@ -4,14 +4,12 @@ import {main, input, label, ul} from '@fusorjs/dom/html';
 import {memoMap} from '../lib/memoMap';
 import {entries} from '../lib/entries';
 
-import {Route, getRoute, subscribeRoute} from '../share/route';
+import {getRoute, subscribeRoute} from '../share/route';
 import {
   getData,
   subscribeData,
-  Data,
   changeDataCompletion,
   getDataSizes,
-  getDataBy,
 } from '../share/data';
 
 import {Item} from './Item';
@@ -25,7 +23,7 @@ export const Main = () =>
       class: 'toggle-all',
       type: 'checkbox',
       change_e: ({target: {checked}}) => changeDataCompletion(checked),
-      checked: () => getDataSizes()['active'] === 0,
+      checked: () => getDataSizes().active === 0,
       mount: self => subscribeData(() => update(self)),
     }),
 
@@ -43,18 +41,16 @@ export const Main = () =>
         },
       },
 
-      (
-        (getItems = memoMap(Item)) =>
-        () => [...getItems(entries(getRouteData(getRoute()))).values()]
-      )(),
+      (getItems => () => [
+        ...getItems(
+          entries(
+            getData(
+              (route => (route === '/' ? undefined : route === '/completed'))(
+                getRoute(),
+              ),
+            ),
+          ),
+        ).values(),
+      ])(memoMap(Item)),
     ),
   );
-
-const getRouteData = (route: Route): Data =>
-  route === '/' ? getData() : getDataBy(route === '/completed');
-
-// const xxx = entries({aaa: 111, bbb: 222});
-// for (const x of xxx) console.log(x);
-
-// const yyy = entries(getRouteData(getRoute()));
-// for (const x of yyy) console.log(x);

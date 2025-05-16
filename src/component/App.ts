@@ -38,10 +38,8 @@ export const App = () =>
       }),
     ),
 
-    // escape updating recursion
     (
-      (cache = [Main(), Footer()]) =>
-      () =>
-        getDataSizes()['total'] > 0 && cache
-    )(),
+      content => () =>
+        getDataSizes().total > 0 && content
+    )([Main(), Footer()]),
   );

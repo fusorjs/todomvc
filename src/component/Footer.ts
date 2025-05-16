@@ -1,9 +1,10 @@
 import {update} from '@fusorjs/dom';
+import {a} from '@fusorjs/dom/html';
 import {footer, span, ul, li, button} from '@fusorjs/dom/html';
+import clsx from 'clsx';
 
+import {getRoute, Route, subscribeRoute, routeRoot} from '../share/route';
 import {getDataSizes, removeCompletedData, subscribeData} from '../share/data';
-
-import {RouteLink} from './RouteLink';
 
 export const Footer = () =>
   footer(
@@ -25,13 +26,22 @@ export const Footer = () =>
     ),
 
     (
-      (
-        cache = button(
-          {class: 'clear-completed', click_e: removeCompletedData},
-          'Clear completed',
-        ),
-      ) =>
-      () =>
-        getDataSizes()['completed'] > 0 && cache
-    )(),
+      clearButton => () =>
+        getDataSizes().completed > 0 && clearButton
+    )(
+      button(
+        {class: 'clear-completed', click_e: removeCompletedData},
+        'Clear completed',
+      ),
+    ),
+  );
+
+const RouteLink = (title: string, route: Route) =>
+  a(
+    {
+      href: routeRoot + route,
+      class: () => clsx(getRoute() === route && 'selected'),
+      mount: self => subscribeRoute(() => update(self)),
+    },
+    title,
   );
